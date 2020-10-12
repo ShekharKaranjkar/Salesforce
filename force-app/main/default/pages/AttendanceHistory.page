@@ -1,0 +1,324 @@
+<apex:page docType="html-5.0" controller="AttendanceHistoryController" showHeader="false" sidebar="false" applyBodyTag="false" applyHtmlTag="false" cache="true" expires="50"  lightningStylesheets="true" tabstyle="account">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+        <style>
+        .slds-scope .slds-notify_toast{
+             min-width: 0rem;
+        }
+        </style>
+          <style>
+        .switch-field {
+        display: flex;
+        margin-bottom: 36px;
+        overflow: hidden;
+        }
+        
+        .switch-field input {
+        position: absolute !important;
+        clip: rect(0, 0, 0, 0);
+        height: 1px;
+        width: 1px;
+        border: 0;
+        overflow: hidden;
+        }
+        
+        .switch-field label {
+        background-color: #e4e4e4;
+        color: rgba(0, 0, 0, 0.6);
+        font-size: 14px;
+        line-height: 1;
+        text-align: center;
+        padding: 8px 16px;
+        margin-right: -1px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+        transition: all 0.1s ease-in-out;
+        }
+        
+        .switch-field label:hover {
+        cursor: pointer;
+        }
+        
+        .switch-field input:checked + label {
+        background-color: #a5dc86;
+        box-shadow: none;
+        }
+        
+        .switch-field label:first-of-type {
+        border-radius: 4px 0 0 4px;
+        }
+        
+        .switch-field label:last-of-type {
+        border-radius: 0 4px 4px 0;
+        }
+        .slds-scope .slds-icon-text-default {
+    fill: rgb(112, 110, 107);
+    width: 22px;
+}
+        
+    </style>
+        <style>
+        body .rich-tabhdr-cell-active,.rich-tabhdr-cell-active {
+       background-colour : #3E3E3C;
+        font-weight: 700 !important;
+        color: #3E3E3C !important;
+        }
+        .rich-tab-active  , .rich-tab-inactive , .rich-tabpanel-content {
+        background-image: none;
+        background-color: transparent;
+        }
+        .rich-tabpanel-content {
+            color : none !important;
+        }
+    </style>
+        <script>
+         function redirectToDriverAttendance(){
+             //  alert('back pressed Please Wait....');
+            //console.log(UITheme);
+            debugger;
+             
+             var domain = "{!$Label.Driver_Menu_Domain}";
+        if(!window.location.href.includes(domain))
+            domain = '/apex';
+            var theme = '{!$User.UITheme}';
+            var userAgent = navigator.userAgent;
+             
+             
+              if (theme === 'Theme4d' || theme === 'Theme4u'){
+                    
+                        sforce.one.navigateToURL(domain+'/Driver_Attendence');
+                } 
+                else if(theme ==='Theme4t'){
+                    if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                        sforce.one.navigateToURL(domain+'/apex/Driver_Attendence');
+                    else
+                        window.location=domain+'/Driver_Attendence';
+                }    
+                    else {
+                        //alert();
+                        window.location.href=domain+'/Driver_Attendence';
+                    }
+             
+             
+             
+             
+             
+          
+             /*  if(theme ==='Theme4t'){
+                    if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                        sforce.one.navigateToURL(domain+'/apex/Driver_Attendence');
+                    else
+                        window.location=domain+'/AttendanceHistory';
+                }    
+                    else {
+                        //alert();
+                        window.location=domain+'/AttendanceHistory';
+                    }
+            else{
+                showtoast('Error_Toast');
+            } */
+        }
+        
+        </script>
+        <apex:slds />
+
+        <div class="slds-scope">
+            <div class="demo-only" style="height:4rem; display:none;" id="Success_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+                        <span class="slds-assistive-text">success</span>
+                        <span class="slds-icon_container slds-icon-utility-success slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Covid_record_created_successfully}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Success_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only" style="height:4rem; display:none;" id="missingField_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Temperature_value_should_be_between_95_105}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('missingField_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          <div class="demo-only" style="height:4rem; display:none;" id="UnableError_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Unable_to_create_please_fill_the_required_fields}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('UnableError_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            <div class="demo-only" style="height:4rem; display:none;" id="Location_Not_Found_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Location_Not_Found}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Location_Not_Found_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only" style="height:4rem; display:none;" id="Unable_to_record_the_Audio_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Unable_to_record_the_Audio}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Location_Not_Found_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                   <apex:outputPanel style="display:block;" id="Driver_Repair_Issue_Details"><div class=" slds-p-around_medium">
+                <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom15" >
+                                <svg aria-hidden="true" class="slds-icon slds-icon_large">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                         xlink:href="/apexpages/slds/latest/assets/icons/custom-sprite/svg/symbols.svg#custom15">
+                                    </use>
+                                </svg>
+                                <span class="slds-assistive-text">custom</span>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Leave" >{!$Label.Attendance_History}</h1>
+                        </div>
+                         <!--<button class="slds-button slds-button_neutral"  onclick="redirectToDriverAttendance()">{!$Label.Back}</button> -->
+                    
+                    </div>
+                </div>
+                <br/>
+                
+                       
+                       </div>
+            </apex:outputPanel>
+
+                    <div class="slds-box">
+            <apex:tabPanel >
+                <apex:tab label="30 Days"  > 
+                    
+                    <apex:repeat value="{!attendance30List}" var="RecList">
+                        <apex:pageBlock >
+                            <div class = "slds-p-around_small slds-grid slds-wrap">
+                                
+                                <table >
+                                    <tbody>
+                                             <tr>
+                                            <td><b>{!$Label.Name}</b><span style="width:300px;"> </span>
+                                        	<apex:outputText value="{!RecList.Lithium_ID__c}"> </apex:outputText></td> 
+                                              
+                                        </tr>
+                                         <tr>
+                                            <td><b>{!$Label.Login_Date}</b><span style="width:300px;"> </span>
+                                        	<!--<apex:outputText value="{!RecList.Login__c}"> </apex:outputText></td> -->
+                                              <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!RecList.Login__c}" /> 
+                                                </apex:outputText> </td>
+                                        </tr>
+                                         <tr>
+                                            <td><b>{!$Label.Logout_Date}</b><span style="width:300px;"> </span>
+                                        	<!--<apex:outputText value="{!RecList.Logout__c}"> </apex:outputText></td>-->
+                                             <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!RecList.Logout__c}" /> 
+                                                </apex:outputText> </td>
+                                        </tr>
+                                         <tr>
+                                             <td><b>Status</b><span style="width:300px;"> </span>
+                                        	<apex:outputText value="{!RecList.Status__c}"> </apex:outputText></td>
+                                        </tr>
+                                   
+                                   
+                                        
+                                      <!--  <p><b>Leave On</b>
+                                        </p> <br /><apex:outputText value="{!RecList.From_date__c}"> </apex:outputText><br />
+                                        <br /> <p><b>Status</b>
+                                        </p><br /><apex:outputText value="{!RecList.Approval_Request__c}"> </apex:outputText>-->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </apex:pageBlock>
+                    </apex:repeat>
+                </apex:tab>
+           
+                        </apex:tabPanel>
+                        <br/>
+             <button class="slds-button slds-button_destructive slds-align_absolute-center"  onclick="redirectToDriverAttendance()">{!$Label.Back}</button> 
+            
+        </div>
+            
+        </div>
+    </html>
+</apex:page>

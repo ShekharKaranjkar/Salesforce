@@ -1,0 +1,13 @@
+.THIS {
+  background-color: white;
+  height: 100%;
+}
+
+.THIS input{ 
+    background-color: rgb(229,229,229);
+}
+
+.THIS button{
+    background-color: rgb(27,185,165);
+    color: white;
+}

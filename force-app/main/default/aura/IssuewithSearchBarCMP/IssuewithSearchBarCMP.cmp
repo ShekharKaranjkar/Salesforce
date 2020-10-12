@@ -1,0 +1,133 @@
+<aura:component access="global" controller="DriverMenuCtrl">
+    <aura:attribute name="MainrecordsMap" type="Map"/>
+    <aura:attribute name="filteredresultList" type="List" default="[]"/>
+    <aura:attribute name="dependencyresultList" type="List" default="[]"/>
+    <aura:attribute name="searchkeyword" type="String"/>
+    <aura:attribute name="headervalue" type="String"/>
+    <aura:attribute name="resolveheadervalue" type="String"/>
+    <aura:attribute name="uitheme" type="String"/>
+    <aura:attribute name="searchissuewith" type="object"/>
+    <aura:attribute name="redirecttovf" type="object"/>
+    <aura:attribute name="isSearchingstarted" type="Boolean" default="false"/>
+    <aura:attribute name="issuewithcmp" type="Boolean" default="true"/>
+    <aura:attribute name="issuewithresolved" type="Boolean" default="false"/>
+    <aura:attribute name="userlanguage" type="string" default="en_IN"/>
+    <aura:attribute name="IssueCategoryList" type="List" default="[{'label': 'None', 'value': 'None'}]"/>
+    <aura:attribute name="KnowledgeArticlesList" type="List" default="[{'label': 'None', 'value': 'None'},{'label': 'Brake Squeal', 'value': 'Brake Squeal'},
+                                                                      {'label': 'The Brake pads are worn out', 'value': 'The Brake pads are worn out'},{'label': 'Brake Squeal', 'value': 'Brake Squeal'},
+                                                                      {'label': 'The parking brake does not work', 'value': 'The parking brake does not work'},{'label': 'The tires are flat', 'value': 'The tires are flat'},
+                                                                      {'label': 'The wheel wobbles', 'value': 'The wheel wobbles'}
+                                                                      ]"/>
+    
+    <aura:attribute name="IssueCategoryval" type="string" />
+    <aura:attribute name="knowledgeval" type="string" />
+    <aura:attribute name="iconvalue" type="string" />
+    <aura:attribute name="showdropdown" type="boolean" default="false"/>
+    <aura:attribute name="showtoasterror" type="boolean" default="false"/>
+    <aura:attribute name="selectissuewithman" type="boolean" default="false"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="Selectedissuewith" event="c:IssuewithSearchBarEvent" action="{!c.handleComponentEvent}"/>    
+    <aura:if isTrue="{!v.showtoasterror}">         
+        <div class="demo-only" style="height:4rem;">
+            <div class="slds-notify_container slds-is-fixed">
+                <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                    <lightning:icon iconName="utility:error" alternativeText="Error!" title="Error" variant="inverse"/>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small ">{!$Label.c.Please_Select_Issue_With}</h2>
+                    </div>
+                    <div class="slds-notify__close">
+                        <lightning:buttonIcon iconName="utility:close" variant="bare" onclick="{! c.closetoast }" alternativeText="error" title="error" iconClass="whitecolor" size="large"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    <aura:if isTrue="{!v.issuewithcmp}">
+        <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+            <div class="slds-media">
+                <div class="slds-media__figure">
+                    <lightning:icon iconName="custom:custom19" alternativeText=""/>
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="{!v.headervalue}">{!v.headervalue}</h1>
+                </div>
+            </div>
+        </div>
+        <lightning:layout >
+            <lightning:layoutItem padding="around-small" size="12">
+                <lightning:combobox name="type" label="{!$Label.c.Issues_Category}" value="{!v.IssueCategoryval}" placeholder="search.." options="{! v.IssueCategoryList}" onchange="{!c.setissuewithlistoncategory}"/> 
+                <div class="slds-truncate" title="Issue with">
+                    {!$Label.c.Issue_With}  
+                    <abbr class="slds-required" title="required">* </abbr>                                           
+                    <lightning:input
+                                     aura:id="issuewithSearchInput"
+                                     name="issuewithSearchInput"
+                                     class="serachInput"
+                                     label="Standard Reports"
+                                     type="search"
+                                     variant="label-hidden"
+                                     placeholder="search"
+                                     value="{!v.searchkeyword}"
+                                     onchange="{!c.searchforresults}"
+                                     isLoading="{! v.isSearchingstarted }"
+                                     />
+                    <aura:if isTrue="{!v.selectissuewithman}">
+                        <div class="slds-text-color_error" id="Attachment_File4_error" >Please select mention issue details.</div>
+                    </aura:if>
+                    <aura:if isTrue="{!v.showdropdown}">
+                        <div id="listbox-id-4" role="listbox" style="max-height: 300px;overflow-y: scroll;">
+                            <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                <aura:iteration items="{!v.filteredresultList}" var="item">
+                                    <c:IssuewithSearchBarCHILDCMP issue="{!item}"/>
+                                </aura:iteration>
+                            </ul>           
+                        </div>
+                    </aura:if>
+                </div>
+                <!--<lightning:combobox name="type" label="Select a relevant Knowledge base" value="{!v.knowledgeval}" placeholder="select.." options="{! v.KnowledgeArticlesList}" /> -->
+                
+                <br/>
+                <br/>  
+                
+                <br/>
+                <div class="slds-float_right">
+                    <lightning:button label="{!$Label.c.Back}" onclick="{!c.backmethod}" variant="neutral"/>
+                    <lightning:button label="{!$Label.c.Next}" onclick="{!c.nextmethod}" variant="success"/>
+                </div>
+            </lightning:layoutItem>
+            
+        </lightning:layout>
+    </aura:if>
+    <aura:if isTrue="{!v.issuewithresolved}">
+        <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+            <div class="slds-media">
+                <div class="slds-media__figure">
+                    <lightning:icon iconName="custom:custom19" alternativeText=""/>
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="{!v.resolveheadervalue}">{!v.resolveheadervalue}</h1>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div style="text-align:center;">
+            <img src="{!$Resource.IssueResolved}" style="float-center"/>
+        </div>
+        <br/>
+        <div class="slds-align_absolute-center">
+            <p>
+                {!$Label.c.Is_your_Issue_Resolved}
+            </p>
+            <br/><br/></div>
+        <div class="slds-align_absolute-center">
+            <lightning:button label="{!$Label.c.Back}" onclick="{!c.showissueform}" variant="neutral"/>
+            
+            <span style="width: 40px;"></span>
+            <lightning:button label="{!$Label.c.Yes}" iconName="utility:check" iconPosition="left" onclick="{!c.yesmethod}" variant="success"/>
+            <span style="width: 40px;"></span>
+            <lightning:button label="{!$Label.c.No}" iconName="utility:close" iconPosition="left" onclick="{!c.nomethod}" variant="destructive"/>
+            
+        </div>
+    </aura:if>
+    
+</aura:component>

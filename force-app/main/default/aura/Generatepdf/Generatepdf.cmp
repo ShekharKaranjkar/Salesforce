@@ -1,0 +1,190 @@
+<aura:component controller="Generatepdf" implements="force:appHostable,flexipage:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,force:hasRecordId" access="global" >
+    
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+    
+    <!-- <aura:attribute name="email" type="string"/>
+    <aura:attribute name="cc" type="string"/>
+    <aura:attribute name="bcc" type="string"/>  -->
+    
+    <aura:attribute name="subject" type="string"/>
+    <aura:attribute name="body" type="string"/>
+    <!--  <aura:attribute name="mailStatus" type="boolean" default="false"/> -->
+    <aura:attribute name="showLoadingSpinner" type="boolean" default="false" />
+    <!-- <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/> -->
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    
+    
+    
+    <aura:attribute name="selectedLookUpRecords" type="sObject[]" default="[]"/>
+    <aura:attribute name="selectedLookUp" type="sObject[]" default="[]"/>
+    <aura:attribute name="selectedbccLookUp" type="sObject[]" default="[]"/>
+    
+    <!--declare events hendlers-->  
+    <aura:handler name="oSelectedRecordEvent" event="c:selectedsObjectRecordsEvent" action="{!c.handleComponentEvent}"/>
+    <aura:attribute name="Message" type="String" default=""/>
+    
+    <aura:html tag="style">
+        .slds-text-heading_medium{
+        margin-left:-47px;
+        }
+        .fixedContainer{
+         position: relative;
+        }
+        
+    </aura:html>
+    <div class="slds-m-around_xx-large">
+       <div class ="fixedContainer">  
+        <aura:if isTrue="{!v.isOpen}">
+            
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+
+                
+                <header class="slds-modal__header">
+                    
+                    
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Send Email</h2>
+                </header>
+                
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div class="slds-scrollable_y" style="height:28rem;width:47rem;margin-left: 71px;">
+                        <aura:if isTrue="{!v.Spinner}">
+                            <div aura:id="spinnerId" class="slds-align_absolute-center">
+                                
+                                <div class="slds-align_absolute-center" style="height:6rem">
+                                    <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                                        <span class="slds-assistive-text">Loading</span>
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </aura:if>
+                        
+                        <div class="slds-m-around--medium">
+                            <div class="slds-container--medium">
+                                <div class="slds-form--stacked">
+                                    
+                                    <c:reUsableMultiSelectLookupCtrl objectAPIName="contact"
+                                                                     IconName="standard:contact"
+                                                                     lstSelectedRecords="{!v.selectedLookUpRecords}"
+                                                                     label="To"/>
+                                    
+                                    <div class="slds-form-element">
+                                        
+                                        <c:reUsableMultiSelectLookupCtrl objectAPIName="contact"
+                                                                         IconName="standard:contact"
+                                                                         lstSelectedRecords="{!v.selectedLookUp}"
+                                                                         label="Cc"/>
+                                        
+                                    </div>
+                                    <div class="slds-form-element">
+                                        <c:reUsableMultiSelectLookupCtrl objectAPIName="contact"
+                                                                         IconName="standard:contact"
+                                                                         lstSelectedRecords="{!v.selectedbccLookUp}"
+                                                                         label="Bcc"/>
+                                        
+                                        
+                                    </div>
+                                    <div class="slds-form-element">
+                                        <label class="slds-form-element__label" for="CC">Subject</label>
+                                        <div class="slds-form-element__control">
+                                            <ui:inputText class="slds-input" aura:id="subject"  value="{!v.subject}" />
+                                        </div>
+                                    </div>
+                                    <div class="slds-form-element">
+                                        <label class="slds-form-element__label" for="textareaSample2">Mail Body</label>
+                                        <div class="slds-form-element__control">
+                                            <lightning:inputRichText aura:id="body" value="{!v.body}" />
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral" 
+                                      label="Cancel"
+                                      title="Cancel"
+                                      onclick="{! c.closeMessage }"/>
+                    <lightning:button variant="brand" 
+                                      label="Send Email"
+                                      title="Send Email"
+                                      onclick="{! c.sendMail }"/>
+                    <!--   <lightning:button variant="neutral" 
+                                          label="list"
+                                          title="list"
+                                          onclick="{! c.list }"/>  -->
+                </footer>
+                
+            </section>
+            
+        </aura:if>
+    </div>
+    </div> 
+    
+    <aura:html tag="style">
+        .slds-modal__header {
+        padding: 0 0rem !important;
+        width:1000px;
+        }
+        .slds-p-around--medium {
+        padding: 0rem !important;
+        }
+        .slds-modal__content{
+        overflow-y:hidden !important;
+        height:unset !important;
+        max-height:unset !important;
+        width:1000px;
+        }
+        .slds-modal__footer{
+        width:1000px;
+        }
+        
+        .forceChangeRecordTypeFooter{
+        margin-right: -4px;
+        }
+        .forceChatterBasePublisher :not(.PHONE) .cuf-content {
+        padding: 0 0rem !important;
+        }
+       
+.slds-modal__container {
+    margin: 10px auto;
+    width: 50%;
+    max-width: 40rem;
+    min-width: 20rem;
+    margin-left: 135px;
+}
+    </aura:html>  
+    
+    
+    <div class="modal-header slds-modal__header slds-size_1-of-1">
+        <h4 class="title slds-text-heading--medium" >PDF Preview</h4>
+    </div>
+    <div class="slds-modal__content  slds-align_absolute-center slds-size_1-of-1 slds-is-relative" aura:id="modalbody" id="modalbody">
+        <form class="slds-form--stacked">
+            <iframe src="{! '/apex/createpdf?recid='+v.recordId}" width="975px" height="350px;" frameBorder="0"/>
+        </form>
+    </div>    
+    <footer class="slds-modal__footer">
+        
+        <lightning:button variant="brand"
+                          label="Save and Email Invoice"
+                          title="Save and Email Invoice"
+                          onclick="{! c.openModel }" />
+        
+        <lightning:button variant="brand" 
+                          label="Save to Invoice"
+                          title="Save"
+                          onclick="{! c.save }"/>
+        <lightning:button variant="neutral" 
+                          label="Cancel"
+                          title="Cancel"
+                          onclick="{! c.close }"/>
+        
+    </footer> 
+    
+</aura:component>

@@ -1,0 +1,61 @@
+<aura:component implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global" >
+	<div style="text-align:center;">
+                    <!--<apex:image url="{!$Resource.Lithiumimg}" style=" width:290px; margin-left:6px; margin-bottom:4px; float-center"/>--> 
+                </div><br/><br/>
+                <table width="100" align="center">
+                    
+                    <tr>
+                        <td>
+                            <span class="slds-icon_container" >
+                                <lightning:icon iconName="action:approval" alternativeText="Approved" title="Approved" />
+                                <!--<svg aria-hidden="true" class="hometabicons" style="background-color: #3abeb1;" onclick="redirecttovehicleassignment();">
+                                    <use xlink:href="{!URLFOR($Resource.AssignedIcon, '#AssignedIcon')}"></use>
+                                </svg>-->
+                                <span class="slds-assistive-text">utility</span>
+                            </span><br/>
+                            <p style="font-size: 15px;"><br/>
+                              {!$Label.c.Assigned_Vehicles}
+                            </p>
+                            <br/>                           
+                        </td> 
+                        <td>
+                            <span class="slds-icon_container" >
+                                <lightning:icon iconName="action:approval" alternativeText="Approved" title="Approved" onclick="showoutput('Driver_Repair_Issue');" />
+                                <!--<svg aria-hidden="true" class="hometabicons" style="background-color: #3abeb1;" onclick="showoutput('Driver_Repair_Issue');">
+                                    <use xlink:href="{!URLFOR($Resource.RepairIcon, '#RepairIcon')}"></use>
+                                </svg>-->
+                                <span class="slds-assistive-text">utility</span>
+                            </span><br/>
+                            <p style="font-size: 15px;"><br/>
+                               {!$Label.c.Request_Repair}
+                            </p><br/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="slds-icon_container" >
+                                <!--<svg aria-hidden="true" class="hometabicons" style="background-color: #3abeb1;" onclick="showoutput('Breakdown_Issue');">
+                                    <use xlink:href="{!URLFOR($Resource.TowingIcon, '#TowingIcon')}"></use>
+                                </svg>-->
+                                <span class="slds-assistive-text">utility</span>
+                            </span><br/>
+                            <p style="font-size: 15px;"><br/>
+                               {!$Label.c.Report_Breakdown}
+                            </p><br/>
+                        </td>
+                        <td>
+                            <span class="slds-icon_container" >
+                                <!--<svg aria-hidden="true" class="hometabicons" style="background-color: #3abeb1;" onclick="showoutput('Driver_Accident_Human_Injuries');">
+                                    <use xlink:href="{!URLFOR($Resource.AccidentIcon, '#AccidentIcon')}"></use>
+                                </svg>-->
+                                <span class="slds-assistive-text">utility</span>
+                            </span><br/>
+                            <p style="font-size: 15px;"><br/>
+                                {!$Label.c.Report_Accident}
+                            </p><br/>
+                        </td>
+                    </tr>
+                    <tr>
+                    </tr>
+                </table>
+</aura:component>

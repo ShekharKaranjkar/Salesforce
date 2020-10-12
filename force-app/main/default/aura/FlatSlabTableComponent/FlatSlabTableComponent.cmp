@@ -1,0 +1,6 @@
+<aura:component >
+	    <aura:method name="GetTableMethod" action="{!c.GetTable}"
+                 access="public">
+        <aura:attribute name="tableshow" type="boolean" />
+    </aura:method>
+</aura:component>

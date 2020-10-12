@@ -1,0 +1,180 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,lightning:actionOverride" access="global" controller="eventctrl">
+    <aura:handler event="force:refreshView" action="{!c.isRefreshed}" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="LookUpRecords" type="sObject[]" default="[]"/>
+    <aura:attribute name="ContactLookUpRecords" type="sObject[]" default="[]"/>
+    <aura:attribute name="AccountContactRelationList" type="List" />
+    <aura:attribute name="userobj" type="sObject" default=""/>
+    <aura:attribute name="accobj" type="sObject" default=""/>
+    <aura:attribute name="showacc" type="boolean" default="false"/>
+    <aura:handler name="oSelecteduserlookupIdEvent" event="c:SelecteduserlookupEvent" action="{!c.handleComponentEvent}"/>
+    <aura:attribute name="selectedcontactList" type="List" description="Selected Genre Picklist Values"/>
+    <aura:attribute name="EventObj" type="Event" default="{'Id':'',
+                                                          'Subject':'',
+                                                          'OwnerId':'',
+                                                          'Location':'',
+                                                          'StartDateTime':'',
+                                                          'EndDateTime':'',
+                                                          'IsAllDayEvent':'',
+                                                          'Description':'',
+                                                          'Attendees__c':'',
+                                                          'WhatId':'','WhoId':''
+                                                          }" access="global"/> 
+    <aura:attribute name="LookUpRecords3" type="sObject[]" default="[]"/>
+    <aura:handler name="oSelectedcontactlookupIdEvent" event="c:SelectedcontactlookupEvent" action="{!c.handlecontactComponentEvent}"/>
+    <aura:html tag="style">
+        .slds-modal__header {
+        padding: 0.5rem !important;
+        width:1000px;
+        
+        }
+        .slds-p-around--medium {
+        padding: 0rem !important;
+        }
+        .slds-modal__content{
+        height:unset !important;
+        max-height:unset !important;
+        width:1000px;
+        padding: 0.5rem !important;
+        
+        }
+        .slds-modal__footer{
+        width:1000px;
+        }
+        .slds-text-heading_medium{
+        // margin-left:-47px;
+        }
+        .slds-fade-in-open {
+        margin-left: -300px;}
+        .likeicon svg{
+        fill:blue !important;
+        }
+        
+        .likeicon1 {
+        background-color:#16325c;
+        
+        
+        
+        !important;
+        }
+        .field{
+        width: 300px;
+        }
+    </aura:html> 
+     <div class="modal-header slds-modal__header slds-size_1-of-1">
+        <b>
+        <h4 class="title slds-text-heading--medium">EDIT</h4>
+        </b>
+    </div>
+    <BR></BR>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col">
+            <lightning:input   style="width:300px;"  name="input1" label="Meeting Title" value="{!v.EventObj.Subject}" /> 
+        </div>
+        <div class="slds-col">
+            <lightning:input  style="width:300px;" name="input1" label="Location"  value="{!v.EventObj.Location}"  /> 
+        </div>
+    </div> 
+    <br/>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col">
+            <lightning:input  type="datetime"  style="width:300px;"   aura:id="today" label="Start" class="field slds-col--padded slds-size--1-of-2 slds-medium-size--5-of-6 slds-large-size--6-of-12" value="{!v.EventObj.StartDateTime}" />     
+        </div>
+        <div class="slds-col">
+            <lightning:input  type="datetime"  style="width:300px;"  aura:id="today" label="End" class="field slds-col--padded slds-size--1-of-2 slds-medium-size--1-of-6 slds-large-size--6-of-12" value="{!v.EventObj.EndDateTime}" />  
+        </div>
+    </div>
+    <ui:inputTextArea  label="Agenda"
+                      class="slds-input"
+                      labelClass="slds-form-element__label"
+                      value="{!v.EventObj.Description}"   
+                      />
+    <b>
+        <div class="slds-truncate"  title="AssignedTo">Assigned To</div> 
+    </b>
+   <!-- <lightning:pill class="slds-m-around_xx-small" label="{!v.userobj.Name}" name="{!v.userobj.Id}" onremove="{! c.clear }">
+        <aura:set attribute="media">
+            <lightning:icon iconName="standard:user" size="x-small" alternativeText="icon"/>
+        </aura:set></lightning:pill>-->
+    
+    <c:userlookupmultiselect objectAPIName="User"
+                             IconName="standard:user"
+                             lstSelectedRecords="{!v.LookUpRecords3}" userobj = "{!v.userobj}" showpill="true"/>
+    <lightning:dualListbox name="contacts"
+                           label="Attendees"
+                           sourceLabel="Available"
+                           selectedLabel="Selected"
+                           fieldLevelHelp="Select person you want to attend the meeting"
+                           options="{!v.AccountContactRelationList}"
+                           value="{!v.selectedcontactList}"
+                           onchange="{!c.handleChange}"/>
+    <ui:inputCheckbox label="All-Day Event"
+                      value="{!v.EventObj.IsAllDayEvent}"  
+                      />
+    <br/>
+    <b>
+        <div class="slds-truncate"  title="ContactName">Contact Name</div> 
+    </b>
+    <c:userlookupmultiselect objectAPIName="Contact"
+                             IconName="standard:contact"
+                             lstSelectedRecords="{!v.ContactLookUpRecords}" iscontact="true" showcontactpill="false"/>
+    <aura:if isTrue="{!v.showacc}">
+        <b>
+            <div class="slds-truncate"  title="AssignedTo">Related To</div> 
+        </b>
+        
+        <lightning:pill class="slds-m-around_xx-small" label="{!v.accobj.Name}" name="{!v.accobj.Id}" onremove="{! c.clear }">
+            <aura:set attribute="media">
+                <lightning:icon iconName="standard:account" size="x-small" alternativeText="icon"/>
+            </aura:set></lightning:pill>
+    </aura:if>
+    <!-- <lightning:button variant="brand"
+                              label="Add Attendee"
+                              onclick="{! c.openModel }" />
+    
+            <aura:if isTrue="{!v.isOpen}">
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-box">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <lightning:buttonIcon iconName="utility:close"
+                                                  onclick="{! c.closeNewModal}"
+                                                  alternativeText="close"
+                                                  variant="bare-inverse"
+                                                  class="slds-modal__close"/>
+                            <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Contact Details</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <div class="slds-size_6-of-12 slds-p-left_xx-large slds-p-horizontal_x-large " >
+                                <lightning:input label="Contact Name " name="myname" value="{!v.accForm.LastName}"/>
+                            </div>
+                            <div class="slds-size_5-of-12 slds-p-left_xx-small slds-p-horizontal_x-large " >
+                                <lightning:input label="Phone" name="myname" value="{!v.accForm.Phone}"/>
+                            </div>
+                            <div class="slds-size_6-of-12 slds-p-left_xx-large slds-p-horizontal_x-large " >
+                                <lightning:input label="Email" name="myemail" value="{!v.accForm.Email}"/>
+                            </div>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <lightning:button label="Save" onclick="{!c.saveModal}" />
+                            <lightning:button label="Close" onclick="{!c.closeNewModal}" />
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if> -->
+    <br></br>
+     <footer class="slds-modal__footer">
+                      <div class="slds-p-right_x-large">
+                     
+                       <lightning:button variant="brand" 
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{!c.doCancel}"/> 
+                     <lightning:button variant="brand" 
+                                          label="Save"
+                                          title="Save"
+                                          onclick="{! c.OnSubmit}"/>
+                          
+          </div>
+    </footer>
+</aura:component>

@@ -1,0 +1,268 @@
+@isTest
+public class CampusApprovalHelper_Test {
+    public Testmethod static void Testmethod1 () {
+           list<Campus__c> extList = new  list<Campus__c>();
+          Profile profileId = [SELECT Id FROM Profile WHERE Name = 'Site Manager' LIMIT 1];
+        User usrObj = new User();
+        usrObj.LastName = 'TestLast';
+        usrObj.FirstName='TestFirst';
+        usrObj.Alias = 'tst';
+        usrObj.Email = 'test@test.com';
+        usrObj.Username = 'testkalasinj@gmail.com.staging';
+        usrObj.ProfileId = profileId.id;
+        usrObj.TimeZoneSidKey = 'GMT';
+        usrObj.LanguageLocaleKey = 'en_US';
+        usrObj.EmailEncodingKey = 'UTF-8';
+        usrObj.LocaleSidKey = 'en_US';
+        usrObj.IsActive=True;
+        //usrObj.userRoleId='00EC0000001EkqFMAS';
+        //usrObj.UserRole.Name='CRM Rep';
+        insert usrObj;
+        
+        Profile profileId1 = [SELECT Id FROM Profile WHERE Name = 'Shift Incharge' LIMIT 1];
+        User usrObj1 = new User();
+        usrObj1.LastName = 'TestLasast';
+        usrObj1.FirstName='TestFirst';
+        usrObj1.Alias = 'tstas';
+        usrObj1.Email = 'test@testas.com';
+        usrObj1.Username = 'testkalaassinj@gmail.com.staging';
+        usrObj1.ProfileId = profileId1.id;
+        usrObj1.TimeZoneSidKey = 'GMT';
+        usrObj1.LanguageLocaleKey = 'en_US';
+        usrObj1.EmailEncodingKey = 'UTF-8';
+        usrObj1.LocaleSidKey = 'en_US';
+        usrObj1.IsActive=True;
+        //usrObj.userRoleId='00EC0000001EkqFMAS';
+        //usrObj.UserRole.Name='CRM Rep';
+        insert usrObj1;
+        
+        
+          Profile profileId2 = [SELECT Id FROM Profile WHERE Name = 'HR' LIMIT 1];
+        User usrObj2 = new User();
+        usrObj2.LastName = 'TestLasadst';
+        usrObj2.FirstName='TestFiasdrst';
+        usrObj2.Alias = 'tst';
+        usrObj2.Email = 'tasdest@test.com';
+        usrObj2.Username = 'tedasstkalasinj@gmail.com.staging';
+        usrObj2.ProfileId = profileId2.id;
+        usrObj2.TimeZoneSidKey = 'GMT';
+        usrObj2.LanguageLocaleKey = 'en_US';
+        usrObj2.EmailEncodingKey = 'UTF-8';
+        usrObj2.LocaleSidKey = 'en_US';
+        usrObj2.IsActive=True;
+        //usrObj.userRoleId='00EC0000001EkqFMAS';
+        //usrObj.UserRole.Name='CRM Rep';
+        insert usrObj2;
+        
+        Profile profileId3 = [SELECT Id FROM Profile WHERE Name = 'City Ops/ City Head' LIMIT 1];
+        User usrObj3 = new User();
+        usrObj3.LastName = 'TestLadfast';
+        usrObj3.FirstName='TestFerirst';
+        usrObj3.Alias = 'tst';
+        usrObj3.Email = 'tesdsaft@test.com';
+        usrObj3.Username = 'testadfkalasinj@gmail.com.staging';
+        usrObj3.ProfileId = profileId3.id;
+        usrObj3.TimeZoneSidKey = 'GMT';
+        usrObj3.LanguageLocaleKey = 'en_US';
+        usrObj3.EmailEncodingKey = 'UTF-8';
+        usrObj3.LocaleSidKey = 'en_US';
+        usrObj3.IsActive=True;
+        //usrObj.userRoleId='00EC0000001EkqFMAS';
+        //usrObj.UserRole.Name='CRM Rep';
+        insert usrObj3;
+        
+        Profile profileId4 = [SELECT Id FROM Profile WHERE Name = 'Maintenance Manager' LIMIT 1];
+        User usrObj4 = new User();
+        usrObj4.LastName = 'TeadsstLast';
+        usrObj4.FirstName='TestFadsirst';
+        usrObj4.Alias = 'tst';
+        usrObj4.Email = 'tesdft@test.com';
+        usrObj4.Username = 'testksdaalasinj@gmail.com.staging';
+        usrObj4.ProfileId = profileId4.id;
+        usrObj4.TimeZoneSidKey = 'GMT';
+        usrObj4.LanguageLocaleKey = 'en_US';
+        usrObj4.EmailEncodingKey = 'UTF-8';
+        usrObj4.LocaleSidKey = 'en_US';
+        usrObj4.IsActive=True;
+        //usrObj.userRoleId='00EC0000001EkqFMAS';
+        //usrObj.UserRole.Name='CRM Rep';
+        insert usrObj4;
+        
+                account acc=new account();
+        acc.Name='rag';
+        acc.Lithium_Billing_Entity__c='Pune';
+        acc.Lithium_Bank_Account__c='State Bank';
+        insert acc;
+        City__c c=new City__c();
+        c.Account__c=acc.id;
+        insert c;
+        Campus__c   Campus=new Campus__c();
+        Campus.Name='rag';
+        Campus.Location__c=c.id;
+        Campus.Account__c=acc.id;
+        Campus.Lithium_Bank_Account__c='State Bank';
+        campus.PAN__c='XXXXX1234X';
+        campus.GSTN__c='qwertyuiopasdfg';
+        campus.Invoice_Creation_Date__c=system.today();
+        campus.Payment_Terms__c= '30';
+        campus.Billing_City__c='mrt';
+        campus.Billing_State_Province__c='tp';
+        campus.Billing_Street__c='ee';
+        campus.Billing_Zip_Postal_Code__c='ff';
+        campus.Shipping_City__c='ff';
+        campus.Shipping_State_Province__c='ff';
+        campus.Shipping_Street__c='ff';
+        campus.Shipping_Zip_Postal_Code__c='ff';
+        campus.Site_Supervisor__c = usrObj.Id;
+        campus.Site_Incharge__c = usrObj1.Id;
+        campus.HR__c =usrObj2.Id;
+      campus.City_Head__c=  usrObj3.Id;
+        campus.Maintenance_Manager__c =usrObj4.Id;
+        campus.Total_Limit__c=2;
+        campus.No_of_Buffer__c =1;
+        campus.Approval_Request__c = 'Initiate';
+        extList.add(campus);
+        insert extList;
+       
+      
+        map<id,Campus__c> oldmap = new  map<id,Campus__c>();
+        Test.startTest();
+       // CampusApprovalHelper.sendApproval(extList,oldmap);
+        Test.stopTest();
+        
+    }
+    public Testmethod static void Testmethod2 () {
+          list<Campus__c> extList = new  list<Campus__c>();
+          Profile profileId = [SELECT Id FROM Profile WHERE Name = 'Site Manager' LIMIT 1];
+        User usrObj = new User();
+        usrObj.LastName = 'TestLast';
+        usrObj.FirstName='TestFirst';
+        usrObj.Alias = 'tst';
+        usrObj.Email = 'test@test.com';
+        usrObj.Username = 'testkalasinj@gmail.com.staging';
+        usrObj.ProfileId = profileId.id;
+        usrObj.TimeZoneSidKey = 'GMT';
+        usrObj.LanguageLocaleKey = 'en_US';
+        usrObj.EmailEncodingKey = 'UTF-8';
+        usrObj.LocaleSidKey = 'en_US';
+        usrObj.IsActive=True;
+        //usrObj.userRoleId='00EC0000001EkqFMAS';
+        //usrObj.UserRole.Name='CRM Rep';
+        insert usrObj;
+        
+        Profile profileId1 = [SELECT Id FROM Profile WHERE Name = 'Shift Incharge' LIMIT 1];
+        User usrObj1 = new User();
+        usrObj1.LastName = 'TestLasast';
+        usrObj1.FirstName='TestFirst';
+        usrObj1.Alias = 'tstas';
+        usrObj1.Email = 'test@testas.com';
+        usrObj1.Username = 'testkalaassinj@gmail.com.staging';
+        usrObj1.ProfileId = profileId1.id;
+        usrObj1.TimeZoneSidKey = 'GMT';
+        usrObj1.LanguageLocaleKey = 'en_US';
+        usrObj1.EmailEncodingKey = 'UTF-8';
+        usrObj1.LocaleSidKey = 'en_US';
+        usrObj1.IsActive=True;
+        //usrObj.userRoleId='00EC0000001EkqFMAS';
+        //usrObj.UserRole.Name='CRM Rep';
+        insert usrObj1;
+        
+        
+          Profile profileId2 = [SELECT Id FROM Profile WHERE Name = 'HR' LIMIT 1];
+        User usrObj2 = new User();
+        usrObj2.LastName = 'TestLasadst';
+        usrObj2.FirstName='TestFiasdrst';
+        usrObj2.Alias = 'tst';
+        usrObj2.Email = 'tasdest@test.com';
+        usrObj2.Username = 'tedasstkalasinj@gmail.com.staging';
+        usrObj2.ProfileId = profileId2.id;
+        usrObj2.TimeZoneSidKey = 'GMT';
+        usrObj2.LanguageLocaleKey = 'en_US';
+        usrObj2.EmailEncodingKey = 'UTF-8';
+        usrObj2.LocaleSidKey = 'en_US';
+        usrObj2.IsActive=True;
+        //usrObj.userRoleId='00EC0000001EkqFMAS';
+        //usrObj.UserRole.Name='CRM Rep';
+        insert usrObj2;
+        
+        Profile profileId3 = [SELECT Id FROM Profile WHERE Name = 'City Ops/ City Head' LIMIT 1];
+        User usrObj3 = new User();
+        usrObj3.LastName = 'TestLadfast';
+        usrObj3.FirstName='TestFerirst';
+        usrObj3.Alias = 'tst';
+        usrObj3.Email = 'tesdsaft@test.com';
+        usrObj3.Username = 'testadfkalasinj@gmail.com.staging';
+        usrObj3.ProfileId = profileId3.id;
+        usrObj3.TimeZoneSidKey = 'GMT';
+        usrObj3.LanguageLocaleKey = 'en_US';
+        usrObj3.EmailEncodingKey = 'UTF-8';
+        usrObj3.LocaleSidKey = 'en_US';
+        usrObj3.IsActive=True;
+        //usrObj.userRoleId='00EC0000001EkqFMAS';
+        //usrObj.UserRole.Name='CRM Rep';
+        insert usrObj3;
+        
+        Profile profileId4 = [SELECT Id FROM Profile WHERE Name = 'Maintenance Manager' LIMIT 1];
+        User usrObj4 = new User();
+        usrObj4.LastName = 'TeadsstLast';
+        usrObj4.FirstName='TestFadsirst';
+        usrObj4.Alias = 'tst';
+        usrObj4.Email = 'tesdft@test.com';
+        usrObj4.Username = 'testksdaalasinj@gmail.com.staging';
+        usrObj4.ProfileId = profileId4.id;
+        usrObj4.TimeZoneSidKey = 'GMT';
+        usrObj4.LanguageLocaleKey = 'en_US';
+        usrObj4.EmailEncodingKey = 'UTF-8';
+        usrObj4.LocaleSidKey = 'en_US';
+        usrObj4.IsActive=True;
+        //usrObj.userRoleId='00EC0000001EkqFMAS';
+        //usrObj.UserRole.Name='CRM Rep';
+        insert usrObj4;
+        
+                account acc=new account();
+        acc.Name='rag';
+        acc.Lithium_Billing_Entity__c='Pune';
+        acc.Lithium_Bank_Account__c='State Bank';
+        insert acc;
+        City__c c=new City__c();
+        c.Account__c=acc.id;
+        insert c;
+        Campus__c   Campus=new Campus__c();
+        Campus.Name='rag';
+        Campus.Location__c=c.id;
+        Campus.Account__c=acc.id;
+        Campus.Lithium_Bank_Account__c='State Bank';
+        campus.PAN__c='XXXXX1234X';
+        campus.GSTN__c='qwertyuiopasdfg';
+        campus.Invoice_Creation_Date__c=system.today();
+        campus.Payment_Terms__c= '30';
+        campus.Billing_City__c='mrt';
+        campus.Billing_State_Province__c='tp';
+        campus.Billing_Street__c='ee';
+        campus.Billing_Zip_Postal_Code__c='ff';
+        campus.Shipping_City__c='ff';
+        campus.Shipping_State_Province__c='ff';
+        campus.Shipping_Street__c='ff';
+        campus.Shipping_Zip_Postal_Code__c='ff';
+        campus.Site_Supervisor__c = usrObj.Id;
+        campus.Site_Incharge__c = usrObj1.Id;
+        campus.HR__c =usrObj2.Id;
+      campus.City_Head__c=  usrObj3.Id;
+        campus.Maintenance_Manager__c =usrObj4.Id;
+        campus.Total_Limit__c=2;
+        campus.No_of_Buffer__c =1;
+        campus.Approval_Request__c = 'Initiate';
+        extList.add(campus);
+        insert campus;
+        campus.Approval_Request__c = 'Approve';
+        campus.No_of_Buffer__c =1;
+        update campus;
+        
+      
+        map<id,Campus__c> oldmap = new  map<id,Campus__c>();
+        Test.startTest();
+       // CampusApprovalHelper.sendApproval(extList,oldmap);
+        Test.stopTest();
+    }
+  
+}

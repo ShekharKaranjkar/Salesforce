@@ -1,0 +1,53 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global"
+                controller ="FileUploadController">
+    
+    <aura:attribute name="parentId" type="Id" default="Id" />
+    <aura:attribute name="Notecmt" type="string" default="" />
+    <aura:attribute name="fileName" type="String" default=""  />
+     <aura:attribute name="fileData" type="String" default=""  />
+    <aura:attribute name="filesdata" type="contentdocument" default=""  />
+    <aura:attribute name="showLoadingSpinner" type="boolean" default="false" />
+    <div class="div-bg" style="height:200px;">
+        
+        <ul class="slds-list_horizontal slds-has-block-links_space">
+            <li>
+                <lightning:input aura:id="fuploader" onchange="{!c.handleFilesChange}" type="file" name="file" 
+                                 label="Upload File (Limit Upto 25mb)"  multiple="true"	 value="{!v.filesdata}" />
+            </li>
+            <li>
+                
+                <aura:if isTrue="{!v.showLoadingSpinner}" >
+                    <div class="slds-text-body_small slds-text-color_error slds--fixed slds-p-top_large slds-p-left_xx-small  " style="color:black;"> 
+                        <img src="/auraFW/resources/aura/images/spinner.gif" class="spinner-img" alt="Loading"/>
+                    </div>
+                </aura:if>
+                
+                <lightning:icon class="some-indicator slds-p-top_large slds-p-left_xx-small slds-hide" variant="info"
+                                iconName="utility:check" alternativeText="check" size="small" aura:id="fILE_NAMES"/>
+                
+            </li>
+            
+        </ul>
+        <div class="slds-text-body_small slds-text-color" style="color:black;">{!v.fileName} </div>
+        <div class="exampleHolder">
+            
+            <br/>
+            
+            <lightning:textarea name="input1" label="Comments" value="{!v.Notecmt}" default=""  />
+           
+            <ul class="slds-list_horizontal slds-has-block-links_space slds--left slds-align_absolute-right" style="float:right;">
+               
+                <lightning:button label="Save" onclick="{!c.handleSave}"
+                              variant="brand" class="slds-m-top--medium "/>
+                
+                <lightning:button label="Cancel" onclick="{!c.handleCancel}" class="slds-m-top--medium " />
+                
+            <lightning:button label="Download" onclick="{!c.download}" iconName="utility:download"                              
+                              iconPosition="left"   class="slds-m-top--medium " />
+               
+            </ul>
+            
+        </div>
+        
+    </div> 
+</aura:component>

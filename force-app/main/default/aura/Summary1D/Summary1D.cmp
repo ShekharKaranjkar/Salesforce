@@ -1,0 +1,60 @@
+<aura:component >
+    <aura:attribute name="singleRec" type="list"/>
+    
+    
+ 
+            <aura:if  isTrue="{!or(  not(empty( v.singleRec.suggestedPrice )),not(empty( v.singleRec.Current_Pursuit__c)))}">
+          <tr>
+            <td>
+                <div class="slds-truncate">{!v.singleRec.productName}</div>
+            </td>
+            
+            <td>
+                <div class="slds-truncate">1D/2D</div>
+            </td>
+            
+            <td>
+                  
+                <div class="slds-truncate"><ui:outputCurrency  value="{!v.singleRec.suggestedPrice}"/></div>
+            </td>
+            <td>
+                <div class="slds-truncate">{!v.singleRec.Current_Pursuit__c}</div>
+            </td>
+            
+            <td >
+                <div class = "slds-form-element slds-p-around_small">
+                    
+                    <div class = "slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+                        
+                        
+                        <Lightning:input type = "text" onchange="{!c.check}"  value="{!v.singleRec.Productivity__c}" aura:id="oneD" />
+                        <Lightning:buttonIcon  class = "slds-p-around_small slds-icon slds-input__icon slds-input__icon_right  slds-icon-text-default" iconName = "utility:edit" size = "x-small" />
+                        
+                    </div>
+                    
+                </div>
+            </td>   
+            <td >
+                <div class = "slds-form-element slds-p-around_small">
+                    
+                    <div class = "slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+                        
+                        
+                        <Lightning:input type = "text" onchange="{!c.check}"   value="{!v.singleRec.Cars_to_be_ordered_for_Current_Pursuit__c}" aura:id="oneD" />
+                        <Lightning:buttonIcon  class = "slds-p-around_small slds-icon slds-input__icon slds-input__icon_right  slds-icon-text-default" iconName = "utility:edit" size = "x-small" />
+                        
+                    </div>
+                    
+                </div>
+            </td>   
+            
+            <td>
+                <ui:outputCurrency  value="{!(v.singleRec.suggestedPrice * v.singleRec.Current_Pursuit__c) }"/>
+                
+            </td>                    
+        </tr>
+  </aura:if> 
+
+
+    
+</aura:component>

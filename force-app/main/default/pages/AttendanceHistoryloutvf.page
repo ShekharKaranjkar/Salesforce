@@ -1,0 +1,108 @@
+<apex:page showHeader="false" sidebar="false"  docType="html-5.0" showQuickActionVfHeader="false"   applyBodyTag="false" applyHtmlTag="false" cache="false" expires="50"  lightningStylesheets="true" >
+    <apex:includeLightning />  
+       <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <apex:slds />
+    <style>
+        .switch-field {
+        display: flex;
+        margin-bottom: 36px;
+        overflow: hidden;
+        }
+        
+        .switch-field input {
+        position: absolute !important;
+        clip: rect(0, 0, 0, 0);
+        height: 1px;
+        width: 1px;
+        border: 0;
+        overflow: hidden;
+        }
+        
+        .switch-field label {
+        background-color: #e4e4e4;
+        color: rgba(0, 0, 0, 0.6);
+        font-size: 14px;
+        line-height: 1;
+        text-align: center;
+        padding: 8px 16px;
+        margin-right: -1px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+        transition: all 0.1s ease-in-out;
+        }
+        
+        .switch-field label:hover {
+        cursor: pointer;
+        }
+        
+        .switch-field input:checked + label {
+        background-color: #a5dc86;
+        box-shadow: none;
+        }
+        
+        .switch-field label:first-of-type {
+        border-radius: 4px 0 0 4px;
+        }
+        
+        .switch-field label:last-of-type {
+        border-radius: 0 4px 4px 0;
+        }
+        
+        
+    </style>    
+     <script>
+    $Lightning.use("c:AttendanceHistoryLoutapp", function() {
+        $Lightning.createComponent("c:AttendanceHistoryCmp",
+                                   { redirecttovf:callbackmethod
+                                   },
+                                   "LightningComponentid",
+                                   function(cmp) {
+                                       // document.getElementById('htmltag').style = 'display:block';
+                                       console.log('Display Lightning component in visualforce page');
+                                   });
+    });
+    function callbackmethod(button){
+            alert('button from vf');
+        
+        if(button == 'Back')
+            // showoutput('Driver_Menu');
+        
+        
+                     var domain = "{!$Label.Driver_Menu_Domain}";
+        if(!window.location.href.includes(domain))
+            domain = '/apex';
+            var theme = '{!$User.UITheme}';
+            var userAgent = navigator.userAgent;
+             
+             
+              if (theme === 'Theme4d' || theme === 'Theme4u'){
+                    
+                        sforce.one.navigateToURL(domain+'/Driver_Attendence');
+                } 
+                else if(theme ==='Theme4t'){
+                    if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                        sforce.one.navigateToURL(domain+'/apex/Driver_Attendence');
+                    else
+                        //   window.location=domain+'/Driver_Attendence';
+                        // sforce.one.navigateToURL(domain+'/Driver_Attendence');
+                         window.Driver_Attendence.back();
+                }    
+                    else {
+                        //alert();
+                        window.location.href=domain+'/Driver_Attendence';
+                    }
+             
+             
+             
+        
+        
+         return false;
+    } 
+    </script> 
+    <apex:form >
+     <apex:includeScript value="/lightning/lightning.out.js" />
+                            <div id="LightningComponentid" />      
+       <!--  <button class="slds-button slds-button_destructive slds-align_absolute-center"  onclick="redirectToDriverAttendance()">{!$Label.Back}</button>  -->
+    </apex:form>
+</apex:page>

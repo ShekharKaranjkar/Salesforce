@@ -1,0 +1,19 @@
+<apex:page showHeader="false" sidebar="false">
+    <apex:includeLightning />    
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    </head>
+    <apex:includeScript value="/lightning/lightning.out.js" />
+    <div id="LightningComponentid" />    
+    <script>
+    $Lightning.use("c:FeedMasterApp", function() {
+        $Lightning.createComponent("c:FeedMaster",
+          { 
+          },
+          "LightningComponentid",
+          function(cmp) {
+             console.log('Display Lightning component in visualforce page');
+          });
+    });
+    </script>
+</apex:page>

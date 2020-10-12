@@ -1,0 +1,104 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                access="global" 
+                controller = "RosterController">
+    
+    <aura:handler name = "init" value = "{!this}" action = "{!c.doInit}"/>
+    
+    
+    
+    <aura:attribute name="listControllingValues" type="list" default="[]" description="to store controller field values"/>
+    
+    <aura:attribute name="objDetail" type="Rostering__c" default="{'sobjectType' : 'Rostering__c'}"/>
+    <aura:attribute name="monthRostdataObject" type="object"/>
+    
+    <tr>  
+        <td>                                                      
+            <div class = "slds-truncate" > <b> {!v.monthRostdataObject.DriverName}</b> </div>
+            <aura:if isTrue="{!v.monthRostdataObject.Status__c}">
+                
+                <p style="color:blue;"> ( {!v.monthRostdataObject.Status__c} )</p>
+                
+            </aura:if> 
+        </td>
+        <td >                                         
+            <div class = "slds-truncate" >   {!v.monthRostdataObject.LithiumIds__c}</div>
+        </td>
+        <td >
+            <div class = "slds-truncate" >            
+                <lightning:layoutItem size="12" padding="around-small">    
+                    <lightning:select name="controllerFld"
+                                      value="{!v.monthRostdataObject.Shift__c}"
+                                      onchange="{!c.updateFlag}"
+                                      >
+                        <aura:iteration items="{!v.listControllingValues}" var="val">
+                            <option value="{!val}">{!val}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </lightning:layoutItem>
+            </div>
+        </td>
+        
+        
+        <td >
+            
+            
+            <lightning:input type="date" name="input1"            onchange="{!c.checkdate}"  value="{!v.monthRostdataObject.Shift_Start_Date__c}" />
+            
+        </td> 
+        <td >
+            
+            <lightning:input type="date" name="input2"            onchange="{!c.updateFlag}"  value="{!v.monthRostdataObject.Shift_End_Date__c}" />
+            
+        </td> 
+        <td >
+            
+            
+            <lightning:input type="time" name="input1"            onchange="{!c.updateFlag}"  value="{!v.monthRostdataObject.Start_Time__c}" />
+            
+        </td> 
+        <td >
+            
+            <lightning:input type="time" name="input2"            onchange="{!c.updateFlag}"  value="{!v.monthRostdataObject.End_Time__c}" />
+            
+        </td> 
+        <td >
+            <div  > 
+                <div>
+                    <span>
+                        <lightning:input type = "checkbox" onchange="{!c.updateFlag}"  label="Sunday" checked = "{!v.monthRostdataObject.Sunday__c}"   />      
+                        
+                    </span>
+                    <span>
+                        <lightning:input type = "checkbox"   onchange="{!c.updateFlag}"  label="Monday"  checked = "{!v.monthRostdataObject.Monday__c}"  />      
+                    </span>
+                </div>
+                <div>
+                    <span>
+                        <lightning:input type = "checkbox"   onchange="{!c.updateFlag}"  label="Tuesday"  checked = "{!v.monthRostdataObject.Tuesday__c}" />      
+                        
+                    </span>
+                    <span>
+                        <lightning:input type = "checkbox" onchange="{!c.updateFlag}"  label="Wednesday" checked = "{!v.monthRostdataObject.Wednesday__c}"   />      
+                    </span>
+                </div>
+                <div>
+                    <span>
+                        <lightning:input type = "checkbox" onchange="{!c.updateFlag}" label="Thursday" checked = "{!v.monthRostdataObject.Thrusday__c}"   />      
+                    </span>
+                    <span>
+                        
+                        <lightning:input type = "checkbox"  onchange="{!c.updateFlag}"  label="Friday" checked = "{!v.monthRostdataObject.Friday__c}"  />      
+                    </span>
+                </div>
+                <div>
+                    <span>
+                        <lightning:input type = "checkbox"  onchange="{!c.updateFlag}"  label="Saturday" checked = "{!v.monthRostdataObject.Saturday__c}"   />      
+                        
+                    </span>
+                    
+                </div>
+                
+            </div>
+        </td>  
+    </tr>      
+</aura:component>

@@ -1,0 +1,93 @@
+<!-- Customer Reports                       -->
+<!-- @author      Dazeworks Inc. (Shruti S) -->
+<!-- @version     1.0                       -->
+<!-- @see         [ADD-LINK-TO-USER-STORY]  -->
+
+<aura:component controller="CaptureCurrentAccountCtrl" 
+                implements="flexipage:availableForRecordHome,force:hasRecordId" 
+                access="global">
+    
+    <!-- Attributes -->
+    <aura:attribute name="tripsReportId" 
+                    type="String"></aura:attribute>
+    
+    <aura:attribute name="kmsReportId" 
+                    type="String"></aura:attribute>
+    
+    <aura:attribute name="normativeReportId" 
+                    type="String"></aura:attribute>
+    
+    <aura:attribute name="isBusy" 
+                    type="Boolean" 
+                    default="false"></aura:attribute>
+    
+    <!-- Busy Indicator -->
+    <aura:if isTrue="{! v.isBusy }">
+        
+        <lightning:spinner alternativeText="Busy"
+                           size="large" />
+        
+    </aura:if>
+    
+    <!-- Report Buttons-->
+    <lightning:card title="Customer Reports" 
+                    iconName="standard:report">
+        
+        <div class="slds-p-around_small slds-text-align_center">
+            
+            <div class="slds-grid">
+                
+                <!-- Number of Trips -->
+                <!-- Name should match the Aura Attribute -->
+                <button name="tripsReportId"
+                        label="Number of Trips"
+                        class="slds-button slds-button_neutral slds-col slds-size_6-of-12"
+                        onclick="{! c.openReport }">
+                    
+                    <lightning:icon iconName="utility:chart" 
+                                    size="x-small"
+                                    class="slds-m-right_x-small"></lightning:icon>
+                    
+                    Number of Trips
+
+                </button>
+                
+                <!-- Number of Kms -->
+                <!-- Name should match the Aura Attribute -->
+                <button name="kmsReportId"
+                        class="slds-button slds-button_neutral slds-col slds-size_6-of-12"
+                        onclick="{! c.openReport }">
+                    
+                    <lightning:icon iconName="utility:chart" 
+                                    size="x-small"
+                                    class="slds-m-right_x-small"></lightning:icon>
+
+                    Number of Kms
+
+                </button>
+                
+            </div>
+
+        </div>
+            
+
+        <div class="slds-p-around_small slds-text-align_center slds-grid">
+            
+            <!-- Normative vs Actual Revenue -->
+            <!-- Name should match the Aura Attribute -->
+            <button name="normativeReportId"
+                    class="slds-button slds-button_neutral slds-col slds-size_12-of-12"
+                    onclick="{! c.openReport }">
+                    
+                <lightning:icon iconName="utility:chart" 
+                                size="x-small"
+                                class="slds-m-right_x-small"></lightning:icon>
+
+                Normative vs Actual Revenue
+
+            </button>
+        </div>
+        
+    </lightning:card>
+    
+</aura:component>

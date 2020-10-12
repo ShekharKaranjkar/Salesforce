@@ -1,0 +1,15 @@
+<aura:component controller="ConverttoSpController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="show" type="Boolean" default="true" />
+    <aura:attribute name="candidate" type="Candidate__c"/> 
+    <aura:attribute name = "selectedCountOfSave" type = "integer" default = "0" />
+    <aura:if isTrue="{!v.show}">
+         <div class="slds-box slds-theme_default"  >
+            <div class="slds-grid slds-wrap slds-align_absolute-center"  >
+    <lightning:button variant="brand" label="Convert To Service Provider"
+                                          title="Convert"
+                                          onclick="{!c.convert}" />
+             </div>
+        </div>
+    </aura:if>
+</aura:component>

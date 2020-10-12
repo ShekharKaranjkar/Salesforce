@@ -1,0 +1,17 @@
+<aura:component >
+	<aura:attribute name="index" type="integer" default=""/>
+    <aura:attribute name="whichtaskList" type="string" default=""/>
+    <aura:attribute name="redcolor" type="boolean" default="false"/>
+    <aura:registerEvent name="SelectedTemperatureIconcolor" type="c:TemperatureIconEvent"/>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_1-of-3">
+    <lightning:icon iconName="utility:routing_offline" size="medium" onclick="{!c.toggleIconcolor}" aura:id="tempred" title="Red" variant="error"/>
+        </div>
+        <div class="slds-col slds-size_1-of-3">
+    <lightning:icon iconName="utility:routing_offline" size="medium" onclick="{!c.toggleIconcolor}" aura:id="tempyellow" title="Yellow" variant="warning"/>
+        </div>
+        <div class="slds-col slds-size_1-of-3">
+    <lightning:icon iconName="utility:routing_offline" size="medium" onclick="{!c.toggleIconcolor}" aura:id="tempgreen" title="Green" variant="success"/>
+        </div>
+    </div>
+</aura:component>

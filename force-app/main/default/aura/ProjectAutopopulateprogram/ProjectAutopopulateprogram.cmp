@@ -1,0 +1,80 @@
+<aura:component implements="force:lightningQuickAction,lightning:actionOverride,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes"
+                access="global" controller="Projectcontroller">
+    
+    
+    <aura:attribute name="sObjectName" type="String" default="MPM4_BASE__Milestone1_Project__c" />
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="parentId" type="String" />
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <!--  <aura:handler name="init" value="{!this}" action="{!c.doinit}" /> -->
+    
+    <lightning:card iconName="custom:custom51" title="Project">
+        
+        
+        <div class="slds-p-left_large slds-p-right_medium">	
+            <aura:if isTrue="{!v.Spinner}">
+                <div aura:id="spinnerId" class="slds-align_absolute-center">
+                    
+                    <div class="slds-align_absolute-center" style="height:6rem">
+                        <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                            <span class="slds-assistive-text">Loading</span>
+                            <div class="slds-spinner__dot-a"></div>
+                            <div class="slds-spinner__dot-b"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </aura:if>
+            
+            <lightning:recordEditForm aura:id="recordViewForm" 
+                                      objectApiName="{!v.sObjectName}"
+                                      
+                                      onsuccess="{!c.handleOnSubmit}"
+                                      onsubmit="{!c.onSubmit}"
+                                      onload="{!c.handleOnload}"
+                                      onerror="{!c.onError}"
+                                      >
+                <lightning:messages/>
+                <h3 class="slds-section-title--divider">Information</h3>
+                <br/>
+                <table>
+                    <tr>
+                        <td>
+                            <lightning:inputField fieldName="Name" required="true"/>
+                        </td>
+                        <td>
+                            <lightning:inputField fieldName="MPM4_BASE__Program__c" aura:id="programlookup"/></td></tr>
+                    
+                    <br>
+                    </br>    
+                    <tr>
+                        <td>  <lightning:inputField fieldName="MPM4_BASE__Project_Type__c" aura:id="projecttype"/></td>
+                        <td> <lightning:inputField fieldName="MPM4_BASE__Status__c" aura:id="status"/></td></tr>
+                    <tr> <td><lightning:inputField fieldName="MPM4_BASE__Predecessor_Project__c" aura:id="predecessor"/></td>
+                        
+                        <td> <lightning:inputField fieldName="MPM4_BASE__Internal__c" aura:id="internal"/></td></tr>
+                    <tr> <td> <lightning:inputField fieldName="MPM4_BASE__Opportunity__c" aura:id="opportunitylookup"/></td>
+                        
+                    </tr>
+                </table>
+                
+                <h3 class="slds-section-title--divider">Timeline Information</h3>
+                <br/>     
+                <table>
+                    <tr> <td> <lightning:inputField fieldName="MPM4_BASE__Actual_Start_Date__c" aura:id="startdate"/></td>
+                        <td><lightning:inputField fieldName="MPM4_BASE__Actual_Finish_Date__c" aura:id="finishdate"/> </td></tr>
+                    <tr><td><lightning:inputField fieldName="MPM4_BASE__Deadline__c" aura:id="deadline"/></td>
+                        <td><lightning:inputField fieldName="MPM4_BASE__Kickoff__c" aura:id="kickoff"/></td></tr>
+                </table>
+                <br/>
+                
+                <div class="slds-m-top_medium slds-align_absolute-center">
+                    
+                    <lightning:button  class="slds-float_right" variant="neutral" type="cancel"  onclick="{!c.cancel}" label="Cancel" /><span style="width: 1%;"></span>
+                    <lightning:button  class="slds-float_right" variant="brand" label="Save" type="submit" />
+                    
+                </div>
+                
+            </lightning:recordEditForm>
+        </div></lightning:card>
+</aura:component>

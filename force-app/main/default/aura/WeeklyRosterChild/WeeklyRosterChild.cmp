@@ -1,0 +1,68 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                access="global" 
+                controller = "RosterController">
+    
+    <aura:handler name = "init" value = "{!this}" action = "{!c.doInit}"/>
+    
+    
+    
+    <aura:attribute name="weeklyRostdataObject" type="Object"/>
+    
+    <aura:attribute name="listControllingValues" type="list" default="[]" description="to store controller field values"/>
+    
+    <aura:attribute name="objDetail" type="Rostering__c" default="{'sobjectType' : 'Rostering__c'}"/>
+    
+    
+    <tr>  
+        <td>                                                      
+            <div class = "slds-truncate" >           <b> {!v.weeklyRostdataObject.DriverName}</b> 
+            </div>
+            <aura:if isTrue="{!v.weeklyRostdataObject.Status__c}">
+                
+                <p style="color:blue;"> ( {!v.weeklyRostdataObject.Status__c} )</p>
+            </aura:if> 
+        </td>
+        <td >                                         
+            <div class = "slds-truncate" > {!v.weeklyRostdataObject.LithiumIds__c}</div>
+        </td>
+        <td >
+            <div class = "slds-truncate" >            
+                <lightning:layoutItem size="12" padding="around-small">    
+                    
+                    <lightning:select name="controllerFld"
+                                      value="{!v.weeklyRostdataObject.Shift__c}"
+                                      
+                                      onchange="{!c.updateFlag}"
+                                      >
+                        <aura:iteration items="{!v.listControllingValues}" var="val">
+                            
+                            <option value="{!val}">{!val}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </lightning:layoutItem>
+            </div>
+        </td>
+        
+        <td >
+            
+            <lightning:input type="date"    aura:id = "startdate"  name="Start Time"   onchange="{!c.checkDate}" value="{!v.weeklyRostdataObject.Shift_Start_Date__c}" />
+            
+        </td>     
+        <td >
+            
+            <lightning:input type="date" name="End Time" aura:id = "enddate" onchange="{!c.checkDateEnd}"  value="{!v.weeklyRostdataObject.Shift_End_Date__c}"/>
+            
+        </td>  
+        <td >
+            
+            <lightning:input type="time"    aura:id = "start"  name="Start Time" onchange="{!c.updateFlag}"  value="{!v.weeklyRostdataObject.Start_Time__c}" />
+            
+        </td>     
+        <td >
+            
+            <lightning:input type="time" name="End Time" aura:id = "end" onchange="{!c.updateFlag}"   value="{!v.weeklyRostdataObject.End_Time__c}"/>
+            
+        </td>  
+        
+    </tr>    
+</aura:component>

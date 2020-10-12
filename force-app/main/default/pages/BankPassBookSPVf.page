@@ -1,0 +1,54 @@
+<apex:page standardController="Service_Provider__c" extensions="BankPassBookSP">
+     <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"/>
+ 
+    <apex:slds />
+    <style>
+        .c{
+        transform: rotate(1deg) !important;
+        
+        }
+        .slds-scope .slds-button__icon {
+        width: .875rem;
+        height: .875rem;
+        
+        fill: red;
+        transform: rotate(1deg) !important;
+        }
+        .slds-scope .slds-pill__remove {
+        width: 2rem;
+        height: 1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: .25rem;
+        border-radius: .125rem;
+        }
+    </style>
+  
+    
+    <apex:form >
+        
+       <!-- <apex:actionFunction name="deletedriverProofFile" action="{!deleteRecord}" id="deletedriverProofFile"  >
+            
+
+        </apex:actionFunction>-->
+        
+        <table width="100%">
+            <tr><td >
+Bank PassBook
+
+               </td>
+           
+                <apex:outputPanel >
+                    
+                    <td>
+                        
+                        <apex:outputLink value="/{!myCustomObjectVal.Bank_PassBook_Picture__c}" rendered="{!if(myCustomObjectVal.Bank_PassBook_Picture__c==null,false,true)}" id="theLink1">  {!driverProofNm}</apex:outputLink>
+                        
+                    </td>
+                 
+                </apex:outputPanel>                
+            </tr>                       
+        </table>        
+    </apex:form>
+</apex:page>

@@ -1,0 +1,505 @@
+<apex:page lightningStylesheets="true" showHeader="false" controller="AssignCar">
+<apex:slds />  
+    <script type="text/javascript"
+      src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.2.min.js"></script>
+      <script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/grid.js')}"></script>
+      <script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/version.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/detector.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/formatinf.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/errorlevel.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/bitmat.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/datablock.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/bmparser.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/datamask.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/rsdecoder.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/gf256poly.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/gf256.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/decoder.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/qrcode.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/findpat.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/alignpat.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.qrscanner_webcam, '/jsqrcode-master/src/databr.js')}"></script>
+    <!--<script type="text/javascript" src="https://raw.githubusercontent.com/LazarSoft/jsqrcode/master/src/qrcode.js"></script>-->
+      <form>
+      <title>Car Assignment</title>
+      <div class="slds-page-header">
+  <div class="slds-page-header__row">
+    <div class="slds-page-header__col-title">
+      <div class="slds-media">
+        <div class="slds-media__figure">
+          
+        </div>
+        <div class="slds-media__body">
+          <div class="slds-page-header__name">
+            <div class="slds-page-header__name-title">
+              <h1>
+                <span class="slds-page-header__title slds-truncate" title="Car Assignment">Car Assignment</span>
+              </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <style>
+             html,.slds-page-header {
+                background-color: white !important;
+            }
+            .qrscanner video {
+            max-width: 60%;
+            max-height: 60;
+            align:center;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            
+            }
+            .rules_form2  {
+            display: block;
+            font-size:50px;
+            margin-left: auto;
+            margin-right: auto;
+            
+            }
+            #fileUploader{
+                display:none;
+            }
+            #driverImg, #carImg{
+                width: 15%;
+                height:9%;
+                
+            }
+            @media only screen and (max-width: 600px) {
+              #driverImg, #carImg{
+                width: 25%;
+                height:9%;
+                
+            }
+                  
+            }
+            
+        </style>
+        
+  <!--<input type="file" onchange="previewFile()" />
+ 
+<h1>Preview</h1>
+ <div style="height:200px">
+  <img src="" id="preview" height="200" alt="Image preview..." />
+ </div>-->
+</form>
+ 
+<!--<p>If the image above looks clear, click the decode button.  If not, try again!</p>
+<button id="decode" onclick="decode()">Decode</button>
+-->
+<body>
+    <apex:message />
+            <br/>
+            <div >
+                <div id="drimage" style="text-align:center">
+                    <div>
+                        <img src="{!$Resource.Driver}" id="driverImg" border="0" align="center" /> &nbsp;  
+                    </div>
+                    <p><b><h2>Scan Driver</h2></b></p>
+                    
+                </div>
+                <div id="crimage" style="display:none;text-align:center">
+                    <div>
+                        <img src="{!$Resource.Car}" id="carImg" border="0" align="center" style="font-size:10px;"/> &nbsp; 
+                    </div>
+                    <p><b><h2>Scan Car</h2></b></p>
+                </div>
+                <br/>
+                <div id="qrScannerDiv" style="text-align: center;">
+                <input type="file" id="fileUploader" onchange="previewFile()" accept="image/*;capture=camera" />
+                    <h1></h1>
+                     <div style="height:200px">
+                      <img src="" id="preview" height="200" style="height: 200px;width: 200px;" alt="Image preview..." />
+                     </div>
+                     <br/>
+                     <br/>
+                     <div >
+                    <button id="decode" class="slds-button slds-button_brand" onclick="decode()">Save</button>
+                    <button id="resetprv" class="slds-button slds-button_destructive" onclick="resetPreview()">Reset</button>
+                    </div>
+                </div>
+                <br/>
+                <div id="drid" style="display:none" align="center">
+                    Driver Assigned:
+                    <output type='text'  id='scannedTextMemo' />
+                </div>
+                <div  id="crid" style="display:none" align="center">
+                    Car Assigned:
+                    <output type='text'  id='scannedTextMemo1' />
+                </div>
+                <br/>
+                <div id="details_div" style="display:none;" align="center">
+                    
+                    <input type="hidden" id="driverhidden" name="driverhidden" value=""/>
+                    <input type="hidden" id="carhidden" name="carhidden" value=""/>
+                    Driver Name : <span id="Driver_Name"></span>
+                </div>
+                <div id="cardetails_div" style="display:none;" align="center">
+                    
+                    Car Name : <span id="Car_Name"></span>
+                    
+                </div>
+                
+                <div id="Driver_div"    >
+                    <apex:form id="theForm">
+                        <apex:pageBlock >
+                            <div id="driver_link" >
+                                <apex:pageBlockSection >
+                                    <apex:commandLink value=" QR Code not working?" onclick="camarahide();return false;" />
+                                </apex:pageBlockSection>
+                            </div>
+                            <div id="driver_pb" style="display:none;width:370px">
+                                <apex:pageblocktable id="selectedvalue"  value="{!RecordFetching}" var="fetch" >
+                                    <apex:column value="{!fetch.name}" style="font-size:18px;" id="selected_val"   onclick="commandhide();" />
+                                    <apex:column >
+                                        <apex:commandButton value="Select" onclick="More('{!fetch.id}');return false;"  reRender="three"  id="value_selected">
+                                            <apex:param name="driverId" value="{!fetch.name}" assignTo="{!drid}" />
+                                        </apex:commandButton>
+                                    </apex:column>
+                                </apex:pageblocktable>
+                            </div>
+                        </apex:pageBlock>
+                        <apex:commandButton value="NEXT" onclick="Car();return false"      id="id5"/>
+                    </apex:form>
+                </div>
+                
+                <div id="car_div" style="display:none;" >
+                    <apex:form id="form">          
+                        <apex:pageBlock id="pb" >
+                            <div id="car_command_link" >
+                                <apex:pageBlockSection >
+                                    <apex:commandLink value="QR Code not working?" onclick="camarahide();return false;"    />
+                                </apex:pageBlockSection>
+                            </div>
+                            <div id="car_pb" style="display:none;width:370px">
+                                
+                                <apex:pageblocktable id="selectedvalue1" value="{!RecordFetching1}" var="car">
+                                    <apex:column value="{!car.name}"  style="font-size:18px;"  onclick="commandhide();"  />
+                                    <apex:column >
+                                        <apex:commandButton value="Select" onclick="CarDetails('{!car.id}');return false;"  reRender="three"  >
+                                            <apex:param name="carId" value="{!car.name}" assignTo="{!crid}" />
+                                        </apex:commandButton>
+                                    </apex:column>
+                                </apex:pageblocktable>
+                                
+                            </div>
+                            
+                        </apex:pageBlock>  
+                        <apex:commandButton value="Next" onclick="CarDetailhide();return false;" />
+                        <apex:commandButton value="Cancel" onclick="cancelDetails();" />
+                        
+                        <apex:actionFunction action="{!savemethod}" name="savefunction" reRender="content">
+                            <apex:param name="hiddendriver" value=""/>
+                            <apex:param name="hiddendcar" value=""/>
+                        </apex:actionFunction>
+                    </apex:form>        
+                </div>
+                <div id="lastsceen" style="display:none">
+                    <apex:form >
+                        <apex:pageBlock >
+                            <apex:pageBlockSection columns="4" title="Confirm Assignment" collapsible="false">
+                                <apex:pageBlockSectionItem >
+                                    <img src="{!$Resource.Driver}" border="0" width="52" height="52" align="center"/> &nbsp;
+                                    <span id="Assigned_Driver_Name"></span><br/><br/>
+                                    <!--<span id="driverhidden"></span><br/><br/>-->
+                                    
+                                    <img src="{!$Resource.Car}" border="0" width="52" height="52" align="center"/> &nbsp;
+                                    <span id="Assigned_Car_Name"></span><br/><br/>      
+                                </apex:pageBlockSectionItem>
+                            </apex:pageBlockSection>
+                            <apex:commandButton value="Confirm" onclick="finalsubmit();return false;"/>
+                        </apex:pageBlock>
+                    </apex:form>
+                </div>
+            </div>
+            
+            <div id="popup" style="display:none">
+                <div class="slds-scope"  >
+                    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                                    <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">  
+                                    </svg>
+                                    <span class="slds-assistive-text"></span>
+                                </button>
+                                <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">ERROR</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <p>ID is Undefined</p>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <button class="slds-button slds-button_brand" onclick="popuphide();">OK</button>
+                            </footer>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </div>
+            </div>
+            <div id="Errorpopup" style="display:none">
+                <div class="slds-scope"  >
+                    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                                    <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">  
+                                    </svg>
+                                    <span class="slds-assistive-text"></span>
+                                </button>
+                                <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">ERROR</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <p>Please Select Value from the List</p>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <button class="slds-button slds-button_brand" onclick="popuphide();">OK</button>
+                            </footer>
+                        </div>  
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </div>
+            </div>
+            
+        </body><br/>
+<script>
+    function read(driverId){
+      //alert(driverId);
+      console.log('test');
+            var scannedTextMemo = document.getElementById("scannedTextMemo");
+            if(scannedTextMemo)
+            {
+                //alert('TEST' + driverId);
+                var substr = driverId.substring(28);
+                //alert('substr ' + driverId + ' ' + substr);
+                if(driverId.startsWith("a0m")){
+                    //alert('TEST 2' + driverId);
+                    var jsonmap = JSON.parse('{!jsondriverdetailsMap}');
+                    
+                    var result = jsonmap[driverId];
+                  
+                    if(!result){
+                        alert('Please scan valid driver id');
+                    }else{
+                        scannedTextMemo.value = result.Name;
+                        console.log('result.Name ',result.Name);
+                        $('[id$=drid]').show();
+                        $('[id$=driverhidden]').val(driverId);
+                        document.getElementById("Driver_Name").innerHTML = result.Name;
+                    }
+                }
+                else{
+                    var jsonmap = JSON.parse('{!jsoncardetailsMap}');
+                    
+                    var result = jsonmap[driverId];
+                    if(!result){
+                        alert('Please scan valid car id');
+                    }else{
+                        scannedTextMemo1.value = result.Name;
+                        $('[id$=crid]').show();
+                        $('[id$=carhidden]').val(driverId);
+                        document.getElementById("Car_Name").innerHTML = result.Name;
+                    }
+                }          
+            }
+}
+       
+$(document).ready(function() {
+      document.getElementById('preview').addEventListener('click',function(){$('#fileUploader').click();});
+      qrcode.callback = read;
+});
+function previewFile() {
+  var preview = document.querySelector('#preview');
+  var file    = document.querySelector('input[type=file]').files[0];
+  var reader  = new FileReader();
+ 
+  reader.onloadend = function () {
+    preview.src = reader.result;
+  }
+ 
+  if (file) {
+    reader.readAsDataURL(file);
+  } else {
+    preview.src = "";
+  }
+}
+function decode() {
+    try
+    {
+    var preview=document.querySelector('#preview');
+    
+    qrcode.decode(preview.src);
+    
+    }
+    catch (e)
+    {
+       alert('Error - ' + e);
+    }
+}
+</script>
+
+<script type="text/javascript">
+        function resetPreview(){
+            let crImg = document.getElementById('crimage').style.display;
+            let drImg = document.getElementById('drimage').style.display;
+            if(drImg == '' && crImg == 'none'){
+            
+                $('#scannedTextMemo').val('');
+                $('[id$=driverhidden]').val('');
+                console.log('Step 1');
+            }else if(crImg == '' && drImg == 'none'){
+                $('#scannedTextMemo1').val('');
+                $('[id$=carhidden]').val('');
+                console.log('Step 2');
+            }
+            document.querySelector('input[type=file]').value = "";
+            document.querySelector('#preview').src = "";
+            
+        }
+        function More(Drivername){
+            //debugger;              
+            $('[id$=details_div]').show();
+            $('[id$=cardetails_div]').hide();    
+            var selectedvalue1 = Drivername;
+            alert('Drivername2 : ' +Drivername);
+            var jsonmap = JSON.parse('{!jsondriverdetailsMap}');
+            
+            var result = jsonmap[selectedvalue1];
+            document.getElementById("driverhidden").value = Drivername;
+            document.getElementById("Driver_Name").innerHTML = result.Name;
+            document.getElementById("Assigned_Driver_Name").innerHTML = result.Name;
+            $('[id$=driverhidden]').val(result.Id); 
+            //alert('Drivername1'+Drivername);
+            //alert(result);
+            // $('[id$=driverhidden]').val(Drivername);  
+            //alert('Drivername5: '+Drivername);
+        } 
+        function commandhide(){
+            $('[id$=driver_link]').hide();
+            
+        }
+        function camarahide(){
+            
+            $('[id$=crimage]').hide();
+            $('[id$=drimage]').hide();
+            $('[id$=driver_pb]').show();
+            $('[id$=driver_link]').hide();
+            $('[id$=car_pb]').show();
+            $('[id$=car_command_link]').hide();
+            
+            document.getElementById("qrScannerDiv").style.display = "none";
+        }
+        function Car(){
+            //debugger;
+            let crImg = document.getElementById('crimage').style.display;
+            let drImg = document.getElementById('drimage').style.display;
+            
+            document.querySelector('input[type=file]').value = "";
+            
+            document.querySelector('#preview').src = "";
+            document.getElementById("qrScannerDiv").style.display = "";
+            var value =   $('[id$=driverhidden]').val();  
+            //alert(value);
+            if (value == null || value =="" ) {  
+                console.log('Step 1');
+                $('[id$=popup]').hide();
+                $('[id$=Errorpopup]').show();
+                return false;
+            }
+            else{  
+                
+                $('[id$=theForm]').hide();
+                $('[id$=drid]').hide();
+                $('[id$=details_div]').hide();
+                
+                $('[id$=crimage]').show();
+                $('[id$=drimage]').hide();
+                document.getElementById("car_pb").style.display = "none";
+                
+                $('[id$=car_div]').show();
+                $('[id$=cardetails_div]').hide();
+                $('[id$=popup]').hide();
+                $('[id$=car_command_link]').show();
+                
+                
+                
+            }
+        }
+        function CarDetails(Carname){
+            
+            $('[id$=cardetails_div]').show();
+            var selectedcar1 = Carname;
+            var jsonmap = JSON.parse('{!jsoncardetailsMap}');
+            var result = jsonmap[selectedcar1];
+            document.getElementById("Car_Name").innerHTML = result.Name;
+            document.getElementById("Assigned_Car_Name").innerHTML = result.Name;
+            $('[id$=carhidden]').val(result.Id);
+        }
+        function popuphide(){  
+            $('[id$=popup]').hide();
+            $('[id$=Errorpopup]').hide();
+        }
+        function CarDetailshide(){  
+            $('[id$=car_div]').hide();
+        }
+        function CarDetailhide(){
+            console.log('inner Driver', document.getElementById("Driver_Name").innerHTML);
+            document.getElementById("Assigned_Driver_Name").innerText = document.getElementById("Driver_Name").innerHTML;
+            document.getElementById("Assigned_Car_Name").innerHTML = document.getElementById('Car_Name').innerHTML;
+            var value1 =   $('[id$=carhidden]').val();
+            console.log('value1 ' ,value1);
+            // alert(value1);
+            if (value1 == null || value1 =="" ) {
+                $('[id$=popup]').hide();
+                $('[id$=Errorpopup]').show();
+                return false;
+            }
+            else{
+                $('[id$=preview]').hide();
+                $('[id$=form]').hide();
+                $('[id$=drid]').hide();
+                $('[id$=crid]').hide();
+                $('[id$=lastsceen]').show();
+                $('[id$=cardetails_div]').hide();
+                $('[id$=crimage]').hide();
+                $('[id$=drimage]').hide();
+                $('[id$=note]').hide();
+                 $('[id$=popup]').hide();
+                document.getElementById("qrScannerDiv").style.display = "none";
+                
+            }
+        }
+        function finalsubmit(){
+            debugger;
+            var hd =  $('[id$=driverhidden]').val();
+            var hc =  $('[id$=carhidden]').val();
+            //  alert('');
+            alert('F-Dirive: '+hd);
+            savefunction(hd,hc);
+           
+        }
+        function validatedriverId(DriverId){
+            var selectedvalue6 = DriverId;
+            var jsonmap = JSON.parse('{!jsondriverdetailsMap}');
+            var result = jsonmap[selectedvalue6];
+            if(result = "undefined"){
+                $('[id$=popup]').show();
+                $('[id$=drid]').hide();
+            }
+        }
+        function validatecarId(CarId){
+            var selectedvalue7 = CarId;
+            var jsonmap = JSON.parse('{!jsoncardetailsMap}');
+            var result = jsonmap[selectedvalue7];
+            if(result = "undefined"){
+                $('[id$=popup]').show();
+                $('[id$=crid]').hide();  
+            }
+        }
+        
+</script>
+</apex:page>

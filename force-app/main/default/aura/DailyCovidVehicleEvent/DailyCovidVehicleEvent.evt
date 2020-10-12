@@ -1,0 +1,6 @@
+<aura:event type="COMPONENT">
+    <aura:attribute name="id" type="String"/>
+        <aura:attribute name="field" type="String"/>
+        <aura:attribute name="fileName" type="String"/>
+        <aura:attribute name="base64Data" type="String"/>
+</aura:event>

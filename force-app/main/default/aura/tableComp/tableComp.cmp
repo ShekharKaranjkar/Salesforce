@@ -1,0 +1,108 @@
+<aura:component >
+    <aura:attribute name="tabelSelectedInstance" type="object" access="public"/>   
+    <aura:attribute name="enableWifi" type="Boolean" default="false"/>
+    <aura:attribute name="buttonstate" type="Boolean" default="false"/>
+    <aura:attribute name="selected" type="Boolean" access="public" default="true" />
+    <aura:handler name = "init" value = "{!this}" action = "{!c.doInit}"/>
+    
+    <aura:if isTrue="{!v.tabelSelectedInstance.tableToShow}">
+        
+        <div class = "slds-p-top_medium ">   
+            <div class="slds-text-heading_small slds-box slds-box_xx-small slds-theme_shade">Table of Product {!v.tabelSelectedInstance.productName} </div>
+        </div> 
+        <div class="slds-box">
+            <div>
+                <div >
+                    <span >
+                        <lightning:button label="Flat" onclick="{!c.handleFlat}" variant="{!v.selected ? 'brand' : 'neutral'}" class=" btn"/>
+                    </span>
+                    <span class = "slds-p-around_small">    
+                        <lightning:button label="Slab-Based" onclick="{!c.handleSlab}" variant="{!v.selected ? 'neutral' : 'brand'}" class="btn"/>
+                    </span>
+                </div>
+            </div>   
+            
+            <aura:if isTrue="{!v.tabelSelectedInstance.showFlat}">
+                <div >
+                    <div class = "slds-form-element slds-p-horizontal_x-small">
+                        <table class = "slds-table slds-table_cell-buffer slds-table_header-hidden">
+                            <thead class = "slds-border_bottom slds-border_top">
+                                <tr class = "slds-line-height_reset">
+                                    <th  scope = "col">
+                                        <div class = "slds-truncate" title = "Flat"></div>
+                                    </th>
+                                    <th  scope = "col">
+                                        <div class = "slds-truncate" title = "Slab">Location</div>
+                                    </th>
+                                    <th  scope = "col">
+                                        <div class = "slds-truncate" title = "Slab">Suggested Price/Trip/Vehicle</div>
+                                    </th>
+                                    <th scope = "col">
+                                        <div class = "slds-truncate" title = "day">Total Trips/Month</div>
+                                    </th>
+                                    <th  scope = "col">
+                                        <div class = "slds-truncate" title = "Price">Price/Trip</div>
+                                    </th>
+                                </tr>
+                            </thead>                      
+                            <tbody>
+                                
+                                
+                                
+                                <aura:iteration items="{!v.tabelSelectedInstance.oliflat}" var="item" indexVar="index">
+                                    <c:dynamicRowItemFlat oppLineItemInstance="{!item}"  rowIndex="{!index}"  />
+                                </aura:iteration>  
+                                
+                                
+                                
+                            </tbody>
+                        </table>
+                    </div>               
+                </div>           
+            </aura:if> 
+            <aura:if isTrue="{!v.tabelSelectedInstance.showSlab}">
+                
+                <div  >
+                    <div class = "slds-form-element slds-p-horizontal_x-small">
+                        <table class = "slds-table slds-table_cell-buffer slds-table_header-hidden">
+                            <thead class = "slds-border_bottom slds-border_top">
+                                <tr class = "slds-line-height_reset">
+                                    <th  scope = "col">
+                                        <div class = "slds-truncate" title = "Slab"></div>
+                                    </th>
+                                    <th  scope = "col">
+                                        <div class = "slds-truncate" title = "Slab">Location</div>
+                                    </th>
+                                    <th  scope = "col">
+                                        <div class = "slds-truncate" title = "Slab">Suggested Price/Trip/Vehicle</div>
+                                    </th>
+                                    <th  scope = "col">
+                                        <div class = "slds-truncate" title = "Slab">Slab</div>
+                                    </th>
+                                    
+                                    <th  scope = "col">
+                                        <div class = "slds-truncate" title = "day">Total Trips/Month</div>
+                                    </th>
+                                    <th  scope = "col">
+                                        <div class = "slds-truncate" title = "Price"> Price/Trip</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody>                          
+                                <aura:iteration items="{!v.tabelSelectedInstance.olislab}" var="item" indexVar="index">
+                                    <c:dynamicRowItemSlab oppLineItemInstance="{!item}"  rowIndex="{!index}"  />
+                                </aura:iteration>                          
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                </div>
+                
+            </aura:if> 
+        </div>
+    </aura:if> 
+    
+    
+    
+</aura:component>

@@ -1,0 +1,44 @@
+.THIS.table {
+    border: none;
+}
+.THIS a.slds-pill__action.slds-p-left_x-medium{
+    min-height:30px;
+}
+.THIS .th{
+    border: none;
+}
+.THIS .tr{   
+    border: none;
+}
+.THIS .btn-margin-top .slds-button{
+    margin-top:-37px !important;
+    
+}
+.THIS .positionclass{
+
+    top:-21px;
+    float:right !important;
+}
+.THIS .position-btn-right{
+    float:right !important;
+}
+.THIS .padding-left{
+    padding-left:10px;
+}
+.THIS .hover-diabled:hover td{
+    background-color:none !important;
+}
+.THIS .position{
+   
+    top:-21px;
+    float:right;
+}
+.THIS .detailbox{
+    margin-top: -7px;
+    left: 1px;
+}
+.THIS .hourbox{
+    top: -15px;
+    left: -1px;
+    
+}

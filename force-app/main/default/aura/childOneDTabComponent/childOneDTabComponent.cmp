@@ -1,0 +1,24 @@
+<aura:component >
+    <aura:attribute name="rowIndex" type="integer"/>
+    <aura:method name="getoneDListfromParent" action="{!c.getoneDList}"  access="public">
+        <aura:attribute name="oneDListfromParent" type="list" />
+    </aura:method>
+    <aura:attribute name="singleRec" type="list"/>
+    <tr id  = "{!index}" >  
+        <td>                                                      
+            <lightning:input type = "checkbox" label = "{!index}" aura:id = "tripModel" class = "slds-p-vertical_small" value = "{!item}" checked = "{!item.checkboxSelectedTrip}"  onchange = "{!c.checkboxSelect}" />      
+        </td>
+        <td >                                         
+            <div class = "slds-truncate" >{!item.pbe.Name}</div>
+        </td>
+        <td >
+            <div class = "slds-truncate" >{!item.pbe.ProductCode}</div>
+        </td>
+        <td >
+            <div class = "slds-truncate" >{!item.pbe.UnitPrice}</div>
+        </td>
+        <td >
+            <div class = "slds-truncate" >{!item.pbe.Product2.Family}</div>
+        </td>                                    
+    </tr>  
+</aura:component>

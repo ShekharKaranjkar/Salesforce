@@ -1,0 +1,140 @@
+<aura:component controller="DailyJournal" Implements="force:appHostable,flexipage:availableForAllPageTypes,
+                                                      flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,
+                                                      force:lightningQuickAction" access ="global">
+    <aura:attribute name="DailyList" type="Log_Line_Hour__c[]"/> 
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute Name="selItem" type="object"  access="public" /> 
+    <aura:attribute name="loglst" type="List"/>
+    <aura:attribute name="removeLogIds" type="List"/>
+    <aura:attribute name="options" type="List" default="[
+                                                        {'label': 'Client Meeting', 'value': 'Client Meeting'},
+                                                        {'label': 'Planning', 'value': 'Planning'},
+                                                        {'label': 'Others', 'value': 'Others'},
+                                                        {'label': 'Internal', 'value': 'Internal'}                                                 
+                                                        ]"/>
+    
+    <aura:attribute name="typeOptions" type="List" default="[
+                                                            {'label': 'Account', 'value': 'Account'},
+                                                            {'label': 'Lead', 'value': 'Lead'},
+                                                            ]"/>
+    
+    <aura:attribute name="today" type="Date" />
+    <div style="float:left;display:inline-block;padding:20px;    font-size: 20px;">
+        <b style="float:left">Daily Journal</b>
+    </div>
+    <div style="float:right;padding:10px;display:inline-block;">
+        <b>Date :</b><ui:outputDate value="{!v.today}" />&nbsp;&nbsp;&nbsp;
+        <lightning:icon iconName="action:new_event" size="small" alternativeText="Show Calender" onclick="{!c.gotoURL}" style="cursor:pointer" />
+        <!--<lightning:button variant="brand" label="Show Calender" title="Show Calender" onclick="{!c.gotoURL}" class="positionclass" />
+            -->        
+    </div>
+    <table class="slds-table  slds-table_cell-buffer" > 
+        <thead>
+            <tr >
+                <th scope="col" style="width: 120px;">
+                    <div class="slds-truncate "  title="Hours">Hours</div>
+                </th>
+                <th>
+                    <div class="slds-truncate "  title="Type">Type</div>
+                </th>
+                <!-- Account -->
+                <th scope="col" style="width: 200px;">
+                    <div class="slds-truncate "  title="Account/Lead">Account/Lead</div>
+                </th>
+                <!-- Account -->
+                <!-- Lead -->
+                <!-- Lead -->
+                <th scope="col" style="width:100px">
+                    <div class="slds-truncate"  title="Category">Category</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate"  title="Details">Details</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate"  title="Action">Action</div>
+                </th>
+            </tr>
+        </thead> 
+        <tbody>      
+            <aura:iteration items="{!v.DailyList}" var="dai" indexVar="index">
+                <tr>
+                    <td>
+                        <lightning:input name="dailyhour" type="number" step="any"  value="{!dai.Hours}" class="hourbox" style="width:50px"  />
+                    </td>
+                    <td style="padding-top:5px;">
+                        <lightning:combobox name="type" style="width: 150px;" label="" class="hourbox" value="{!dai.Type}" placeholder="Select Type" options="{! v.typeOptions}"/>                        
+                    </td>
+                    <aura:if isTrue="{!dai.Type == 'Account'}">
+                        <td>
+                            <div style="margin-top: -15px;">
+                                <c:CustomLookup objectName="Account"
+                                                field_API_text="Name"
+                                                field_API_val="Id"
+                                                limit="4"
+                                                field_API_search="Name"
+                                                lookupIcon="standard:account" 
+                                                selItem="{!dai.AccountId}" 
+                                                placeholder="Accounts"
+                                                />  
+                                <!--<c:customDynamicLookup objectAPIName="account" IconName="standard:account" selectedRecord="{!v.selectedLookUpRecord}" label="Account Name"/>
+                      -->    
+                            </div>
+                        </td>
+                        <aura:set attribute="else">
+                            <!-- Lead -->
+                            <td>
+                                <div style="margin-top: -15px;">
+                                    <c:CustomLookup objectName="Lead"
+                                                    field_API_text="Name"
+                                                    field_API_val="Id"
+                                                    limit="4"
+                                                    field_API_search="Name"
+                                                    lookupIcon="standard:lead" 
+                                                    selItem="{!dai.LeadId}" 
+                                                    placeholder="Lead"
+                                                    />
+                                </div>
+                            </td>
+                            <!-- Lead -->
+                        </aura:set>
+                    </aura:if> 
+                    <td style="padding-top:5px;">
+                        <!--<lightning:input name="category" type="text" value="{!dai.Category__c}" class="hourbox"  />
+ -->						
+                        <lightning:combobox name="category" style="width: 190px;" label="" class="hourbox" value="{!dai.Category}" placeholder="Select Category" options="{! v.options }"/>                        
+                    </td>
+                    <td>
+                        <lightning:textarea name="dailydetail" style="width: 400px;" type="textarea"  maxlength="32768"  value="{!dai.Details}" class="detailbox"/>
+                    </td>
+                    <td>
+                        <tr>
+                            <td style="padding-top: 28px;">
+                                <aura:if isTrue="{!v.DailyList.length != 1}">
+                                    <lightning:button label="-"  title="Neutral action" name="{!index}" onclick="{! c.removeRow }" class="position slds-button_destructive"/>
+                                </aura:if>
+                            </td>
+                            <td style="padding-top: 28px;">
+                                <aura:if isTrue="{!v.DailyList.length -1 == index}">
+                                    <lightning:button label="+"  title="Neutral action" onclick="{! c.addRow }"  class="position slds-button_success"/>
+                                </aura:if>
+                            </td>
+                        </tr>
+                    </td>
+                </tr>
+            </aura:iteration>
+            <br></br>
+            <br></br>
+        </tbody>
+    </table>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col">
+        </div>
+        <div class="slds-col">
+            <div class="slds-align_absolute-center slds-list_horizontal slds-has-block-links_spaceslds-p-top_small position-btn-right">
+                <div class="padding-left">
+                   <lightning:button variant="brand" label="Submit" title="Brand action" onclick="{!c.save}" class="positionclass" />
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

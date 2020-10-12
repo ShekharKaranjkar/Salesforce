@@ -1,0 +1,79 @@
+<aura:component controller = "IssueOverRideController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,lightning:hasPageReference,lightning:isUrlAddressable,lightning:actionOverride,force:hasSObjectName"
+                access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doint}"/>
+     <aura:attribute name="sObjectName" type="String" default="Issues__c" />
+    <aura:attribute name="RecordTypeId" type="String"/>
+    <aura:attribute name="Current_Location__Latitude__s" type="integer"/>
+    <aura:attribute name="Current_Location__Longitude__s" type="integer"/>
+    <aura:attribute name="Vehicle__c" type="string" default=""/>
+    <aura:attribute name="Vehicle1__c" type="string" default=""/>
+    <aura:attribute name="Vehicle2__c" type="string" />
+    <aura:attribute name="Vehicle_Assignment__c" type="string" />
+    <aura:attribute name="Towing_Request1__c" type="string" />
+    <aura:attribute name="Site__c" type="string" />
+    <aura:attribute name="Service_Center__c" type="string" />
+    <aura:attribute name="Towing_Request__c" type="string" />
+    <aura:attribute name="Replacement_Request1__c" type="string" />
+    <aura:attribute name="Replacement_Request__c" type="string" />
+    <aura:attribute name="Penalty__c" type="string" />
+    <aura:attribute name="Issue_Owner__c" type="string" />
+    <aura:attribute name="Driver__c" type="string" />
+    <aura:attribute name="Service_Provider__c" type="string" />
+    <aura:attribute name="Contact_Name__c" type="string" />
+    <aura:attribute name="Account_Name__c" type="string" />
+    <aura:attribute name="showbuttons" type="boolean" default="false"/>
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <aura:attribute name="listOfSecionToShow" type = "List" access="public"/>
+    <aura:attribute name="setIntervalId" type="Integer"/>
+    <aura:html tag="style">
+        .slds-brand-band {
+    overflow-y: scroll;
+        }
+    </aura:html>
+    <lightning:recordEditForm aura:id="Formdata"
+                              objectApiName="Issues__c"
+                              recordTypeId = "{!v.RecordTypeId}"
+                              onsubmit="{!c.handleOnSubmit}"
+                              onsuccess="{!c.onSuccess}"
+                              onerror="{!c.onError}">
+        <lightning:messages />
+           <aura:iteration items = "{!v.listOfSecionToShow}" var = "item" >    
+            <div class="slds-section  slds-is-open">
+                <h3 class="slds-section__title slds-theme--shade" >
+                    <span class="slds-truncate slds-p-horizontal_small" >{!item.header}</span></h3>
+                <!--<div class="slds-page-header" style="padding-top: 9px; padding-bottom: 9px;, padding-right: 9px;, padding-left: 10px;">
+                    <h3 style="font-size: 1rem;" title="">{!item.header}</h3>
+                </div> -->
+             
+
+<div aria-hidden="false" class="slds-section__content">
+
+          
+                <div class="slds-grid  slds-wrap slds-p-top_medium  slds-size_12-of-12">    
+                    <aura:iteration items="{!item.fieldsString}" var="fieldsStringvar">
+                        <aura:if isTrue="{!or(fieldsStringvar.fieldAPI !='Current_Location__Latitude__s',fieldsStringvar.fieldAPI !='Current_Location__Longitude__s')}">
+                        <div  class="slds-size_6-of-12 ">
+                            <span>
+                                <lightning:inputField fieldName="{!fieldsStringvar.fieldAPI}" value="{!fieldsStringvar.fieldval}"/>
+                            </span>
+                        </div>
+                        </aura:if>
+                    </aura:iteration>
+                </div>
+               </div> 
+                </div>
+        </aura:iteration>
+     <div class="exampleHolder slds-align_absolute-center" size="large">
+                    <lightning:spinner aura:id="loadingSpinner" class="slds-hide"/>
+        </div>
+        <aura:if isTrue="{!v.showbuttons}">
+          <div class="slds-m-top_medium slds-align_absolute-center">
+                    
+                    <lightning:button  class="slds-float_right" variant="neutral" type="cancel"  onclick="{!c.cancel}" label="Cancel" /><span style="width: 1%;"></span>
+                    <lightning:button  class="slds-float_right" variant="brand" label="Save" type="submit" />
+                    
+                </div>
+        </aura:if>
+
+    </lightning:recordEditForm>
+</aura:component>

@@ -1,0 +1,16 @@
+<design:component>
+	<design:attribute name="tripsReportId"
+                      label="Number of Trips (Customer) Report Id"
+                      description="Number of Trips (Customer) Report Id"
+                      required="true"></design:attribute>
+    
+	<design:attribute name="kmsReportId"
+                      label="Number of Kms (Customer) Report Id"
+                      description="Number of Kms (Customer) Report Id"
+                      required="true"></design:attribute>
+    
+	<design:attribute name="normativeReportId"
+                      label="Normative vs Actual Revenue (Customer) Report Id"
+                      description="Normative vs Actual Revenue (Customer) Report Id"
+                      required="true"></design:attribute>
+</design:component>

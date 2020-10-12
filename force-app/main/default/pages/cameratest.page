@@ -1,0 +1,182 @@
+<apex:page showHeader="false" sidebar="false">
+<html>
+    <head>
+        <script src="https://localhost/cordova.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" ></script>
+        
+        <style>
+        #wrapper {
+      width:1600px;
+      clear:both;
+    }
+        #first {
+          width:800px;
+          float:left;
+        }
+        #second {
+          width:800px;
+          float:left;
+        }
+        </style>
+  </head>
+
+           <title>Webcam</title>
+<div  style="background-color:#FFF">
+    <div  style="padding-top: 2%;padding-bottom: 1%;">
+        <div class="col-md-2 col-md-offset-3" >
+            <button class="btn btn-primary" style="margin-top:10px" id="snap" >Capture</button>
+            <button class="btn btn-primary" style="margin-top:10px;display:none" id="new">Retake</button>    
+            <button class="btn btn-primary" style="margin-top:10px;display:none" id="upload">Upload</button>
+        </div>
+
+
+        <div >
+            <select class="form-control" style="margin-top:10px;display:none" id="videoSource"></select>
+        </div>
+
+    </div>
+    <div style="padding-top: 2%;padding-bottom: 1%;" >
+        <div align="center">
+            <canvas id="canvas" style="display:none;width:10%;height:10%;"></canvas>
+            <video class="myvideo" id="video" autoplay="autoplay" style="background-color: white;width:15%; height:15%;"></video> 
+            <input id="video" type="file" accept="image/*;capture=camera"/>
+        </div>
+    </div> 
+
+    <div id="el_loading" style="display:none;position: fixed;top:0;background-color: #fbfbfb; height:100%;opacity:0.65;width:100%;">
+        <div  style="top: 50%; width: 91px;  margin: 20% 47%;"> 
+            <img  src="/img/loading.gif" title="Please Wait..."/>
+            <span>Saving...</span>
+        </div>
+    </div>  
+</div>
+
+<script>
+
+function hideTheBoxComponent(){
+        $("#myModal1").modal('hide'); 
+    }
+
+    function showDialogComponent(){
+        $("#myModal1").modal({
+          "backdrop"  : "static",
+          "keyboard"  : true,
+          "show"      : true 
+        });
+    }
+
+    // Put event listeners into place
+    window.addEventListener("DOMContentLoaded", function() {
+
+        // Grab elements, create settings, etc.
+        var canvas = document.getElementById("canvas"),
+            context = canvas.getContext("2d"),
+            video = document.getElementById("video"),
+            videoObj = { "video": true },
+            errBack = function(error) {
+                console.log("Video capture error: ", error.code); 
+            };
+
+        // Capture Snap Photo
+        document.getElementById("snap").addEventListener("click", function() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0);
+            // Littel effects
+            $('#video').hide();
+            $('#canvas').show();
+            $('#snap').hide();
+            $('#new').show();
+            $('#upload').show();
+        });
+
+        // Capture New Photo
+        document.getElementById("new").addEventListener("click", function() {
+            $('#video').show();
+            $('#canvas').hide();
+            $('#snap').show();
+            $('#new').hide();
+            $('#upload').hide();
+        });
+
+
+
+    }, false);
+
+    'use strict';
+
+ var videoElement = document.querySelector("video");
+ var videoSelect = document.querySelector("select#videoSource");
+ navigator.getUserMedia = navigator.getUserMedia ||
+ navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+ function gotSources(sourceInfos) {
+    for (var i = 0; i != sourceInfos.length; ++i) {
+        var sourceInfo = sourceInfos[i];
+         var option = document.createElement("option");
+          option.value = sourceInfo.id;
+         if (sourceInfo.kind === 'video') {
+           option.text = sourceInfo.label || 'camera ' + (videoSelect.length + 1);
+           videoSelect.appendChild(option);
+              if( i == sourceInfos.length - 1 ) {
+              option.selected = true;
+               }
+        } else {
+            console.log('Some other kind of source: ', sourceInfo);
+        }
+     }
+     start();
+   }
+
+   if (typeof MediaStreamTrack === 'undefined') {
+    alert('This browser does not support MediaStreamTrack.\n\nTry Chrome Canary.');
+   } else {
+    MediaStreamTrack.getSources(gotSources);
+   } 
+
+
+   function successCallback(stream) {
+    window.stream = stream; // make stream available to console
+    videoElement.src = window.URL.createObjectURL(stream);
+    videoElement.play();
+   }
+
+   function errorCallback(error) {
+    console.log("navigator.getUserMedia error: ", error);
+   }
+
+    function start() {
+    if (!!window.stream) {
+        videoElement.src = null;
+        window.stream.stop();
+    }
+
+    var videoSource = videoSelect.value;
+
+    var constraints = {
+        video: {
+            optional: [{ sourceId: videoSource}]
+       }
+    };
+    navigator.getUserMedia(constraints , successCallback, errorCallback);
+    }
+ </script>   
+ 
+     
+        <apex:form > 
+             
+             
+     <apex:actionRegion >
+    <apex:actionFunction action="{!saveImage}" name="saveImage" rerender="dummy">
+    <!--<apex:actionFunction name="saveImage" rerender="dummy">-->
+        <apex:param name="imageBase" assignTo="{!imageBase}" value="" />
+    </apex:actionFunction>
+    <apex:outputPanel id="dummy"/>
+</apex:actionRegion>
+
+
+  </apex:form> 
+
+</html>
+</apex:page>

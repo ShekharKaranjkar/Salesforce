@@ -1,0 +1,190 @@
+<apex:page standardController="Issues__c" extensions="WitnessStatement">
+    <apex:slds />
+    <style>
+        .c{
+        transform: rotate(1deg) !important;
+        
+        }
+        .slds-scope .slds-button__icon {
+        width: .875rem;
+        height: .875rem;
+        
+        fill: red;
+        transform: rotate(1deg) !important;
+        }
+        .slds-scope .slds-pill__remove {
+        width: 2rem;
+        height: 1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: .25rem;
+        border-radius: .125rem;
+        }
+    </style>
+    
+    <script type="text/javascript">
+    var maxStringSize = 6000000;    //Maximum String size is 6,000,000 characters
+    var maxFileSize = 4350000;      //After Base64 Encoding, this is the max file size
+    var chunkSize = 950000;         //Maximum Javascript Remoting message size is 1,000,000 characters
+    var attachment;
+    var filetName;
+    var fileSize;
+    var positionIndex;
+    var doneUploading;
+    
+    //Method to prepare a file to be attached to the Account bound to the page by the standardController
+    function uploadFile() {
+      
+        var file = document.getElementById('attachtFile').files[0];
+        console.log(file);
+        if(file != undefined) {
+            if(file.size <= maxFileSize) {
+                filetName = file.name;
+                var fileReader = new FileReader();
+                fileReader.onloadend = function(e) {
+                    attachment = window.btoa(this.result);  //Base 64 encode the file before sending it
+                    positionIndex=0;
+                    fileSize = attachment.length;
+                    console.log("Total Attachment Length: " + fileSize);
+                    doneUploading = false;
+                    if(fileSize < maxStringSize) {
+                        uploadAttachment(null);
+                    } else {
+                        alert("Base 64 Encoded file is too large.  Maximum size is " + maxStringSize + " your file is " + fileSize + ".");
+                    }
+                    
+                }
+                fileReader.onerror = function(e) {
+                    alert("There was an error reading the file.  Please try again.");
+                }
+                fileReader.onabort = function(e) {
+                    alert("There was an error reading the file.  Please try again.");
+                }
+                
+                fileReader.readAsBinaryString(file);  //Read the body of the file
+                
+            } else {
+                alert("File must be under 4.3 MB in size.  Your file is too large.  Please try again.");
+            }
+        } else {
+            alert("You must choose a file before trying to upload it");
+        }
+    }
+    
+    
+    function uploadAttachment(fileId) {
+         alert("File start Uploading");
+        var base64Data = "";
+        if(fileSize <= positionIndex + chunkSize) {
+            base64Data = attachment.substring(positionIndex);
+            doneUploading = true;
+        } else {
+            base64Data = attachment.substring(positionIndex, positionIndex + chunkSize);
+        }
+        console.log("Uploading " + base64Data.length + " chars of " + fileSize);
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.WitnessStatement.uploadfiles}',
+            '{!Issues__c.Id}', base64Data,filetName ,
+            function(result, event) {
+                console.log(result);
+                if(event.type === 'exception') {
+                    console.log("exception");
+                    console.log(event);
+                } else if(event.status) {
+                    alert("File uploaded successfully")
+                    location.reload();
+                    if(result.substring(0,3) == '00P') {
+                        if(doneUploading == true) {
+                            // alert("asdc")
+                            //      window.open("/{!Issues__c.Id}", "_blank");
+                            //    window.location.reload();
+                        } else {
+                            positionIndex += chunkSize;
+                            uploadAttachment(result);
+                        }
+                    }
+                } else {
+                    console.log(event.message);
+                }
+            },
+            {buffer: true, escape: true, timeout: 120000}
+        );
+    }
+    </script>
+      <script type='text/javascript'>
+       function showfilename(input)  {
+        
+             var v=document.getElementById('attachtFile'); 
+         alert(v.files[0].name);  
+           /*for(var i =0; i<input.files.length; i++)
+            {           
+                var filesizeInBytes = input.files[i].size;
+                var filename = input.files[i].name;
+                console.log("File name is : "+input.files[i].name+" and  size : "+input.files[i].size+" Bytes");                    
+            }   */        
+        }
+    
+    </script>
+    
+    
+    <apex:form >
+        
+        <apex:actionFunction name="deletedriverProofFile" action="{!deleteRecord}" id="deletedriverProofFile"  >
+            
+
+        </apex:actionFunction>
+        
+        <table width="100%">
+            <tr><td >Witness Statement
+                </td>
+                <apex:outputPanel rendered="{!drivingLicence}">
+                    <td >
+                           
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <div class="slds-file-selector slds-file-selector_files">
+                                    <div class="slds-file-selector__dropzone">
+                                        <input type="file" class="slds-file-selector__input slds-assistive-text" accept=".jpg,jepg,.png,.pdf" id="attachtFile" aria-labelledby="file-selector-primary-label file-selector-secondary-label" onchange="showfilename(this)" />
+                                        <label class="slds-file-selector__body" for="attachtFile" id="file-selector-secondary-label">
+                                            <span class="slds-file-selector__button slds-button slds-button_neutral">
+                                                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#upload')}"></use>
+                                                </svg>Upload Files</span>
+                                            <span class="slds-file-selector__text slds-medium-show">or Drop Files</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        
+                    </td>
+                    <td>
+                        <div class="slds-form-element">
+                            
+                            <button class="slds-button slds-button_brand"  onclick="uploadFile();return false;">Save</button></div>
+                        
+                    </td>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!!drivingLicence}">
+                    
+                    <td>
+                        
+                        <apex:outputLink value="https://lithium--dev--c.documentforce.com/sfc/servlet.shepherd/document/download/{!myCustomObject.Witness_Statement_Font_Id_Text__c}"  id="theLink1">  {!driverProofNm}</apex:outputLink>
+                        
+                    </td>
+                    <td>
+                        <button class="slds-button slds-button_icon_large slds-button_icon slds-pill__remove" title="Remove" onclick="deletedriverProofFile();return false;">
+                            
+                            <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" >
+                                <use  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#delete')}"></use>
+                            </svg>
+                        </button>  
+                    </td>
+                </apex:outputPanel>                
+            </tr>                       
+        </table>        
+    </apex:form>
+</apex:page>

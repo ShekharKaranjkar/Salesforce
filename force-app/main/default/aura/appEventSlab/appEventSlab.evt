@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION">
+    <aura:attribute name="slabList" type="list"/>
+    <aura:attribute name="addNewObjec" type="boolean" default = "false"/>
+    <aura:attribute name="indexval" type="integer" />
+</aura:event>

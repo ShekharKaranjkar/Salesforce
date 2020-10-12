@@ -1,0 +1,242 @@
+@isTest
+public class ServiceCenterController_Test {
+    static testMethod void updateIssue() {
+        Profile profileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator' LIMIT 1];
+        User usrObj = new User();
+        usrObj.LastName = 'TestLast';
+        usrObj.FirstName='TestFirst';
+        usrObj.Alias = 'tst';
+        usrObj.Email = 'test@test.com';
+        usrObj.Username = 'testkalasinj@gmail.com.staging';
+        usrObj.ProfileId = profileId.id;
+        usrObj.TimeZoneSidKey = 'GMT';
+        usrObj.LanguageLocaleKey = 'en_US';
+        usrObj.EmailEncodingKey = 'UTF-8';
+        usrObj.LocaleSidKey = 'en_US';
+        usrObj.IsActive=True;
+        //usrObj.userRoleId='00EC0000001EkqFMAS';
+        //usrObj.UserRole.Name='CRM Rep';
+        insert usrObj;
+        account acc=new account();
+        acc.Name='rag';
+        acc.Lithium_Billing_Entity__c='Pune';
+        acc.Lithium_Bank_Account__c='State Bank';
+        insert acc;
+        City__c c=new City__c();
+        c.Account__c=acc.id;
+        insert c;
+        Campus__c   Campus=new Campus__c();
+        Campus.Name='rag';
+        Campus.Location__c=c.id;
+        Campus.Account__c=acc.id;
+        Campus.Lithium_Bank_Account__c='State Bank';
+        campus.PAN__c='XXXXX1234X';
+        campus.GSTN__c='qwertyuiopasdfg';
+        campus.Invoice_Creation_Date__c=system.today();
+        campus.Payment_Terms__c= '30';
+        campus.Billing_City__c='mrt';
+        campus.Billing_State_Province__c='tp';
+        campus.Billing_Street__c='ee';
+        campus.Billing_Zip_Postal_Code__c='ff';
+        campus.Shipping_City__c='ff';
+        campus.Shipping_State_Province__c='ff';
+        campus.Shipping_Street__c='ff';
+        campus.Shipping_Zip_Postal_Code__c='ff';
+        insert campus;
+        
+        Vehicle__c v= new Vehicle__c();
+        v.Site__c=campus.Id;
+        v.VIN_Number__c='23456789052234567';
+        v.Name = 'MP09213421';
+        v.City__c = c.id;
+        v.Finance_Type__c ='Owned';
+        v.Financer__c = 'Intelligrow';
+        v.Delivery_Date__c = system.today().addDays(3);
+        v.Re_enter_VIN_Number__c='23456789052234567';
+        v.Status1__c='New';
+        v.Lease_Loan_Amount__c= 1000;
+        v.Lease_Loan_Start_Date__c = system.today();
+        v.Lease_Loan_End_Date__c= system.today().addDays(3);
+        v.OEM__c ='Tata';
+        v.Manufacturing_Date__c = system.today().addDays(4);
+        v.Vehicle_Registration_Number__c = 'GJ01RX0349';
+        v.Date_of_Purchase__c=system.today().addDays(2);
+        v.RC_Registration_Date__c = system.today().addDays(1);
+        insert v;
+        
+        
+        Service_Center__c ser = new Service_Center__c();
+        ser.Name = 'Mettur';
+        ser.OwnerId = usrObj.id;
+     //   ser.Pincode__c = 636401;
+     //   ser.Zip_Postal_Code__c = 636401;
+        ser.Location__Latitude__s =11.7863 ;
+        ser.Location__Longitude__s=77.8008 ;
+        insert ser;
+        
+        Issues__c issue= new Issues__c();
+        String strRecordTypeId = [Select Id From RecordType Where SobjectType = 'Issues__c' and Name = 'Breakdown'].Id;
+        
+        issue.Vehicle__c = V.id;
+        issue.RecordTypeId = strRecordTypeId;
+        // issue.Latitude__Latitude__s=12.9569;
+        issue.Current_Location__Latitude__s=12.9569;
+        issue.Current_Location__Longitude__s=77.7011;
+        // issue.Latitude__Longitude__s= 77.7011;
+        insert issue;
+        
+        Map<id,Issues__c> issuemap = new Map<id,Issues__c>([select id,name from Issues__c where id=: issue.Id]);
+        
+        //   list<Issues__c> lisiss= [select id,name from Issues__c where id=: issue.Id];
+        Test.startTest();
+        issue.Service_Center__c = ser.id;
+        issuemap.put(issue.Id, issue);
+        update issuemap.values();
+        ServiceCenterController.updateIssue(issue);
+        Test.stopTest();   
+    }
+    static testMethod void getservicecenter(){
+        Profile profileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator' LIMIT 1];
+        User usrObj = new User();
+        usrObj.LastName = 'TestLast';
+        usrObj.FirstName='TestFirst';
+        usrObj.Alias = 'tst';
+        usrObj.Email = 'test@test.com';
+        usrObj.Username = 'testkalasinj@gmail.com.staging';
+        usrObj.ProfileId = profileId.id;
+        usrObj.TimeZoneSidKey = 'GMT';
+        usrObj.LanguageLocaleKey = 'en_US';
+        usrObj.EmailEncodingKey = 'UTF-8';
+        usrObj.LocaleSidKey = 'en_US';
+        usrObj.IsActive=True;
+        //usrObj.userRoleId='00EC0000001EkqFMAS';
+        //usrObj.UserRole.Name='CRM Rep';
+        insert usrObj;
+        account acc=new account();
+        acc.Name='rag';
+        acc.Lithium_Billing_Entity__c='Pune';
+        acc.Lithium_Bank_Account__c='State Bank';
+        insert acc;
+        City__c c=new City__c();
+        c.Account__c=acc.id;
+        insert c;
+        Campus__c   Campus=new Campus__c();
+        Campus.Name='rag';
+        Campus.Location__c=c.id;
+        Campus.Account__c=acc.id;
+        Campus.Lithium_Bank_Account__c='State Bank';
+        campus.PAN__c='XXXXX1234X';
+        campus.GSTN__c='qwertyuiopasdfg';
+        campus.Invoice_Creation_Date__c=system.today();
+        campus.Payment_Terms__c= '30';
+        campus.Billing_City__c='mrt';
+        campus.Billing_State_Province__c='tp';
+        campus.Billing_Street__c='ee';
+        campus.Billing_Zip_Postal_Code__c='ff';
+        campus.Shipping_City__c='ff';
+        campus.Shipping_State_Province__c='ff';
+        campus.Shipping_Street__c='ff';
+        campus.Shipping_Zip_Postal_Code__c='ff';
+        insert campus;
+        
+        Vehicle__c v= new Vehicle__c();
+        v.Site__c=campus.Id;
+        v.VIN_Number__c='23456789052234567';
+        v.Re_enter_VIN_Number__c='23456789052234567';
+         v.Name = 'MP09213421';
+        v.City__c = c.id;
+        v.Finance_Type__c ='Owned';
+        v.Financer__c = 'Intelligrow';
+        v.Delivery_Date__c = system.today().addDays(3);
+        v.Status1__c='New';
+        v.Lease_Loan_Amount__c= 1000;
+        v.Lease_Loan_Start_Date__c = system.today();
+        v.Lease_Loan_End_Date__c= system.today().addDays(3);
+        v.OEM__c ='Tata';
+        v.Manufacturing_Date__c = system.today().addDays(4);
+        v.Vehicle_Registration_Number__c = 'GJ01RX0349';
+        v.Date_of_Purchase__c=system.today().addDays(2);
+        v.RC_Registration_Date__c = system.today().addDays(1);
+        insert v;
+        
+        City__c cit = new City__c();
+        cit.Name = 'Chennai';
+        cit.Account__c = acc.id;
+        insert cit;
+        
+        Service_Center__c ser = new Service_Center__c();
+        ser.Name = 'Mettur';
+        ser.Located_City__c = cit.id;
+        ser.State_Province__c = 'TN';
+        ser.Location__Latitude__s =11.7863 ;
+        ser.Location__Longitude__s =77.8008 ;
+        ser.Street__c = 'Kumaran Nagar';
+        ser.OwnerId = usrObj.id;
+       // ser.Pincode__c = 636401;
+     //   ser.Zip_Postal_Code__c = 636401;
+        ser.Location__Latitude__s =11.7863 ;
+        ser.Location__Longitude__s=77.8008 ;
+        insert ser;
+           Service_Center__c ser2 = new Service_Center__c();
+        ser2.Name = 'RamanNagar';
+        ser2.Located_City__c = cit.id;
+        ser2.State_Province__c = 'TN';
+        ser2.Location__Latitude__s =12.9793 ;
+        ser2.Location__Longitude__s =77.6642 ;
+        ser2.Street__c = 'Kumaran Nagar';
+        ser2.OwnerId = usrObj.id;
+      //  ser2.Pincode__c = 636401;
+      //  ser2.Zip_Postal_Code__c = 636401;
+        ser2.Location__Latitude__s =12.9793;
+        ser2.Location__Longitude__s=77.6642 ;
+        insert ser2;
+           Service_Center__c ser3= new Service_Center__c();
+        ser3.Name = 'ammapettai';
+        ser3.Located_City__c = cit.id;
+        ser3.State_Province__c = 'TN';
+        ser3.Location__Latitude__s =11.6213 ;
+        ser3.Location__Longitude__s =77.7409 ;
+        ser3.Street__c = 'Kumaran Nagar';
+        ser3.OwnerId = usrObj.id;
+    //    ser3.Pincode__c = 636401;
+        //ser3.Zip_Postal_Code__c = 636401;
+        ser3.Location__Latitude__s =11.6213 ;
+        ser3.Location__Longitude__s=77.7409;
+        insert ser3;
+           Service_Center__c ser4 = new Service_Center__c();
+        ser4.Name = 'kavery nagar ';
+        ser4.Located_City__c = cit.id;
+        ser4.State_Province__c = 'TN';
+        ser4.Location__Latitude__s =12.9972 ;
+        ser4.Location__Longitude__s =77.7044;
+        ser4.Street__c = 'Kumaran Nagar';
+        ser4.OwnerId = usrObj.id;
+       // ser4.Pincode__c = 636401;
+       // ser4.Zip_Postal_Code__c = 636401;
+        ser4.Location__Latitude__s =12.9972 ;
+        ser4.Location__Longitude__s=77.7044 ;
+        insert ser4;
+        
+        Issues__c Issue1= new Issues__c();
+        String strRecordTypeId = [Select Id From RecordType Where SobjectType = 'Issues__c' and Name = 'Breakdown'].Id;
+        
+        Issue1.Vehicle__c = V.id;
+        Issue1.RecordTypeId = strRecordTypeId;
+        Issue1.Current_Location__Latitude__s =12.9569 ;
+        Issue1.Current_Location__Longitude__s = 77.7011;
+        Issue1.Latitude__Latitude__s=12.9569;
+        Issue1.Latitude__Longitude__s= 77.7011;
+        insert Issue1;
+        
+        id IssueId = Issue1.Id;
+      //  ServiceCenterController.sortDistanceWrapper;
+        Test.startTest();
+        ServiceCenterController scc = new ServiceCenterController();
+        ServiceCenterController.getservicecenter(IssueId);
+       // ServiceCenterController.sortDistanceWrapper ;
+        Test.stopTest();    
+    } 
+    static void compareTo() {
+        
+    }
+}

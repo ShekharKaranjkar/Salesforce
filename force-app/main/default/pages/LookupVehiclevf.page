@@ -1,0 +1,15 @@
+<apex:page controller="DailyCovidActivityVehicle"  tabStyle="Daily_Covid_activity_vehicle__c">
+    <apex:form >
+        <apex:sectionHeader title="Vehicles"/>
+        <apex:pageBlock >
+            <apex:pageBlockSection columns="1">
+                <apex:repeat value="{!vehList}" var="veh">
+                    <apex:commandLink value="{!veh.Name}" action="{!goBack}">
+                        <apex:param value="{!veh.Name}" name="VehName"/>
+                        <apex:param value="{!veh.Id}" name="VehId"/>
+                    </apex:commandLink>
+                </apex:repeat>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

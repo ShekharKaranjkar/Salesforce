@@ -1,0 +1,25 @@
+<aura:component >
+    <tr class = "slds-hint-parent">
+        <th data-label = "Opportunity Name" scope = "row">
+            <div class = "slds-truncate" title = "Cloudhub">
+                0-20
+            </div>
+        </th>
+        <td data-label = "Account Name">
+            <div class = "slds-truncate" title = "Cloudhub">30</div>
+        </td>
+        <td data-label = "Close Date">
+            <div class = "slds-truncate" title = "4/14/2015">40</div>
+        </td>
+        <td data-label = "Prospecting">
+            <div class = "slds-truncate" title = "Prospecting">25</div>
+        </td>
+        <td data-label = "Confidence">
+            <div class = "slds-truncate" title = "20%"></div>
+        </td>
+        <td data-label = "Amount">
+            <div class = "slds-truncate" title = "$25k"></div>
+        </td>
+        
+    </tr>
+</aura:component>

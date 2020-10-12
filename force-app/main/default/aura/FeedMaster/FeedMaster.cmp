@@ -1,0 +1,20 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes">
+    <!--<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>-->
+    <aura:attribute name="options" type="List" />
+    <aura:attribute name="type" type="String" default="News" description="The type of feed" access="GLOBAL"/>
+    <lightning:navigation aura:id="navService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <!--<h1>My Feeds</h1>
+    <div aura:id="feedContainer">
+        <forceChatter:publisher context="GLOBAL" />
+        <forceChatter:publisher context="GLOBAL" />
+    </div>-->
+    <div >
+        <forceChatter:feed type="groups"/>
+    </div>
+    <!--<div >
+  	<forceChatter:publisher context="GLOBAL" />
+        <forceChatter:fullFeed />
+    </div>-->
+    <!--<forceChatter:fullFeed type="To"/>-->
+</aura:component>

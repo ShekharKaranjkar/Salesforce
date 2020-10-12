@@ -1,0 +1,99 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="conmom">
+	 <aura:attribute name="ConObj" type="Contract" default="{'Id':'',
+                                                            'Question__c' :'',
+                                                             'Status':'',
+                                                             'Has_the_KAM_and_ops_team_been_introduced__c':'',
+                                                             'Is_the_marketing_team_preparing_for_laun__c':'',
+                                                             'Have_we_understood_client_s_billing_and__c':'',
+                                                             'Are_any_CXOs_attending_EV_launch_at_clie__c':'',
+                                                            'Have_all_drivers_cars_supervisors_been__c':''
+                                                              }" access="global"/>
+      <aura:attribute name="CarParkingOptions" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions1" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions2" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions3" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions4" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+    <aura:attribute name="CarParkingValue" type="String" default=""/>
+        <aura:attribute name="CarParkingValue1" type="String" default=""/>
+            <aura:attribute name="CarParkingValue2" type="String" default=""/>
+    <aura:attribute name="CarParkingValue3" type="String" default=""/>
+            <aura:attribute name="CarParkingValue4" type="String" default=""/>
+        <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+        <aura:attribute name="S1" type="Contract"/>
+<aura:attribute name="Sdiv" type="boolean" default="false"/>
+ <aura:if  isTrue="{!v.Sdiv}">
+   <div aura:id="show_combo">
+        <lightning:radioGroup
+        aura:id="mygroup"
+        name="radioButtonGroup"
+        label="Has the KAM and ops team been introduced to client?"
+        options="{!v.CarParkingOptions }"
+        value="{!v.CarParkingValue }"
+        onchange="{!c.CarHandleChange }"
+         />
+       <lightning:radioGroup
+        aura:id="mygroup1"
+        name="radioButtonGroup1"
+        label="Is the marketing team preparing for launch?"
+        options="{! v.CarParkingOptions1 }"
+        value="{! v.CarParkingValue1}"
+        onchange="{! c.CarHandleChange1 }"
+         />
+       <lightning:radioGroup
+        aura:id="mygroup2"
+        name="radioButtonGroup2"
+        label="Have we understood client's billing and invoicing processes and people?"
+        options="{! v.CarParkingOptions2}"
+        value="{! v.CarParkingValue2}"
+        onchange="{! c.CarHandleChange2}"
+         />
+       <BR></BR>
+      <lightning:button variant="brand" type="button" name="Save" label="Save" onclick="{!c.OnSubmit}" />
+    </div>
+    </aura:if>
+   <aura:attribute name="Pdiv" type="boolean" default="false"/>
+     <aura:if  isTrue="{!v.Pdiv}">
+   <div aura:id="show_combo1">
+        <lightning:radioGroup
+        aura:id="mygroup3"
+        name="radioButtonGroup3"
+        label="Have all drivers, cars, supervisors been procured in time and inducted at client?"
+        options="{! v.CarParkingOptions3}"
+        value="{! v.CarParkingValue3}"
+        onchange="{! c.CarHandleChange3}"
+         />
+        <lightning:radioGroup
+        aura:id="mygroup4"
+        name="radioButtonGroup4"
+        label="Are any CXOs attending EV launch at client?"
+        options="{! v.CarParkingOptions4}"
+        value="{! v.CarParkingValue4}"
+        onchange="{! c.CarHandleChange4}"
+         />
+       <BR></BR>
+    <lightning:button variant="brand" type="button" name="Save" label="Save" onclick="{!c.OnSubmit}" />
+    </div>
+    </aura:if>
+    <aura:attribute name="Hdiv" type="boolean" default="false"/>
+    <aura:if  isTrue="{!v.Hdiv}">
+        <b>
+   		No Questions are available for this stage 
+        </b>
+    </aura:if>
+    <br></br>
+</aura:component>

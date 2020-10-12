@@ -1,0 +1,182 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,lightning:isUrlAddressable" access="global" controller="ExternalUserLogin">
+    <aura:attribute name="isFirstTime" type="Boolean" default="true"/>
+    <aura:attribute name="forgotPassword" type="Boolean" default="false"/>
+    <aura:attribute name="gotOtp" type="Boolean" default="false"/>
+    <aura:attribute name="disableMobileNumber" type="Boolean" default="false"/>
+    <aura:attribute name="checkStatus" type="Boolean" default="true"/>
+    
+    <aura:attribute name="mobileNumber" type="String"/>
+    <aura:attribute name="usrpassword" type="String"/>
+    <aura:attribute name="cnfpassword" type="String"/>
+    <aura:attribute name="readOtp" type="String"/>
+    <aura:attribute name="storedOtp" type="String"/>
+    
+    <lightning:navigation aura:id="navService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    
+    <!--<aura:handler name="init" action="{!c.doInit}" value="{!this}" />-->
+    
+    <div class="slds-box slds-form-element slds-align_absolute-center">
+        <div class="slds-col slds-size_12-of-12">
+            <form>
+                <div style="text-align:center;">
+                    <img src="{!$Resource.Lithiumimg}" style="width:290px; margin-left:6px; margin-bottom:4px; float-center"/> 
+                </div>
+                <br/>
+                
+                <div style="height:3rem">
+                    <lightning:input aura:id="mobileNoInput" 
+                                     placeholder="{!$Label.c.ExternalLoginPageMobileNoPlaceHolder}" 
+                                     variant="label-hidden"
+                                     value="{!v.mobileNumber}" 
+                                     disabled="{!v.disableMobileNumber}"/>
+                </div>
+                
+                <aura:if isTrue="{!!v.isFirstTime}">
+                    <aura:if isTrue="{!v.gotOtp}">
+                        <div style="height:3rem">
+                            <lightning:input placeholder="{!$Label.c.ExternalLoginPageOtpPlaceHolder}"
+                                             variant="label-hidden"
+                                             value="{!v.readOtp}" />
+                        </div>
+                        <div style="height:3rem">
+                            <lightning:input placeholder="{!$Label.c.ExternalLoginPagePasswordPlaceHolder}"
+                                             variant="label-hidden"
+                                             type="password"
+                                             value="{!v.usrpassword}" />
+                        </div>
+                        <div style="height:3rem">
+                            <lightning:input placeholder="{!$Label.c.ExternalLoginPageConfirmPasswordPlaceHolder}"
+                                             variant="label-hidden"
+                                             type="password"
+                                             value="{!v.cnfpassword}" />
+                        </div>
+                        <div style="height:3rem">
+                            <lightning:button class="slds-button_stretch" 
+                                              variant="success" 
+                                              label="{!$Label.c.ExternalLoginConfirmButton}" 
+                                              onclick="{!c.setPassword}"/>
+                        </div>
+                        <div class="slds-clearfix">
+                            <div class="slds-float_left">
+                                <span class="slds-text-link" onclick="{!c.backToMain}" style="cursor: pointer;">{!$Label.c.ExternalLoginBack}</span>
+                            </div>
+                        </div>
+                        
+                        <aura:set attribute="else">
+                            <div style="height:3rem">
+                                <lightning:button class="slds-button_stretch"
+                                                  variant="success" 
+                                                  label="{!$Label.c.ExternalLoginGetOtpButton}" 
+                                                  onclick="{!c.getOtpCode}"/>
+                            </div>
+                            <div class="slds-clearfix">
+                                <div class="slds-float_left">
+                                    <span class="slds-text-link" onclick="{!c.backToMain}" style="cursor: pointer;">{!$Label.c.ExternalLoginBack}</span>
+                                </div>
+                            </div>
+                        </aura:set>
+                        
+                    </aura:if>
+                    
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!v.forgotPassword}">
+                            <aura:if isTrue="{!v.gotOtp}">
+                                 <div style="height:3rem">
+                                    <lightning:input placeholder="{!$Label.c.ExternalLoginPageOtpPlaceHolder}"
+                                                     variant="label-hidden"
+                                                     value="{!v.readOtp}" />
+                                </div>
+                                <div style="height:3rem">
+                                    <lightning:input placeholder="{!$Label.c.ExternalLoginPageNewPasswordPlaceHolder}"
+                                                     variant="label-hidden"
+                                                     type="password"
+                                                     value="{!v.usrpassword}" />
+                                </div>
+                                <div style="height:3rem">
+                                    <lightning:input placeholder="{!$Label.c.ExternalLoginPageConfirmNewPasswordPlaceHolder}"
+                                                     variant="label-hidden"
+                                                     type="password"
+                                                     value="{!v.cnfpassword}" />
+                                </div>
+                                <div style="height:3rem">
+                                    <lightning:button class="slds-button_stretch" 
+                                                      variant="success" 
+                                                      label="{!$Label.c.ExternalLoginConfirmButton}" 
+                                                      onclick="{!c.setPassword}"/>
+                                </div>
+                                <div class="slds-clearfix">
+                                    <div class="slds-float_left">
+                                        <span class="slds-text-link" onclick="{!c.backToMain}" style="cursor: pointer;">{!$Label.c.ExternalLoginBack}</span>
+                                    </div>
+                                </div>
+                                
+                                <aura:set attribute="else">
+                                    <div style="height:3rem">
+                                        <lightning:button class="slds-button_stretch"
+                                                          variant="success" 
+                                                          label="{!$Label.c.ExternalLoginGetOtpButton}" 
+                                                          onclick="{!c.getOtpCode}"/>
+                                    </div>
+                                    <div class="slds-clearfix">
+                                        <div class="slds-float_left">
+                                            <span class="slds-text-link" onclick="{!c.backToMain}" style="cursor: pointer;">{!$Label.c.ExternalLoginBack}</span>
+                                        </div>
+                                    </div>
+                                </aura:set>
+                                
+                            </aura:if>
+                            <aura:set attribute="else">
+                                <aura:if isTrue="{!v.checkStatus}">
+                                    <div style="height:3rem">
+                                        <lightning:button class="slds-button_stretch" 
+                                                          variant="success" 
+                                                          label="{!$Label.c.ExternalLoginNextButton}" 
+                                                          onclick="{!c.checkStatusDetails}"/>
+                                    </div>
+                                    <!--<div style="height:3rem">
+                                            <lightning:button class="slds-button_stretch" 
+                                                              variant="success" 
+                                                              label="SOAPAction" 
+                                                              onclick="{!c.SOAPlogin}"/>
+                                        </div>-->
+                                    
+                                    <aura:set attribute="else">
+                                        <div style="height:3rem">
+                                            <lightning:input placeholder="{!$Label.c.ExternalLoginPagePasswordPlaceHolder}"
+                                                             variant="label-hidden"
+                                                             type="password"
+                                                             value="{!v.usrpassword}" />
+                                        </div>
+                                        
+                                        <div style="height:3rem">
+                                            <lightning:button class="slds-button_stretch" 
+                                                              variant="success" 
+                                                              label="{!$Label.c.ExternalLoginLoginButton}" 
+                                                              onclick="{!c.SOAPlogin}"/>
+                                        </div>
+                                        
+                                        <div class="slds-clearfix"> 
+                                            <div class="slds-float_left">
+                                                <span class="slds-text-link" onclick="{!c.backToMain}" style="cursor: pointer;">{!$Label.c.ExternalLoginBack}</span>
+                                            </div>
+                                        </div>
+                                    </aura:set>
+                                </aura:if>
+                            </aura:set>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+                
+                <aura:if isTrue="{! and(v.checkStatus,!v.forgotPassword)}">
+                    <div class="slds-clearfix">
+                        <div class="slds-float_right">
+                            <span class="slds-text-link" onclick="{!c.forgotPassword}" style="cursor: pointer;">{!$Label.c.ExternalLoginForgotPassword}</span>
+                        </div>
+                    </div>
+                </aura:if>
+                
+            </form>
+        </div>
+    </div>
+</aura:component>

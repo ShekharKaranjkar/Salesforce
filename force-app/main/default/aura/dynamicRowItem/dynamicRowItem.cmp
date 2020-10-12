@@ -1,0 +1,93 @@
+<aura:component >  
+    
+    <aura:method name="getSlab" action="{!c.getSlabTabel}" access="public">
+        <aura:attribute name="slabToShow" type="String" />
+    </aura:method>
+    
+    <aura:attribute name="oppLineItemInstance" type="list"/>
+    <aura:attribute name="rowIndex" type="String"/>
+    <aura:attribute name="slabTabel" type="boolean" />
+    <aura:attribute name="flatTabel" type="boolean" />
+    
+    <!-- Register 2 Lightning Event for handle add or Delete rows on Parent Component  --> 
+    <aura:registerEvent name="DeleteRowEvt" type="c:DeleteRowEvt"/> 
+    <aura:registerEvent name="AddRowEvt" type="c:AddNewRowEvt"/> 
+    
+    
+    <aura:if isTrue="{!v.slabTabel}">
+        <tr class="slds-text-title_caps">
+            <td>
+                
+                <aura:if isTrue="{!v.rowIndex == 0}">
+                    <a onclick="{!c.AddNewRow}">
+                        <lightning:icon iconName="utility:add" class="slds-icon slds-icon_small" size="small" alternativeText="add"/>
+                        <span class="slds-assistive-text">Add Icon</span>
+                    </a>    
+                    <aura:set attribute="else">
+                        <a onclick="{!c.removeRow}">
+                            <lightning:icon variant="error" iconName="utility:delete" class="slds-icon slds-icon_small" size="small" alternativeText="icon"/>
+                            <span class="slds-assistive-text">Delete Icon</span>
+                        </a>
+                    </aura:set> 
+                </aura:if>
+            </td> 
+            
+            <td>
+                <ui:inputText class="slds-input" value="{!v.oppLineItemInstance.Current_Pursuit__c}"/>
+            </td>
+            <td>
+                <ui:inputText class="slds-input" value="{!v.oppLineItemInstance.Current_Pursuit__c}"/>
+            </td>
+            <td>
+                <ui:inputText class="slds-input" value="{!v.oppLineItemInstance.Cars_to_be_ordered_for_Current_Pursuit__c}"/>
+            </td>
+            <td>
+                <ui:inputText class="slds-input" value="{!v.oppLineItemInstance.Trips_per_Day__c}"/>
+            </td>
+            <td>
+                <ui:inputText class="slds-input" value="{!v.oppLineItemInstance.Price_Trip__c}"/>
+            </td>
+            <td>
+                <ui:inputText class="slds-input" value="{!v.oppLineItemInstance.Price_Car_Month__c}"/>
+            </td>
+        </tr>
+        <aura:set attribute="else">
+            <tr class="slds-text-title_caps">
+                <td>
+                    
+                    <aura:if isTrue="{!v.rowIndex == 0}">
+                        <a onclick="{!c.AddNewRow}">
+                            <lightning:icon iconName="utility:add" class="slds-icon slds-icon_small" size="small" alternativeText="add"/>
+                            <span class="slds-assistive-text">Add Icon</span>
+                        </a>    
+                        <aura:set attribute="else">
+                            <a onclick="{!c.removeRow}">
+                                <lightning:icon variant="error" iconName="utility:delete" class="slds-icon slds-icon_small" size="small" alternativeText="icon"/>
+                                <span class="slds-assistive-text">Delete Icon</span>
+                            </a>
+                        </aura:set> 
+                    </aura:if>
+                </td> 
+                
+                
+                <td>
+                    <ui:inputText class="slds-input" value="{!v.oppLineItemInstance.Current_Pursuit__c}"/>
+                </td>
+                <td>
+                    <ui:inputText class="slds-input" value="{!v.oppLineItemInstance.Cars_to_be_ordered_for_Current_Pursuit__c}"/>
+                </td>
+                <td>
+                    <ui:inputText class="slds-input" value="{!v.oppLineItemInstance.Trips_per_Day__c}"/>
+                </td>
+                <td>
+                    <ui:inputText class="slds-input" value="{!v.oppLineItemInstance.Price_Trip__c}"/>
+                </td>
+                <td>
+                    <ui:inputText class="slds-input" value="{!v.oppLineItemInstance.Price_Car_Month__c}"/>
+                </td>
+                
+            </tr>  
+        </aura:set>
+    </aura:if>  
+    
+</aura:component>

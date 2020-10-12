@@ -1,0 +1,108 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="LeaveHistoryController" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="leave30Days" type="list"/>
+    <aura:attribute name="leave60Days" type="list"/>
+    <aura:attribute name="leave90Days" type="list"/>
+    <aura:html tag="style">
+        
+        .slds-scope .slds-tabs_default__item.slds-is-active:after, .slds-scope .slds-tabs--default__item.slds-active:after, .slds-scope .slds-tabs--default__item.slds-is-active:after {
+        background-color:#3abeb1;
+        x: .1875rem;
+        }
+        .slds-scope .slds-icon-action-description {
+        background-color: #3abeb1;
+        }
+        
+    </aura:html>
+    <div class="slds-box slds-theme_default">
+        <div class="slds-box slds-theme_default" >
+            <span> <lightning:icon iconName="action:description" alternativeText="Description" title="Description" /></span>
+            <span class="slds-page-header__title slds-truncate slds-align-middle" style="color: #54698d;font-size: 1.5rem; text-align: center;margin-top:-30px;">{!$Label.c.Leave_History}</span>
+            
+            <!-- <lightning:icon class="some-indicator slds-p-top_large " variant="info"
+                                iconName="action:back" alternativeText="check" onclick="{!c.backmethod}" size="small" aura:id="fILE_NAMES" style="margin-top: -6px; !important"/>-->
+            
+        </div>
+        <div class="slds-box">
+            <lightning:tabset>
+                <lightning:tab  label = "{!$Label.c.Days30}"  > 
+                    <table>
+                        <tbody>
+                            <aura:iteration items = "{!v.leave30Days}" var = "lea30"  > 
+                                <div class = "slds-box slds-theme_shade" style="background: #cdefeb8a;">
+                                    <tr>  
+                                        <b><td>{!$Label.c.Leave_Type}</td>  </b><td>: {!lea30.RecordType.Name}</td> <br /></tr>
+                                       <tr><b><td>{!$Label.c.Leave_From}</td> </b><td>: {!lea30.From_date__c}</td><br /></tr> 
+                                       <tr><b><td>{!$Label.c.Leave_To}</td> </b><td>: {!lea30.To_date__c}</td><br /></tr> 
+                                        <aura:if isTrue="{!lea30.RecordType.Name == 'Planned EOS'}">
+                                          <tr> <b><td>{!$Label.c.Status}</td> </b><td>: {!lea30.Approval_Request__c}</td><br /></tr> 
+                                            
+                                        </aura:if>
+                                        <aura:if isTrue="{!lea30.RecordType.Name == 'Emergency EOS'}">
+                                           <tr><b><td>{!$Label.c.Status}</td> </b><td>: {!lea30.Emergency_Leave_Approval__c}</td><br /></tr> 
+                                            
+                                        </aura:if>
+                                    
+                                </div><br />
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                    
+                </lightning:tab>
+                <lightning:tab  label = "60 Days" > 
+                    <table>
+                        <tbody>
+                            <aura:iteration items = "{!v.leave60Days}" var = "lea60"  > 
+                                <div class = "slds-box slds-theme_shade" style="background: #cdefeb8a;">
+                                    <tr> 
+                                        <td><b>{!$Label.c.Leave_Type}</b></td><td>: {!lea60.RecordType.Name}</td> <br /></tr>
+                                        <tr><td><b>{!$Label.c.Leave_From} </b></td><td>: {!lea60.From_date__c}</td><br /></tr>
+                                        <tr><td><b>{!$Label.c.Leave_To}</b></td><td>: {!lea60.To_date__c}</td><br /></tr>
+                                        <aura:if isTrue="{!lea60.RecordType.Name == 'Planned EOS'}">
+                                            <tr><td><b>{!$Label.c.Status}</b></td><td>: {!lea60.Approval_Request__c}</td><br /></tr>
+                                            
+                                        </aura:if>
+                                        <aura:if isTrue="{!lea60.RecordType.Name == 'Emergency EOS'}">
+                                           <tr><td><b>{!$Label.c.Status}</b></td><td>: {!lea60.Emergency_Leave_Approval__c}</td><br /></tr>
+                                            
+                                        </aura:if>                                          
+                                </div><br />
+                            </aura:iteration>
+                            
+                        </tbody>
+                    </table>
+                </lightning:tab>
+                <lightning:tab  label = "90 Days" > 
+                    <table>
+                        <tbody>
+                            <aura:iteration items = "{!v.leave90Days}" var = "lea90"  > 
+                                <div class = "slds-box slds-theme_shade" style="background: #cdefeb8a;">
+                                    <tr> 
+                                        <td><b>{!$Label.c.Leave_Type}</b></td> <td>: {!lea90.RecordType.Name}</td> <br /></tr>
+                                        <tr><td><b>{!$Label.c.Leave_From}</b></td><td>: {!lea90.From_date__c}</td><br /></tr>
+                                        <tr><td><b>{!$Label.c.Leave_To}</b></td><td>: {!lea90.To_date__c}</td><br /></tr>
+                                        <aura:if isTrue="{!lea90.RecordType.Name == 'Planned EOS'}">
+                                           <tr><td><b>{!$Label.c.Status} </b></td><td>: {!lea90.Approval_Request__c}</td><br /></tr> 
+                                            
+                                        </aura:if>
+                                        <aura:if isTrue="{!lea90.RecordType.Name == 'Emergency EOS	'}">
+                                           <tr><td><b>{!$Label.c.Status} </b></td><td>: {!lea90.Emergency_Leave_Approval__c}</td><br /></tr> 
+                                            
+                                        </aura:if>                                     
+                                </div><br />
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </lightning:tab>
+            </lightning:tabset>
+            
+            <div class="slds-align_absolute-center">
+                <div class = "slds-p-around_small">
+                    <span >
+                        <lightning:button class="slds-button slds-button_destructive" label ="{!$Label.c.Back}" onclick="{!c.cancel}"/>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

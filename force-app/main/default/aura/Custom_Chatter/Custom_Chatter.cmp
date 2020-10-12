@@ -1,0 +1,295 @@
+<aura:component implements="force:appHostable,forceCommunity:availableForAllPageTypes" access="global" controller="HelpMain_CollaborationGroupController">
+    
+    <aura:attribute name="collaborationGroupFeedList" type="List"/>
+    <aura:attribute name="countForViewMorerecords" type="Integer" default="15"/>
+    <aura:attribute name="hasViewMoreRecords" type="Boolean" default="true"/>
+    <aura:attribute name="feedAnnouncement" type="string"/> 
+    <aura:attribute name="options" type="String[]"/>
+    <aura:attribute name="selectedValue" type="String"/>
+    <aura:attribute name="optionsByPostDate" type="String[]"/>
+    <aura:attribute name="selectedValueByPostDate" type="String" />
+    <aura:attribute name="searchTerm" type="String"/>
+    <aura:attribute name="searchGroupFeedList" type="List"/>
+    <aura:attribute name="noSearchedDataFound" type="string"/>
+    <aura:attribute name="feedItemName" type="String" />
+    <aura:attribute name="isDisplaySection" type="Boolean" default="false" />
+    <aura:attribute name="LikeIncrementDecrement" type="Boolean" default="false" />
+    <aura:attribute name="isgroupmember" type="Boolean" default="false" />
+    <aura:attribute name="CGId" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.groupFeedListMethod}"/> 
+    <aura:attribute name="ImageErr" type="string" default="ERROR" />
+    <aura:attribute name="accept" type="List" default="['.jpg', '.jpeg','.pdf', '.png','.PNG']"/>
+    <aura:attribute name="multiple" type="Boolean" default="true"/>
+    <aura:attribute name="disabled" type="Boolean" default="false"/>
+    <aura:attribute name="uploadedFileRec" type="Blob"/>
+    <aura:attribute name="imageRecId" type="String"/>
+    <aura:attribute name="Name" type="string" default="{!groupFeed.CollaborationGroupObject.Name}"/>
+    
+    <aura:attribute name="uploadFileRecordId" type="String" description="Record to which the files should be attached" />
+    
+    <aura:iteration items="{!v.collaborationGroupFeedList}" var="groupFeed">
+        <div class="slds-align_absolute-center slds-text slds-text-title_caps">    
+            <h1 style="color:black; font-size:large;"><b>{!groupFeed.CollaborationGroupObject.Name} </b></h1>           
+        </div>
+        <center class="">
+            <lightning:icon iconName="action:announcement" title="announcement" size="x-small" />
+            <br/>
+            <p dir="ltr" class="uiOutputText slds-m-top_small">{!v.feedAnnouncement}</p> 
+        </center>
+        <br/>
+        <!--Table start font-family: salesforce sans;-->
+        
+        
+        <br/>
+        <div aura:id="buttondiv" class="{!if(v.isDisplaySection == false,'slds-show','slds-hide')}">        
+            <div class="slds-grid slds-gutters ">
+                <div class="slds-col slds-size_8-of-12">
+                    <div class="slds-grid slds-gutters ">
+                        <div class="slds-col slds-size_11-of-12">
+                            <lightning:button label="Share an update..." title="Share an update..." onclick="{! c.displayInputText }" class="share-update-btn"/>
+                        </div>
+                        <div class="slds-size_1-of-12 slds-p-right_small ">
+                            <lightning:button label="Share" class="slds-float_right share_width" title="Share" variant="brand" onclick="{! c.displayInputText }"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <br/>
+        <div aura:id="inputdiv" class="{!if(v.isDisplaySection == true,'slds-show','slds-hide')}" onpaste="{! c.handlePaste }" style="padding: 7px;"><!--/*OnContextMenu="{! c.handleContext }"*/-->
+            <!--Modified by Deepak(08 May 2020) [Added sharedWithEntityId]-->
+            <!--Modified by Deepak(15 May 2020) [Removed Alignment Buttons]-->
+            <!-- disabledCategories="FORMAT_FONT" -->
+            <lightning:inputRichText formats="['bold', 'image' , 'link' ,'italic', 'underline', 'strike', 'list', 'clean']" disabled="false" variant="bottom-toolbar" 
+                                     label="feedBody" value="{!v.feedItemName}" shareWithEntityId="{!v.CGId}" placeholder="Share an update..." ><lightning:insertImageButton/></lightning:inputRichText><br/>
+            <button type="button" disabled="{!empty(v.feedItemName)}" onclick="{!c.createFeedItemRecord}" class="slds-button slds-button_outline-brand" style="margin-left: 55.8%; width: 10.2%;height: 42px;color: white;font-size: 16px;font-weight:bold; padding-right: 1rem;background-color:rgb(222, 179, 89);">Share</button>
+            
+            <!--  disabledCategories="FORMAT_FONT"
+            <lightning:textArea class="fwidth" variant="label-hidden" label="FeedBody" value="{!v.feedItemName}" placeholder="Share an update..."/>&nbsp;<br/>
+            <button type="button" onclick="{!c.createFeedItemRecord}" class="slds-button slds-button_outline-brand" style="margin-left: 60%;">Share</button>
+           <lightning:fileUpload name="fileUploader" multiple="false" accept="{!v.accept}" disabled="{!v.disabled}" recordId="{!v.uploadFileRecordId}" onuploadfinished="{! c.handleUploadFinished }"/>&nbsp;  
+            -->
+            
+        </div> 
+        <div style="padding: 12px;">
+            <table  style="width:66.2%;">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="" scope="col" width="1%;">
+                            <div class="slds-truncate" title="">Sort by:</div>
+                        </th>
+                        <th class="" title="" scope="col" width="28%">
+                            <lightning:select value="{!v.selectedValue}"  class="dropsort " aura:id="select" name="select" label="" onchange="{! c.onChange }">                
+                                <aura:iteration items="{!v.options}" var="option">                            
+                                    <option text="{!option.label}" value="{!option.value}"></option>
+                                </aura:iteration>                                     
+                            </lightning:select>
+                        </th>
+                        
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="">
+                                <ui:inputText placeholder="Search this feed..." value="{!v.searchTerm}" class="" keyup="{!c.searchGroupFeeds}" updateOn="keyup"/>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                
+            </table>
+        </div>
+        <div>
+            <!-- <div class="slds-col slds-size_8-of-12">
+                <div class="slds-grid slds-gutters ">
+                    <div class="slds-col slds-size_6-of-12">
+                        <div style="width: 59%;display:flex;padding-top: 21px;padding-left: 0px;">
+                            
+                            <p class="slds-size_2-of-6 slds-p-right_xx-small" style="margin-top: 10px; margin-right: -11%;">Sort by: </p> 	
+                            <lightning:select value="{!v.selectedValue}"  class="dropsort slds-size_2-of-6" aura:id="select" name="select" label="" onchange="{! c.onChange }">                
+                                <aura:iteration items="{!v.options}" var="option">                            
+                                    <option text="{!option.label}" value="{!option.value}"></option>
+                                </aura:iteration>                                     
+                            </lightning:select>
+                        </div>
+                    </div>  
+                   
+                    <div class="slds-col slds-size_6-of-12 slds-p-top_small">
+                        <span>                    
+                            
+                            <ui:inputText placeholder="Search this feed..." value="{!v.searchTerm}" class="searchinputfield" keyup="{!c.searchGroupFeeds}" updateOn="keyup"/>
+                           
+                        </span>
+                    </div>
+                    
+                </div> 
+            </div>
+            <div class="slds-col slds-size_4-of-12" style="padding-left: 0px; width:40%">
+                <div style="display:flex;padding-top: 21px;">
+                   <lightning:icon class="Blackgrey" iconName="utility:email" title="Digest"  size="x-medium" style="margin-top:5px;"/>
+                    <lightning:select value="{!v.selectedValueByPostDate}"  class="digestSelect" aura:id="select" name="select" label="" onchange="{! c.onChangeByPostDate }">                
+                        <aura:iteration items="{!v.optionsByPostDate}" var="option">                            
+                            <option selected="{!option.value == v.selectedValueByPostDate}" value="{!option.value}">{!option.label}</option>
+                        </aura:iteration>                                     
+                    </lightning:select> 
+               </div>
+            </div>-->
+        </div>
+        
+        <div class="slds-grid slds-grid--pull-padded" style="margin-top: 20px;"> <!-- slds-wrap slds-gutters -->        		
+            <div class="slds-col  slds-size_2-of-3 slds-col--padded">         
+                <aura:if isTrue="{!empty(groupFeed.colGroupFeedWrapList)}">
+                    <div class="slds-align_absolute-center">
+                        <p class="slds-text slds-text-title_caps">No Post Found.</p>
+                    </div>     
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!and(empty(v.searchTerm),or(v.searchGroupFeedList == null, v.searchGroupFeedList.length == 0))}">                                 
+                            <aura:iteration items="{!groupFeed.colGroupFeedWrapList}" var="grpFeed">  <!--slds-table slds-table_cell-buffer slds-table_fixed-layout slds-max-medium-table_stacked-horizontal slds-table_bordered -->                 
+                                <table border="0" width="100%" class="slds-table slds-table_cell-buffer slds-table_fixed-layout slds-max-medium-table_stacked-horizontal slds-table_bordered  slds-wrap" style="background-color: white;">
+                                    <tr>
+                                        <td width="100%" class="slds-cell-wrap" style="padding-bottom: 5px;">
+                                            <div style="width:100%;text-align: left;">
+                                                <a style="font-size: 1rem;" class="groupBody" target="_self" href="{!'https://uat-lithium.cs75.force.com/serviceprovider/s/feed/'+grpFeed.colGroupFeedObject.Id}">
+                                                    <aura:unescapedHtml value="{!grpFeed.colGroupBody}"></aura:unescapedHtml>
+                                                    
+                                                </a> 
+                                            </div>
+                                            <table border="0" style="margin-left: -25px !important;margin-top: -15px;padding-bottom: 0;" class="">
+                                                <tr>
+                                                    <td width="70%" style="padding-bottom: 0px;">
+                                                        <div class="slds-list_horizontal slds-wrap" style="font-size: .75rem;">{!groupFeed.CollaborationGroupObject.Name}<b style="font-weight: bold;font-size:.75rem;">&nbsp;•&nbsp;</b>{!grpFeed.colGroupFeedObject.CreatedBy.Name}<b style="font-weight: bold;font-size:.75rem;">&nbsp;•&nbsp;</b>
+                                                            
+                                                            <p><lightning:formattedDateTime value="{!grpFeed.colGroupFeedObject.CreatedDate}"/></p>                                                
+                                                            &nbsp; at &nbsp;
+                                                            <p><lightning:formattedDateTime value="{!grpFeed.colGroupFeedObject.CreatedDate}" hour="2-digit" minute="2-digit"/></p>  
+                                                        </div>
+                                                    </td>   
+                                                    <td width="30%" style="text-align:right;padding-right: 0rem !important;padding-bottom: 0;">
+                                                        <!--Comment Count-->  
+                                                        <aura:if isTrue="{!grpFeed.colGroupFeedObject.CommentCount==1}">
+                                                            <a style="font-size: 1rem; padding-right:2px;" target="_self" href="{!'https://uat-lithium.cs75.force.com/serviceprovider/s/feed/'+grpFeed.colGroupFeedObject.Id}">
+                                                                <lightning:icon class="Blue" iconName="utility:comments" title="comment"  size="x-small" />
+                                                            </a>&nbsp;{!grpFeed.colGroupFeedObject.CommentCount} 
+                                                            <aura:set attribute="else">
+                                                                <a style="font-size: 1rem; padding-right:2px;" target="_self" href="{!'https://uat-lithium.cs75.force.com/serviceprovider/s/feed/'+grpFeed.colGroupFeedObject.Id}">
+                                                                    <lightning:icon class="Black" iconName="utility:comments" title="comment"  size="x-small" />
+                                                                </a>&nbsp;{!grpFeed.colGroupFeedObject.CommentCount} 
+                                                            </aura:set>
+                                                        </aura:if>&nbsp;
+                                                        <!--Like Count-->
+                                                        <aura:if isTrue="{!grpFeed.colGroupFeedObject.LikeCount==1}">
+                                                            <a aura:id="feedid" style="font-size: 1rem;padding-right:2px;" target="_self" data-fid="{!grpFeed.colGroupFeedObject.Id}" onclick="{!c.updateFeedLikeCount}">
+                                                                <lightning:icon class="Blue" iconName="utility:like" title="like"  size="x-small" />  
+                                                            </a>{!grpFeed.colGroupFeedObject.LikeCount}
+                                                            <aura:set attribute="else">
+                                                                <a aura:id="feedid" style="font-size: 1rem;padding-right:2px;" target="_self" data-fid="{!grpFeed.colGroupFeedObject.Id}" onclick="{!c.updateFeedLikeCount}">
+                                                                    <lightning:icon class="Black" iconName="utility:like" title="like"  size="x-small" />  
+                                                                </a>{!grpFeed.colGroupFeedObject.LikeCount}
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>  
+                                    </tr>
+                                </table> 
+                            </aura:iteration> 
+                            <div>
+                                <aura:if isTrue="{!v.hasViewMoreRecords}">
+                                    <button type="button" onclick="{!c.handleViewMoreRecord}" style="margin-top: 2%;height:0%;" class="slds-button slds-button_outline-brand slds-align_absolute-center">View More</button>
+                                </aura:if>
+                            </div>
+                        </aura:if>
+                        
+                        <aura:if isTrue="{!and(v.searchTerm,or(v.searchGroupFeedList == null, v.searchGroupFeedList.length == 0))}">
+                            <div class="slds-align_absolute-center">                           
+                                <p class="slds-text slds-text-title_caps">No results found for {!v.searchTerm}</p>
+                            </div> 
+                        </aura:if> 
+                        <aura:if isTrue="{!v.searchGroupFeedList.length>0}">   
+                            <!--Changed 177 - AM -->
+                            <aura:iteration items="{!v.searchGroupFeedList}" var="gpFeed">
+                                <table border="0" width="100%" class="slds-table slds-table_cell-buffer slds-table_fixed-layout slds-max-medium-table_stacked-horizontal slds-table_bordered  slds-wrap" style="background-color: white;">
+                                    <tr>
+                                        <td width="100%" class="slds-cell-wrap" style="padding-bottom: 5px;">
+                                            <div style="width:100%;text-align: left;">
+                                                <a style="font-size: 1rem;" class="groupBody" target="_self" href="{!'https://uat-lithium.cs75.force.com/serviceprovider/s/feed/'+gpFeed.colGroupFeedObject.Id}">
+                                                    <aura:unescapedHtml value="{!gpFeed.colGroupBody}"></aura:unescapedHtml>
+                                                    
+                                                </a> 
+                                            </div>
+                                            <table border="0" style="margin-left: -25px !important;margin-top: -15px;padding-bottom: 0;" class="">
+                                                <tr>
+                                                    <td width="70%" style="padding-bottom: 0px;">
+                                                        <div class="slds-list_horizontal slds-wrap" style="font-size: .75rem;">{!groupFeed.CollaborationGroupObject.Name}<b style="font-weight: bold;font-size:.75rem;">&nbsp;•&nbsp;</b>{!gpFeed.colGroupFeedObject.CreatedBy.Name}<b style="font-weight: bold;font-size:.75rem;">&nbsp;•&nbsp;</b>
+                                                            
+                                                            <p><lightning:formattedDateTime value="{!gpFeed.colGroupFeedObject.CreatedDate}"/></p>                                                
+                                                            &nbsp; at &nbsp;
+                                                            <p><lightning:formattedDateTime value="{!gpFeed.colGroupFeedObject.CreatedDate}" hour="2-digit" minute="2-digit"/></p>  
+                                                        </div>
+                                                    </td>   
+                                                    <td width="30%" style="text-align:right;padding-right: 0rem !important;padding-bottom: 0;">
+                                                        <!--Comment Count-->  
+                                                        <aura:if isTrue="{!gpFeed.colGroupFeedObject.CommentCount==1}">
+                                                            <a style="font-size: 1rem; padding-right:2px;" target="_self" href="{!'https://uat-lithium.cs75.force.com/serviceprovider/s/feed/'+gpFeed.colGroupFeedObject.Id}">
+                                                                <lightning:icon class="Blue" iconName="utility:comments" title="comment"  size="x-small" />
+                                                            </a>&nbsp;{!gpFeed.colGroupFeedObject.CommentCount} 
+                                                            <aura:set attribute="else">
+                                                                <a style="font-size: 1rem; padding-right:2px;" target="_self" href="{!'https://uat-lithium.cs75.force.com/serviceprovider/s/feed/'+gpFeed.colGroupFeedObject.Id}">
+                                                                    <lightning:icon class="Black" iconName="utility:comments" title="comment"  size="x-small" />
+                                                                </a>&nbsp;{!gpFeed.colGroupFeedObject.CommentCount} 
+                                                            </aura:set>
+                                                        </aura:if>&nbsp;
+                                                        <!--Like Count-->
+                                                        <aura:if isTrue="{!gpFeed.colGroupFeedObject.LikeCount==1}">
+                                                            <a aura:id="feedid" style="font-size: 1rem;padding-right:2px;" target="_self" data-fid="{!gpFeed.colGroupFeedObject.Id}" onclick="{!c.updateFeedLikeCount}">
+                                                                <lightning:icon class="Blue" iconName="utility:like" title="like"  size="x-small" />  
+                                                            </a>{!gpFeed.colGroupFeedObject.LikeCount}
+                                                            <aura:set attribute="else">
+                                                                <a aura:id="feedid" style="font-size: 1rem;padding-right:2px;" target="_self" data-fid="{!gpFeed.colGroupFeedObject.Id}" onclick="{!c.updateFeedLikeCount}">
+                                                                    <lightning:icon class="Black" iconName="utility:like" title="like"  size="x-small" />  
+                                                                </a>{!gpFeed.colGroupFeedObject.LikeCount}
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>  
+                                    </tr>
+                                </table> 
+                            </aura:iteration>
+                        </aura:if>
+                    </aura:set>
+                </aura:if> 
+            </div> 
+            
+            <div class="slds-col slds-size_1-of-3 slds-border_top slds-border_right slds-border_left slds-border_bottom slds-col--padded" style="padding-left: 25px;padding-top:10px;background-color: white;height:80%;padding-right:5px;">                
+                <h1 style="color:black;font-size:large;"><b>Group Details</b></h1><br/>
+                
+                <h1 style="font-size: .75rem;">Members</h1> 
+                <p class="slds-border_bottom" style="padding-bottom:10px;">{!groupFeed.CollaborationGroupObject.MemberCount}</p> 
+                
+                <h1 style="padding-top:10px;font-size: .75rem;">Description</h1>
+                <p class="slds-border_bottom slds-cell-wrap" style="padding-bottom:10px;">{!groupFeed.CollaborationGroupObject.Description}</p> 
+                
+                <h1 style="padding-top:10px;font-size: .75rem;">Information</h1>
+                <p class="slds-border_bottom slds-cell-wrap" style="padding-bottom:10px;"><aura:unescapedHtml value="{!groupFeed.CollaborationGroupObject.InformationBody}"></aura:unescapedHtml></p>
+                
+                <h1 style="padding-top:10px;font-size: .75rem;">Owner</h1>
+                <p class="slds-border_bottom" style="padding-bottom:10px;">{!groupFeed.CollaborationGroupObject.Owner.Name}</p>
+                
+                <div style="display:flex;margin-top:1%;margin-bottom:1%;">               
+                    <lightning:icon class="Blackgrey1" iconName="utility:email" title="Digest"  size="x-medium" style="margin-top: 11%;"/>
+                    <lightning:select value="{!v.selectedValueByPostDate}"  class="digestSelect1" aura:id="select" name="select" label="" onchange="{! c.onChangeByPostDate }">                
+                        <aura:iteration items="{!v.optionsByPostDate}" var="option">                            
+                            <option selected="{!option.value == v.selectedValueByPostDate}" value="{!option.value}">{!option.label}</option>
+                        </aura:iteration>                                     
+                    </lightning:select> 
+                    <aura:if isTrue="{!v.isgroupmember}">
+                        <button type="button" onclick="{!c.redirectToGroupDetail}" id="{!groupFeed.CollaborationGroupObject.Id}" style="width:47%;margin-right:3%; padding:2%;/*font-weight:bold;margin-top:11.5%;margin-bottom:10%;*/ margin-left:2%;height: 42px;color: white;font-size: 16px;background-color:rgb(222, 179, 89);" class="slds-button slds-button_outline-brand slds-float_right manage-group-btn">Manage Group </button>
+                    </aura:if>
+                </div>
+                
+                <br/><br/>
+            </div>             
+        </div>
+    </aura:iteration>
+    <!--end-->      
+</aura:component>

@@ -1,0 +1,329 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" controller="QualifierOppController" access="global" >
+	<aura:attribute name="reloadForm" type="boolean" default="true" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!--<aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>-->
+    <!--create a component attributs -->
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="isLead" type="boolean" default="false"/>
+    <aura:attribute name="leadObjects" type="String"/>
+     <aura:attribute name="options" type="list" default="[
+                                                         {'label': '2', 'value': '2'},
+                                                          {'label': '4', 'value': '4'},
+                                                         {'label': '6', 'value': '6'},
+                                                         {'label': '8', 'value': '8'},
+                                                         {'label': '10', 'value': '10'},
+                                                         {'label': '12', 'value': '12'},
+                                                         {'label': '12+', 'value': '12+'}]"/>
+    <aura:attribute name="options1" type="list" default="[
+                                                         {'label': '22', 'value': '22'},
+                                                          {'label': '24', 'value': '24'},
+                                                         {'label': '26', 'value': '26'},
+                                                         {'label': '28', 'value': '28'},
+                                                          {'label': '30', 'value': '30'}]"/>
+     <aura:attribute name="options3" type="list" default="[
+                                                         {'label': '&lt;10 km', 'value': '&lt;10 km'},
+                                                          {'label': '10-25 km', 'value': '10-25 km'},
+                                                         {'label': '25-30 km', 'value': '25-30 km'},
+                                                         {'label': '30+ km', 'value': '30+ km'}]"/>
+    <aura:attribute name="options4" type="list" default="[
+                                                         {'label': '&lt;100', 'value': '&lt;100'},
+                                                          {'label': '100-200', 'value': '100-200'},
+                                                         {'label': '200-300', 'value': '200-300'},
+                                                         {'label': '300-400', 'value': '300-400'},
+                                                         {'label': '400-500', 'value': '400-500'},
+                                                         {'label': '500-600', 'value': '500-600'},
+                                                         {'label': '600+', 'value': '600+'}]"/>
+     <aura:attribute name="options5" type="list" default="[
+                                                         {'label': '&lt;30%', 'value': '&lt;30%'},
+                                                          {'label': '30-50%', 'value': '30-50%'},
+                                                         {'label': '50-70%', 'value': '50-70%'},
+                                                          {'label': '70+%', 'value': '70+%'}]"/> 
+    <aura:attribute name="options6" type="list" default="[
+                                                         {'label': '&lt;2000', 'value': '&lt;2000'},
+                                                          {'label': '2000-3000', 'value': '2000-3000'},
+                                                         {'label': '3000-4000', 'value': '3000-4000'},
+                                                         {'label': '4000-5000', 'value': '4000-5000'},
+                                                         {'label': '5000-6000', 'value': '5000-6000'},
+                                                          {'label': '6000+', 'value': '6000+'}]"/>
+    <aura:attribute name="options7" type="list" default="[
+                                                         {'label': '&lt;10', 'value': '&lt;10'},
+                                                          {'label': '10-20', 'value': '10-20'},
+                                                         {'label': '20-40', 'value': '20-40'},
+                                                         {'label': '40-80', 'value': '40-80'},
+                                                         {'label': '80-150', 'value': '80-150'},
+                                                         {'label': '150-300', 'value': '150-300'},
+                                                         {'label': '300-500', 'value': '300-500'},
+                                                          {'label': '500+', 'value': '500+'}]"/>
+     <aura:attribute name="CarParkingOptions" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+    <aura:attribute name="CarParkingValue" type="String" default=""/>
+    <aura:attribute name="val" type="Integer" default="50" />
+      <aura:attribute name="leadObj" type="Opportunity" default="{'Id':'',
+                                                        'Locations_for_transport_services__c':'',
+                                                        'How_many_number_of_shifts__c':'',
+                                                        'What_are_the_Shift_Durations__c':'',
+                                                        'What_are_the_no_of_Operational_Days__c':0,
+                                                        'What_is_the_load_distribution__c':'',
+                                                        'How_many_of_your_Employees_use_transport__c':0,
+                                                        'What_are_the_typical_Trip_Distances__c':'',
+                                                        'How_many_total_trips_routes_are_deployed__c':'',
+                                                        'What_of_Female_Emp_use_transportation__c':0,
+                                                        'How_many_Escort_Trips_deployed_per_day__c':'',
+                                                        'Are_the_Escort_TripsTreatedAs_1_FullTrip__c':'',
+                                                        'Are_Back_to_Back_Trips_treated_as_1Trip__c':'',
+                                                        'What_are_current_Internal_trans_systems__c':'',
+                                                        'Can_we_put_charging_stations_in_Parking__c':'',
+                                                        'What_are_your_Electricity_Rates__c':'',
+                                                        'What_are_the_types_of_Vehicles_used__c':'',
+                                                        'What_s_the_fleet_Size_Across_the_Vehicle__c':'',	
+                                                        'What_are_total_no_of_trips_by_vehicle__c':'',
+                                                        'Any_specific_Compliance_Expectations__c':'',
+                                                        'What_is_the_current_Engagement_Model__c':'',
+                                                        'What_are_the_ballpark_Rates__c':'',
+                                                        'What_are_the_typical_Contract_Durations__c':'',	
+                                                        'What_are_the_current_Vedor_roles_resp__c':'',
+                                                          'Trip_Length_Profile_one_way_distance__c':'',
+                                                           'No_of_Trips_per_Day1__c':'',
+                                                          'What_are_your_Occupancies_for_vehicles__c':'',
+                                                          'Number_of_Cars_used__c':'',
+                                                          'Avg_Km_per_Car_per_month__c':'',
+                                                        'Is_the_organization_pursuing_Initiatives__c':'',
+                                                          'Overall_Transportation_Cost__c':'',
+                                                          'Occupancy_Increase__c':'',
+                                                          'Diesel_abatement_cost_anually__c':'',
+                                                          'Fleet_Size_Reduction__c':'',
+                                                           'What_is_the_load_distribution_on_Sunday__c':'',
+                                                           'What_is_the_load_distribution_on_Saturda__c	':'',
+                                                        'Co2e_footprint_abatement_MT_annually__c':'',
+                                                          'Have_you_mapped_decision_making_hierarch__c':'',
+                                                          'Have_you_identified_EV_initiative_key_dr__c':'',
+                                                          'Roster_Data_Parameters_checked__c':'',
+                                                          'Question__c':''
+                                                        }" access="global"/> 
+    
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    <div class="slds-m-around_xx-large">
+        <form>
+            
+            <h2 class="slds-section-title--divider">Lithium</h2>
+            <br/>
+
+            <ui:inputText aura:id="Opportunity" label="What are the locations for transport services?"
+                              class="slds-input"
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.Locations_for_transport_services__c}"  
+                              required="true"
+                              />
+            
+            <br/>
+            
+           <lightning:combobox name="type"  label="How many number of shifts?" class="Category" value="{!v.leadObj.How_many_number_of_shifts__c}" placeholder="" options="{!v.options}" required="true"/>
+            
+            <br/>
+            <lightning:combobox name="type"  label="Trip Length Profile (one way distance)" class="Category" value="{!v.leadObj.Trip_Length_Profile_one_way_distance__c}" placeholder="" options="{!v.options3}"/>
+            <br/>
+            <lightning:combobox name="type"  label="No. of Trips per Day" class="Category" value="{!v.leadObj.No_of_Trips_per_Day1__c}" placeholder="" options="{!v.options4}" required="true"/>
+            <br/>
+            <lightning:combobox name="type"  label="What are your Occupancies for vehicles?" class="Category" value="{!v.leadObj.What_are_your_Occupancies_for_vehicles__c}" placeholder="" options="{!v.options5}"/>
+            <br/>
+            <lightning:combobox name="type"  label="Avg Km per Vehicle per month?" class="Category" value="{!v.leadObj.Avg_Km_per_Car_per_month__c}" placeholder="" options="{!v.options6}"/>
+            <br/>
+            <lightning:combobox name="type"  label="Number of Vehicles used?" class="Category" value="{!v.leadObj.Number_of_Cars_used__c}" placeholder="" options="{!v.options7}"/>
+            <br/>
+            <ui:inputText aura:id="Opportunity" label="What are  the shift Durations?"
+                              class="slds-input"
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.What_are_the_Shift_Durations__c}"
+                          required="true"
+                              />
+            <br/>
+            
+             <lightning:combobox name="type"  label="What are the number of Operational days for Transport ?" class="Category" value="{!v.leadObj.What_are_the_no_of_Operational_Days__c}" placeholder="" options="{!v.options1}" required="true"/>
+            <br/>
+            
+            <ui:inputText aura:id="Opportunity" label="What is the load distribution on Saturday?"
+                              class="slds-input"
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.What_is_the_load_distribution_on_Saturda__c}"
+                          required="true"
+                              />
+            
+            <br/>
+             <ui:inputText aura:id="Opportunity" label="What is the load distribution on Sunday?"
+                              class="slds-input"
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.What_is_the_load_distribution_on_Sunday__c	}"
+                          required="true"
+                              />
+            
+            <br/>
+            <ui:inputText aura:id="Opportunity" label="What is the load distribution on Weekedays and Weekends ?"
+                              class="slds-input"
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.What_is_the_load_distribution__c}"
+                              />
+            <br/>
+            
+            <ui:inputNumber aura:id="Opportunity" label="How many of your employees use Transportation?"
+                            class="slds-input"
+                            labelClass="slds-form-element__label"
+                            value="{!v.leadObj.How_many_of_your_Employees_use_transport__c}"
+                            />
+            
+            <br/>
+            <ui:inputText aura:id="Opportunity" label="What are the typical trip distances?"
+                              class="slds-input"
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.What_are_the_typical_Trip_Distances__c}"
+                              />
+            
+            <br/>
+            
+            <ui:inputText aura:id="Opportunity" label="How many total trips/routes are deployed per day ?"
+                              class="slds-input"
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.How_many_total_trips_routes_are_deployed__c}"
+                              />
+            <br/>
+            <ui:inputNumber aura:id="Opportunity" label="What percentage of Female Employees use transportation and do they require Escorts?"
+                            class="slds-input"
+                            labelClass="slds-form-element__label" 
+                            value="{!v.leadObj.What_of_Female_Emp_use_transportation__c}"
+                            />
+            
+            <br/>
+            <ui:inputText aura:id="Opportunity" label="How many Escort trips are deployed per day ?"
+                              class="slds-input"
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.How_many_Escort_Trips_deployed_per_day__c}"
+                              />
+            
+            <br/>
+            <ui:inputText aura:id="Opportunity" label="Are the Escort trips treated as 1 Full trip ?"
+                              class="slds-input"
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.Are_the_Escort_TripsTreatedAs_1_FullTrip__c}"
+                              required="true"
+                              />
+            
+            <br/>
+            <ui:inputText aura:id="Opportunity" label="Are back-back Trips treated as 1 full trip?"
+                              class="slds-input"
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.Are_Back_to_Back_Trips_treated_as_1Trip__c}"
+                               required="true"
+                              />
+            
+            <br/>
+            <ui:inputText aura:id="Opportunity" label="What are the current internal transportation systems/Apps etc used?"
+                              class="slds-input"
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.What_are_current_Internal_trans_systems__c}"
+                           required="true"
+                              />
+            
+            <br/>
+      
+   
+    <lightning:radioGroup
+        aura:id="mygroup"
+        name="radioButtonGroup"
+        label="Can we put charging stations at your parking?"
+        options="{! v.CarParkingOptions }"
+        value="{! v.CarParkingValue }"
+        onchange="{! c.CarHandleChange }"
+        required="true" />
+
+            <br/>
+             <ui:inputText aura:id="Opportunity" label="What are your Electricity Rated?"
+                              class="slds-input" 
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.What_are_your_Electricity_Rates__c}"
+                              /> 
+            
+            <br/>
+            <h2 class="slds-section-title--divider">Vendor</h2>
+            <br/>
+            <ui:inputText aura:id="Opportunity" label="What are the different types of Vehicles currently used?"
+                              class="slds-input" 
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.What_are_the_types_of_Vehicles_used__c}"
+                              />
+            <br/>
+            <ui:inputText aura:id="Opportunity" label="What are the fleet size across the types of Vehicles by Shift?"
+                              class="slds-input" 
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.What_s_the_fleet_Size_Across_the_Vehicle__c}"
+                              />
+            <br/>
+            <ui:inputText aura:id="Opportunity" label="What are the total number of trips done by each Vehicle?"
+                              class="slds-input" 
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.What_are_total_no_of_trips_by_vehicle__c}"
+                              />
+            <br/>
+           
+           
+            
+            <ui:inputText aura:id="Opportunity" label="Are their any specific Compliance Expectations?"
+                              class="slds-input" 
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.Any_specific_Compliance_Expectations__c}"
+                              />
+            <br/>
+            <ui:inputText aura:id="Opportunity" label="What is the current Engagement Model by Vendors?"
+                              class="slds-input" 
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.What_is_the_current_Engagement_Model__c}"
+                              />
+            <br/>
+             <ui:inputText aura:id="Opportunity" label="What are the Ballpark Rates?"
+                              class="slds-input" 
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.What_are_the_ballpark_Rates__c	}"
+                              />
+            <br/>
+            <ui:inputText aura:id="Opportunity" label="What are the typical Contract Durations?"
+                              class="slds-input" 
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.What_are_the_typical_Contract_Durations__c}"
+                              />
+            <br/>
+             <ui:inputText aura:id="Opportunity" label="What are the current Vendor roles and responsibilities?"
+                              class="slds-input" 
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.What_are_the_current_Vedor_roles_resp__c}"
+                              />
+            <br/>
+
+
+<h2 class="slds-section-title--divider">Enterprise</h2>
+            <br/>
+            
+
+<ui:inputText aura:id="Opportunity" label="Is the organization pursuing  any Green Initiatives?"
+                              class="slds-input" 
+                              labelClass="slds-form-element__label"
+                              value="{!v.leadObj.Is_the_organization_pursuing_Initiatives__c}"
+                              />
+            <br/> 
+
+
+            
+            
+            <lightning:button variant="brand" type="button" name="Save" label="Save" onclick="{!c.OnSubmit}" />
+            
+        </form>                           
+    </div> 
+</aura:component>

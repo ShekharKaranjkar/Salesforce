@@ -1,0 +1,63 @@
+<apex:page docType="html-5.0"  showHeader="false" sidebar="false" applyBodyTag="false" applyHtmlTag="false" cache="true" expires="50">
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.js"/>
+    
+    <style>
+        #my_camera{
+        width: 320px;
+        height: 240px;
+        border: 1px solid black;
+        }
+    </style>
+    <body>
+        <apex:form >
+        <div id="my_camera"></div>
+        <apex:commandButton value="Capture Image-" id="theButton" onclick="take_snapshot()"  reRender="false"/>
+        <br/>
+        Captured Image->
+        <div id="results" ></div>
+        
+        <br/>
+        Result->
+        <p id="opResult"></p>
+        </apex:form>
+    </body>
+    <script language="JavaScript">
+    Webcam.set({
+        width: 320,
+        height: 240,
+        image_format: 'jpeg',
+        jpeg_quality: 100
+    });
+    Webcam.attach( '#my_camera' );
+    
+    function take_snapshot() {
+        Webcam.snap( function(data_uri) {
+            console.log('data_uri=='+data_uri);
+            document.getElementById('results').innerHTML = 
+                '<img src="'+data_uri+'"/>';
+                
+                //data_uri
+        } );
+    }
+    
+    //getBinary(file)
+    
+    
+    
+    function getBinary(encodedFile) {
+        var base64Image = encodedFile.split("data:image/jpeg;base64,")[1];
+        var binaryImg = atob(base64Image);
+        var length = binaryImg.length;
+        var ab = new ArrayBuffer(length);
+        var ua = new Uint8Array(ab);
+        for (var i = 0; i < length; i++) {
+          ua[i] = binaryImg.charCodeAt(i);
+        }
+        var blob = new Blob([ab], {
+          type: "image/jpeg"
+        });
+        return ab;
+      }
+    </script>
+
+</apex:page>

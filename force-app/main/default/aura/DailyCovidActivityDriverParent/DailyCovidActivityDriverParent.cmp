@@ -1,0 +1,47 @@
+<aura:component  controller="DailyCovidActivityDriverController">
+    <aura:attribute name="fileName" type="String" default="No File Selected.." />
+    <aura:attribute name="certificate" type="String" default="certificate" />
+    <aura:attribute name="signed" type="String" default="signed" />
+    <aura:attribute name="recordid" type="id" />
+        <aura:attribute name="certificateApexString" type="String" />
+    <aura:attribute name="signedApexString" type="String" />
+    
+    <aura:attribute name="app" type="String"  />
+    <aura:attribute name="duty" type="boolean" />
+    <aura:attribute name="covidDeclarationObj" type="Covid_Declaration__c"/>
+      <aura:attribute name="contentVersionList" type="List"  />
+    
+    <aura:handler name="DailyCovidActivityDriverEvent" event="c:DailyCovidActivityDriverEvent" action="{!c.handleComponentEvent}"/>  
+    
+    <div class="slds-card slds-p-around_medium">
+        <div class="slds-box slds-theme_shade">
+            <span class="slds-text-heading_large slds-align_absolute-center"><b>Daily Covid Activities - Driver</b> </span>
+        </div>
+        
+        <div class="slds-grid slds-wrap slds-p-left_x-large ">
+            <div class="slds-size--1-of-1">
+
+                <div>
+                    <p> Are you suffering from covid symptoms(fever/dry cough/cold/breathlessness)?    </p>
+                    <lightning:input type = "checkbox"    class = "slds-p-vertical_small slds-p-left_xx-large"
+                           checked="{!v.duty}"           />     
+                </div>
+                <div>
+                    <p> Enter body temperature in Fahrenheit   </p>
+                    <lightning:input type = "text"   class = "slds-p-vertical_small slds-p-left_xx-large" 
+                   value="{!v.app}"                  />      
+                </div>      
+                <p>   Upload aarogya setu screenshot  </p>
+                <c:DailyCovidActivitiesComponent fieldvalue="{!v.certificate}" parentId="{!v.recordid}"/>
+                
+                <lightning:button label="Cancel" onclick="{!c.handleCancel}" class="slds-m-top--medium" />
+                <lightning:button label="Save" onclick="{!c.handleSave}"
+                                  variant="brand" class="slds-m-top--medium"/>
+            </div>
+            
+        </div>
+        
+    </div>
+    
+    
+</aura:component>

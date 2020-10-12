@@ -1,0 +1,20 @@
+<apex:page standardController="Opportunity">
+     <apex:includeScript value="/lightning/lightning.out.js" />
+    <apex:includeLightning />
+
+    <div id="lightning" />
+
+    <script>
+    
+        $Lightning.use("c:ProductSelectionApp", function() {
+          $Lightning.createComponent("c:ProductSelection",
+              { "recordId" : "{!$CurrentPage.parameters.id}"},
+              "lightning",
+              function(cmp) {
+                console.log("button was created");
+                // do some stuff
+              }
+          );
+        });
+    </script>
+</apex:page>

@@ -1,0 +1,125 @@
+<aura:component >
+    <aura:attribute name="jobcardItemInstance" type="object" access="public"/>   
+    <aura:attribute name="enableWifi" type="Boolean" default="false"/>
+    <aura:attribute name="buttonstate" type="Boolean" default="false"/>
+    <aura:attribute name="selected" type="Boolean" access="public" default="true" />
+    <aura:handler name = "init" value = "{!this}" action = "{!c.doInit}"/>
+    <aura:attribute name="rowIndex" type="integer"/>
+
+    
+    
+    <div class="slds-box">
+    <lightning:tabset selectedTabId="two">
+        
+        <lightning:tab   label="Swapped" id="one">
+                        <div >
+                <div class = "slds-form-element slds-p-horizontal_x-small">
+                    <table class = "slds-table slds-table_cell-buffer slds-table_header-hidden">
+                        <thead class = "slds-border_bottom slds-border_top">
+                            <tr class = "slds-line-height_reset">
+                                <th  scope = "col">
+                                    <div class = "slds-truncate" title = "Swapp"></div>
+                                </th>
+                                <th  scope = "col">
+                                    <div class = "slds-truncate" title = "Issue">Issue</div>
+                                </th>
+                                <th  scope = "col">
+                                    <div class = "slds-truncate" title = "Action">Action Taken</div>
+                                </th>
+                              
+                                <th scope = "col">
+                                    <div class = "slds-truncate" title = "Vehicle">From Which Vehicle</div>
+                                </th>
+                                <th  scope = "col">
+                                    <div class = "slds-truncate" title = "Part">Part Name</div>
+                                </th>
+                            </tr>
+                        </thead>                      
+                        <tbody>
+                           
+                            <aura:iteration items="{!v.jobcardItemInstance.swapped}" var="item" indexVar="index">
+                                <c:JobCardJobCarLineItemDynamic jobcardItemInstance="{!item}"  rowIndex="{!index}"  />
+                            </aura:iteration>  
+                    
+                        </tbody>
+                    </table>
+                </div>               
+            </div>   
+        </lightning:tab>
+        <lightning:tab   label="Inventory" id="two">
+                        <div  >
+                <div class = "slds-form-element slds-p-horizontal_x-small">
+                    <table class = "slds-table slds-table_cell-buffer slds-table_header-hidden">
+                        <thead class = "slds-border_bottom slds-border_top">
+                            <tr class = "slds-line-height_reset">
+                                <th  scope = "col">
+                                    <div class = "slds-truncate" title = "Slab"></div>
+                                </th>
+                                <th  scope = "col">
+                                    <div class = "slds-truncate" title = "Issue">Issue</div>
+                                </th>
+                           
+              
+                                
+                                <th  scope = "col">
+                                    <div class = "slds-truncate" title = "Inventory">Inventory</div>
+                                </th>
+                                <th  scope = "col">
+                                    <div class = "slds-truncate" title = "Product Available"> Product Available</div>
+                                </th>
+                                <th  scope = "col">
+                                    <div class = "slds-truncate" title = "Quantity">Quantity</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>                          
+                         <aura:iteration items="{!v.jobcardItemInstance.inventory}" var="item" indexVar="index">
+                                <c:JobCardJobCarLineItemDynamicinventory jobcardItemInstance="{!item}"  rowIndex="{!index}"  />
+                            </aura:iteration>       
+              
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+        </lightning:tab>
+         <lightning:tab   label="General Issue" >
+                        <div  >
+                <div class = "slds-form-element slds-p-horizontal_x-small">
+                    <table class = "slds-table slds-table_cell-buffer slds-table_header-hidden">
+                        <thead class = "slds-border_bottom slds-border_top">
+                            <tr class = "slds-line-height_reset">
+                                <th  scope = "col">
+                                    <div class = "slds-truncate" title = "General"></div>
+                                </th>
+
+                                <th  scope = "col">
+                                    <div class = "slds-truncate" title = "Quantity">Issue</div>
+                                  
+                                </th>
+                                <th  scope = "col">
+                                      <div class = "slds-truncate" title = "Product Available"> Action Taken</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>                          
+                         <aura:iteration items="{!v.jobcardItemInstance.general}" var="item" indexVar="index">
+                                <c:JobCardJobCarLineItemDynamicGeneral jobcardItemInstance="{!item}"  rowIndex="{!index}"  />
+                            </aura:iteration>       
+              
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+        </lightning:tab>
+        
+    </lightning:tabset>
+    
+
+
+
+    </div>
+</aura:component>

@@ -1,0 +1,201 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                access="global"
+                controller = "RosterController" >
+    
+    <aura:handler name = "init" value = "{!this}" action = "{!c.doInit}"/>
+    <aura:attribute name="serviceProviderList" type="list"/>
+      <aura:attribute name="monthRecordTypeID" type="String"/>
+      <aura:attribute name="weekendRecordTypeID" type="String"/>
+      <aura:attribute name="weekdayRecordTypeID" type="String"/>
+      <aura:attribute name="Saveflag" type="Boolean" default="false"/>
+        
+   
+   
+    
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+    
+
+    
+    
+    <div class="slds-box" >
+        <div class="slds-box slds-theme_shade">
+            <span>             <lightning:icon iconName="action:description" alternativeText="Description" title="Description" /></span>
+            <span class="slds-text-heading_large"> Roster </span>
+            
+        </div>
+        
+        <div class="slds-box">
+            <lightning:tabset>
+                <lightning:tab  label = "Monthly" > 
+                    <lightning:card >
+                        <div class = "slds-p-around_small slds-grid slds-wrap">
+                            <table class = "slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered ">
+                                <thead>
+                                    <tr class = "slds-line-height_reset">
+                                        <th class = "slds-size_1-of-6 " style="width:auto;" scope = "col">
+                                            <div class = "slds-truncate " title = "Name">Driver Name</div>
+                                        </th>
+                                        <th class = "slds-size_1-of-6 " scope = "col">
+                                            
+                                            <div class = "slds-truncate " title = "Checkbox"> Lithium ID </div>
+                                        </th>
+                                        <th class = "slds-size_1-of-6" scope = "col">
+                                            <div class = "slds-truncate slds-align_absolute-center" title = "Shift">Shift</div>
+                                        </th>
+                                        <th class = "slds-size_1-of-6" scope = "col">
+                                            <div class = "slds-truncate slds-align_absolute-center" title = "Shift Start Date">Shift Start Date</div>
+                                        </th>
+                                        
+                                        
+                                        <th class = "slds-size_1-of-6" scope = "col">
+                                            <div class = "slds-truncate slds-align_absolute-center" title = "Shift End Date">Shift End Date</div>
+                                        </th>
+                                        <th class = "slds-size_1-of-6" scope = "col">
+                                            <div class = "slds-truncate slds-align_absolute-center" title = "Shift End Date">Shift Start Time</div>
+                                        </th>
+                                        <th class = "slds-size_1-of-6" scope = "col">
+                                            <div class = " slds-align_absolute-center" title = "Shift End Date">Shift End Time</div>
+                                        </th>
+                                        <th class = "slds-size_1-of-6" scope = "col">
+                                            <div class = "slds-truncate slds-align_absolute-center" title = "Week Off">Week Off</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    <aura:iteration items = "{!v.serviceProviderList}" var = "item"  > 
+                                        <c:MonthlyChild  monthRostdataObject="{!item.monthRost}" />
+                                    </aura:iteration>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </lightning:card>
+                </lightning:tab>
+                <lightning:tab  label = "Weekly"> 
+                    <lightning:card >
+                        
+                        
+                        <lightning:tabset>
+                            <lightning:tab  label = "Weekdays" > 
+                                <lightning:card >
+                          
+                                    <div class = "slds-p-around_small slds-grid slds-wrap">
+                                        <table class = "slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered ">
+                                            <thead>
+                                                <tr class = "slds-line-height_reset">
+                                                    <th class = "slds-size_1-of-6" style="width:auto;"  scope = "col">
+                                                        <div  title = "Name">Driver Name</div>
+                                                    </th>
+                                                    <th class = "slds-size_1-of-6" scope = "col">
+                                                        
+                                                        <div  title = "Checkbox"> Lithium ID </div>
+                                                    </th>
+                                                    <th class = "slds-size_1-of-6" scope = "col">
+                                                        <div class = " slds-align_absolute-center" title = "Shift">Shift</div>
+                                                    </th>
+                                        <th class = "slds-size_1-of-6" scope = "col">
+                                            <div class = " slds-align_absolute-center" title = "Shift Start Date">Shift Start Date</div>
+                                        </th>
+                                        
+                                        
+                                        <th class = "slds-size_1-of-6" scope = "col">
+                                            <div class = " slds-align_absolute-center" title = "Shift End Date">Shift End Date</div>
+                                        </th>
+                                        <th class = "slds-size_1-of-6" scope = "col">
+                                            <div class = " slds-align_absolute-center" title = "Shift End Date">Shift Start Time</div>
+                                        </th>
+                                        <th class = "slds-size_1-of-6" scope = "col">
+                                            <div class = "slds-align_absolute-center" title = "Shift End Date">Shift End Time</div>
+                                        </th>
+                                                    
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <aura:iteration items = "{!v.serviceProviderList}" var = "item"  > 
+                                                    <c:WeeklyRosterChild  weeklyRostdataObject="{!item.weekdayRost}"  />
+                                                </aura:iteration>
+                                                
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    
+                                </lightning:card>
+                            </lightning:tab>
+                            <lightning:tab  label = "Weekends"> 
+                                <lightning:card >
+                                    <div class = "slds-p-around_small slds-grid slds-wrap">
+                                        <table class = "slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered ">
+                                            <thead>
+                                                <tr class = "slds-line-height_reset">
+                                                    <th class = "slds-size_1-of-6 " style="width:auto;" scope = "col">
+                                                        <div  title = "Name">Driver Name</div>
+                                                        
+                                                    </th>
+                                                    <th class = "slds-size_1-of-6" scope = "col">
+                                                        <div  title = "Checkbox"> Lithium ID </div>
+                                                    </th>
+                                                    <th class = "slds-size_1-of-6" scope = "col">
+                                                        <div class = " slds-align_absolute-center" title = "Shift">Shift</div>
+                                                    </th>
+                                        <th class = "slds-size_1-of-6" scope = "col">
+                                            <div class = "slds-align_absolute-center" title = "Shift Start Date">Shift Start Date</div>
+                                        </th>
+                                        
+                                        
+                                        <th class = "slds-size_1-of-6" scope = "col">
+                                            <div class = " slds-align_absolute-center" title = "Shift End Date">Shift End Date</div>
+                                        </th>
+                                        <th class = "slds-size_1-of-6" scope = "col">
+                                            <div class = " slds-align_absolute-center" title = "Shift End Date">Shift Start Time</div>
+                                        </th>
+                                        <th class = "slds-size_1-of-6" scope = "col">
+                                            <div class = " slds-align_absolute-center" title = "Shift End Date">Shift End Time</div>
+                                        </th>
+                                                    
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <aura:iteration items = "{!v.serviceProviderList}" var = "item"  > 
+                                                    <c:WeekendRosterChild  weekendRostdataObject="{!item.weekendRost}"  />
+                                                </aura:iteration>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </lightning:card>
+                            </lightning:tab>
+                        </lightning:tabset>
+                        
+                        
+                        
+                    </lightning:card>
+                </lightning:tab>
+            </lightning:tabset>
+            
+        </div>
+        
+        <div class = "slds-p-around_small">
+            <span >
+                
+                <lightning:button label = "Cancel" onclick = "{!c.goesBack}"/>
+            </span>
+            
+            <span class = "slds-p-around_small">
+                <button class = "slds-button slds-button_brand"  onclick = "{!c.Save}">Save</button>
+            </span>
+            
+        </div>
+    </div>
+</aura:component>

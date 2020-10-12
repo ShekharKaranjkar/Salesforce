@@ -1,0 +1,954 @@
+<apex:page controller="invoiceId1" renderAs="pdf" standardStylesheets="false">
+    <apex:stylesheet value="/resource/1sd576580677000/Tsheet"/>
+    <apex:outputPanel rendered="{!IF(invoiceList.RecordTypeId=='0125D000000QjPCQA0',true,false)}">
+        <apex:form >        
+            <div style="border:2px solid black;">
+                
+                
+                <div style="text-align: left; background-color: rgb(255, 255, 255);display:inline-block;float:left;font-family: Arial Unicode MS; font-size: 10pt;">
+                    <apex:image url="{!$Resource.Lithiumlogo}" style=" width:100px; margin-right:2.5px; margin-bottom:1px"/>               
+                </div>
+                <div style="text-align: left; background-color: rgb(255, 255, 255);float:left;font-size:11pt;">
+                    
+                    <div style="font-size:20px!important;"><Strong>Lithium Urban Technology Private Limited</Strong></div>
+                    CIN:U74900KA2014PTCO76835 <br/>
+                    GSTIN No:{!billoc.GSTIN__c}<br/>
+                    {!billoc.Street_Address__c} <br/>	
+                    {!billoc.City__c}<br/>
+                    {!billoc.state__c} ,{!billoc.Zip_Code__c}.
+                    <br/>
+                    <div style="color:blue;">
+                        <a href="www.project-lithium.com">www.project-lithium.com</a><br/>
+                        
+                        <a href=" accountingandtaxation@project-lithium.com"> accountingandtaxation@project-lithium.com</a><br/>
+                    </div>                     
+                </div>   
+                
+                <hr style="margin-top:160px;border:1px solid #000;"/>  
+                <div>
+                    <br/>
+                    <article class="slds-card" style="background-color: blue">
+                        <div class="slds-card__body slds-card__body_inner display:inline-block;">
+                            <div style="text-align:center;font-family: Arial Unicode MS;"><Strong><b>TAX INVOICE</b></Strong></div>
+                        </div>
+                    </article> 
+                    <br/>
+                </div>
+                <table style="width:100%;font-size:11pt;">
+                    <tr>
+                        <td width="33%">
+                            <b>Invoice To:</b>
+                        </td>
+                        <td width="33%">
+                            <b>Place of Supply:</b>
+                        </td>
+                        <td width="33%">
+                            <b>Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                            </b>  <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!invoiceList.Date__c}" /> 
+                            </apex:outputText> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Party Name:{!invoiceList.Account__r.Name}</td> 
+                        <td>Party Name:{!invoiceList.Account__r.Name}</td>
+                        <td><b>Invoice #&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {!invoiceList.Name}</td>
+                    </tr>
+                    <tr>
+                        <td>Street:{!invoiceList.Campus__r.Billing_Street__c}</td> 
+                        <td>Street:{!invoiceList.Campus__r.Shipping_Street__c}</td>
+                        <td><b>Agreement No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {!invoiceList.Contract__r.ContractNumber}</td>
+                    </tr>
+                    <tr>
+                        <td>City:{!invoiceList.Campus__r.Billing_City__c}
+                        </td>
+                        <td>City:{!invoiceList.Campus__r.Shipping_City__c}
+                        </td>
+                        <td><b>Agreement Dated:
+                            </b><apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!invoiceList.Contract__r.StartDate}" /> 
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            State:{!invoiceList.Campus__r.Billing_State_Province__c}
+                        </td>
+                        <td>
+                            State:{!invoiceList.Campus__r.Shipping_State_Province__c}
+                        </td>
+                        <td>
+                            <b> Due Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                            </b> <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!invoiceList.Due_Date__c}" /> 
+                            </apex:outputText>                
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>State Code:{!invoiceList.Campus__r.Billing_Zip_Postal_Code__c}
+                        </td>
+                        <td>State code:{!invoiceList.Campus__r.Shipping_Zip_Postal_Code__c}
+                        </td>
+                        <td>
+                            <b>Payment Terms&nbsp;&nbsp;&nbsp;&nbsp;:</b> Net{!invoiceList.Campus__r.Payment_Terms__c}
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>GSTIN No: {!invoiceList.Campus__r.GSTN__c}
+                        </td>
+                        <td>GSTIN No: {!invoiceList.Campus__r.GSTN__c}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>PAN No:{!invoiceList.Campus__r.PAN__c} </td>
+                        <td>PAN No:{!invoiceList.Campus__r.PAN__c} </td>
+                    </tr>
+                </table>
+                <br/> 
+                <article>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-card" style="display:inline-block;width:100%">
+                            <div class="slds-card__body slds-card__body_inner">
+                                
+                                <table border="1" width="100%" style="border-collapse:collapse;">
+                                    <tr>
+                                        <th width="55%">Description</th>
+                                        <th width="10%">No of Vehicles</th>
+                                        <th width="10%" >Rate per car</th>
+                                        <th width="25%">Amount in INR</th>
+                                    </tr>
+                                    <tr>
+                                        <td><apex:outputField value="{!invoiceList.Description__c}"/> </td>
+                                        <td><apex:outputField value="{!invoiceList.No_of_Vehicles__c}"/> </td>  
+                                        <td><apex:outputField value="{!invoiceList.Rate_per_Car__c}"/> </td>
+                                        <td><apex:outputField value="{!invoiceList.Amount__c}"/> </td>
+                                    </tr>
+                                </table>  
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                
+                
+                <table style="width:100%;text-align:right; " >
+                    <!-- <div style="{!IF(showcgst, 'display:block', 'display:none')}"> -->
+                    
+                    
+                    <tr >
+                        <td/>
+                        <td colspan="2" style="text-align:right;">Sub-Total :{!subtotal}
+                            <span style="{!IF(showcgst, 'display:block', 'display:none')}">SGST @ 6% :{!sgst}</span>
+                            <span style="{!IF(showcgst, 'display:block', 'display:none')}">CGST @ 6% :{!CGST}</span>
+                            <span style="{!IF(showcgst, 'display:none', 'display:block')}">IGST @ 12% :{!IGSTR}</span>
+                        </td>
+                        
+                    </tr> 
+                    <!--<tr style="{!IF(showcgst, 'display:block', 'display:none')};text-align:right !important;">
+<td/>
+<td colspan="2" style="text-align:right !important;">SGST @ 6% :{!sgst}</td>
+</tr>      
+<tr style="{!IF(showcgst, 'display:block', 'display:none')};text-align:right !important;">
+<td/>
+<td colspan="2" style="text-align:right !important;">SGST @ 6% :{!sgst}</td>
+</tr>
+<tr style="{!IF(showcgst, 'display:none', 'display:block')};text-align:right !important;">
+<td/>
+<td colspan="2" style="text-align:right !important;">IGST @ 12% :{!IGSTR}</td>
+</tr>-->
+                </table>
+                <table style="width:100% ">
+                    
+                    <tr>
+                        <td width="50%"><b>Amount in words:</b></td>
+                        <td width="50%" style="text-align:right;"><b>Total :</b>{!total}
+                        </td> 
+                    </tr>
+                    
+                    
+                </table>
+                <div style="font-size:11pt; padding-left:5px;" >
+                    <p>
+                        <b> ( {!numtoword} Rupees only) </b> 	
+                        
+                    </p>
+                    
+                </div>
+                <div class=""  style=" padding-left:5px;" >
+                    
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div style="font-size: 10px;font-weight: 450;color:#000;font-family:'cursive', sans-serif;padding-top 20px">
+                            <p> Whether tax is payable under Reverse Charge : No  </p>	
+                            <p> <i> Reference:</i> Transport Solution Agreement Dated &nbsp;&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                <apex:param value="{!invoiceList.Contract__r.StartDate}" /> 
+                                </apex:outputText>
+                            </p>
+                            <p>  State Code:{!invoiceList.Campus__r.Billing_State_Province__c}	</p>
+                            <p>  SAC Code: 996601	</p>
+                            <p>  PAN:{!invoiceList.Campus__r.PAN__c}	</p>
+                            <p>  Note:- Payment should be sent along with payment advice	</p>
+                            <p>  Bank:- {!bilc.Bank_Name__c}</p>	
+                            <p>  A/c No.: {!bilc.Account_Number__c}	</p>
+                            <p> IFSC Code:{!bilc.IFSC_Code__c} </p>	
+                            <p> Branch: {!bilc.Branch__c}</p>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </apex:form>  
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!IF(invoiceList.RecordTypeId=='0125D000000QjP2QAK',true,false)}">
+        
+        <apex:form >        
+            <div style="border:2px solid black;">
+                <div style="text-align: left; background-color: rgb(255, 255, 255);display:inline-block;float:left;font-family: Arial Unicode MS; font-size: 10pt;">
+                    <apex:image url="{!$Resource.Lithiumlogo}" style=" width:100px; margin-right:2.5px; margin-bottom:1px"/>               
+                </div>
+                <div style="text-align: left; background-color: rgb(255, 255, 255);float:left">
+                    
+                    <div style="font-size:20px!important;"><Strong>Lithium Urban Technology Private Limited</Strong></div>
+                    CIN:U74900KA2014PTCO76835 <br/>
+                    GSTIN No:{!billoc.GSTIN__c}<br/>
+                    {!billoc.Street_Address__c} <br/>	
+                    {!billoc.City__c}<br/>
+                    {!billoc.state__c} ,{!billoc.Zip_Code__c}. 
+                    <br/>
+                    <div style="color:blue;">
+                        <a href="www.project-lithium.com">www.project-lithium.com</a><br/>
+                        
+                        <a href=" accountingandtaxation@project-lithium.com"> accountingandtaxation@project-lithium.com</a><br/>
+                    </div> 
+                    
+                </div>   
+                
+                <hr style="margin-top:160px;border:1px solid #000;"/>  
+                <div>
+                    <br/>
+                    <article class="slds-card" style="background-color: blue">
+                        <div class="slds-card__body slds-card__body_inner display:inline-block;">
+                            <div style="text-align:center"><Strong>CREDIT NOTE</Strong></div>
+                        </div>
+                    </article> 
+                    <br/>
+                </div>
+                <table style="width:100%">
+                    <tr>
+                        <td width="33%">
+                            <b>To:</b>                </td>
+                        <td width="33%">
+                            <b> Place of Supply:</b>
+                        </td>
+                        <td width="33%">
+                            <b>  Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                            </b> <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!invoiceList.Date__c}" /> 
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Party Name:{!invoiceList.Account__r.Name}</td> 
+                        <td>Party Name:{!invoiceList.Account__r.Name}</td>
+                        <td><b>Credit Note #&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Street:{!invoiceList.Campus__r.Billing_Street__c}</td> 
+                        <td>Street:{!invoiceList.Campus__r.Shipping_Street__c}</td>
+                        <td><b>Invoice Ref No&nbsp;&nbsp;&nbsp;&nbsp;: {!invoiceList.Name}</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>City:{!invoiceList.Campus__r.Billing_City__c}
+                        </td>
+                        <td>City:{!invoiceList.Campus__r.Shipping_City__c}
+                        </td>
+                        <td><b>Agreement No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {!invoiceList.Contract__r.ContractNumber}
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            State:{!invoiceList.Campus__r.Billing_State_Province__c}
+                        </td>
+                        <td>
+                            State:{!invoiceList.Campus__r.Shipping_State_Province__c}
+                        </td>
+                        <td>
+                            <b>Agreement Dated:
+                            </b> <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!invoiceList.Contract__r.StartDate}" /> 
+                            </apex:outputText>
+                            
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>State Code:{!invoiceList.Campus__r.Billing_Zip_Postal_Code__c}
+                        </td>
+                        <td>State Code:{!invoiceList.Campus__r.Shipping_Zip_Postal_Code__c}
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td>GSTIN No: {!invoiceList.Campus__r.GSTN__c}
+                        </td>
+                        <td>GSTIN No: {!invoiceList.Campus__r.GSTN__c}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>PAN No:{!invoiceList.Campus__r.PAN__c} </td>
+                        <td>PAN No:{!invoiceList.Campus__r.PAN__c} </td>
+                    </tr>
+                </table>
+                <br/><br/> 
+                <article>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-card" style="display:inline-block;width:100%">
+                            <div class="slds-card__body slds-card__body_inner">
+                                <table border="1" width="100%" style="border-collapse:collapse;" >
+                                    <tr>
+                                        <th width="70%">Description</th>
+                                        
+                                        <th width="30%">Amount in INR</th>
+                                    </tr>
+                                    <tr>
+                                        <td><apex:outputField value="{!invoiceList.Description3__c}"/> </td>
+                                        
+                                        <td><apex:outputField value="{!invoiceList.Amountcn__c}"/> </td>
+                                    </tr>
+                                </table>  
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                               
+                <table style="width:100% " >
+                    
+                    <tr>
+                        <td/>
+                        <td colspan="2" style="text-align:right;">Sub-Total :{!subtotalcn}
+                            <span style="{!IF(showcgst, 'display:block', 'display:none')}">SGST @ 6% :{!sgstcn}</span>
+                            <span style="{!IF(showcgst, 'display:block', 'display:none')}">CGST @ 6% :{!CGSTcn}</span>
+                            <span style="{!IF(showcgst, 'display:none', 'display:block')}">IGST @ 12% :{!IGSTRcn}</span>
+                        
+                        </td>
+                    </tr> 
+                  <!--  <tr style="{!IF(showcgst, 'display:block', 'display:none')};{text-align:right !important;}">
+                        <td/>
+                        <td colspan="2" style="text-align:right;">SGST @ 6% :{!sgstcn}</td>
+                    </tr>      
+                    <tr style="{!IF(showcgst, 'display:block', 'display:none')};{text-align:right !important;}">
+                        <td/>
+                        <td colspan="2" style="text-align:right;">CGST @ 6% :{!CGSTcn}</td>
+                    </tr>
+                    <tr style="{!IF(showcgst, 'display:none', 'display:block')};{text-align:right !important;}">
+                        <td/>
+                        <td colspan="2" style="text-align:right;">IGST @ 12% :{!IGSTRcn}</td>
+                    </tr> -->
+                </table>
+                <table style="width:100% ">
+                    <tr>
+                        <td width="50%"><b>Amount in words:</b></td>
+                        <td width="50%" style="text-align:right;"><b>Total :</b>{!totalcn}</td> </tr>
+                    
+                </table> 
+                
+                <div class="">
+                    <div class="" style=" padding-left:5px;" >
+                        <p>
+                            <b> ( {!numtowordcn} Rupees only) </b>	
+                            
+                        </p>
+                        
+                        
+                    </div>
+                </div>
+                <div class="" style=" padding-left:5px;">
+                    
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div style="font-size: 10px;font-weight: 450;color:#000;font-family:'cursive', sans-serif;padding-top 20px">
+                            <p><i>Reference:</i> Transport Solution Agreement Dated  &nbsp;&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                <apex:param value="{!invoiceList.Contract__r.StartDate}" /> 
+                                </apex:outputText></p>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </apex:form> 
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!IF(invoiceList.RecordTypeId=='0125D000000QjOxQAK',true,false)}">
+        <apex:form >        
+            <div style="border:2px solid black;">
+                <div style="text-align: left; background-color: rgb(255, 255, 255);display:inline-block;float:left;font-family: Arial Unicode MS; font-size: 10pt;">
+                    <apex:image url="{!$Resource.Lithiumlogo}" style=" width:100px; margin-right:2.5px; margin-bottom:1px"/>               
+                </div>
+                <div style="text-align: left; background-color: rgb(255, 255, 255);float:left">
+                    
+                    <div style="font-size:20px!important;"><Strong>Lithium Urban Technology Private Limited</Strong></div>
+                    CIN:U74900KA2014PTCO76835 <br/>
+                    GSTIN No:{!billoc.GSTIN__c}<br/>
+                    {!billoc.Street_Address__c} <br/>	
+                    {!billoc.City__c}<br/>
+                    {!billoc.state__c} ,{!billoc.Zip_Code__c}.
+                    <br/>
+                    <div style="color:blue;">
+                        <a href="www.project-lithium.com">www.project-lithium.com</a><br/>
+                        
+                        <a href=" accountingandtaxation@project-lithium.com"> accountingandtaxation@project-lithium.com</a><br/>
+                    </div> 
+                    
+                </div>   
+                
+                <hr style="margin-top:160px;border:1px solid #000;"/>  
+                <div>
+                    <br/>
+                    <article class="slds-card" style="background-color: blue">
+                        <div class="slds-card__body slds-card__body_inner display:inline-block;">
+                            <div style="text-align:center"><Strong>TAX INVOICE</Strong></div>
+                        </div>
+                    </article> 
+                    <br/>
+                </div>
+                <table style="width:100%">
+                    <tr>
+                        <td width="33%">
+                            <b> Invoice To:</b>
+                        </td>
+                        <td width="33%">
+                            <b>  Place of Supply:</b>
+                        </td>
+                        <td width="33%">
+                            <b> Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                            </b> <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!invoiceList.Date__c}" /> 
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Party Name:{!invoiceList.Account__r.Name}</td> 
+                        <td>Party Name:{!invoiceList.Account__r.Name}</td>
+                        <td><b>Invoice # &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {!invoiceList.Name}</td>
+                    </tr>
+                    <tr>
+                        <td>Street:{!invoiceList.Campus__r.Billing_Street__c}</td> 
+                        <td>Street:{!invoiceList.Campus__r.Shipping_Street__c}</td>
+                        <td>
+                            <b>Agreement No &nbsp;&nbsp;&nbsp;&nbsp;:</b> {!invoiceList.Contract__r.ContractNumber}
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>City:{!invoiceList.Campus__r.Billing_City__c}
+                        </td>
+                        <td>City:{!invoiceList.Campus__r.Shipping_City__c}
+                        </td>
+                        <td>
+                            <b>Agreement Dated:
+                            </b> <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!invoiceList.Contract__r.StartDate}" /> 
+                            </apex:outputText>
+                            
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            State:{!invoiceList.Campus__r.Billing_State_Province__c}
+                        </td>
+                        <td>
+                            State:{!invoiceList.Campus__r.Shipping_State_Province__c}
+                        </td>
+                        <td>
+                            <b>Due Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                            </b> <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!invoiceList.Due_Date__c}" /> 
+                            </apex:outputText>
+                            
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>State Code:{!invoiceList.Campus__r.Billing_Zip_Postal_Code__c}
+                        </td>
+                        <td>State Code:{!invoiceList.Campus__r.Shipping_Zip_Postal_Code__c}
+                        </td>
+                        <td><b>Payment Terms&nbsp;&nbsp;&nbsp;:</b> Net{!invoiceList.Campus__r.Payment_Terms__c} 
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>GSTIN No: {!invoiceList.Campus__r.GSTN__c}
+                        </td>
+                        <td>GSTIN No: {!invoiceList.Campus__r.GSTN__c}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>PAN No: {!invoiceList.Campus__r.PAN__c}</td>
+                        <td>PAN No:{!invoiceList.Campus__r.PAN__c} </td>
+                    </tr>
+                </table>
+                <br/>
+                <article>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-card" style="display:inline-block;width:100%">
+                            <div class="slds-card__body slds-card__body_inner">
+                                <table border="1" width="100%" style="border-collapse:collapse;" >
+                                    <tr>
+                                        <th  width="45%">Description</th>
+                                        <th  width="15%">No.of Trips </th>
+                                        <th  width="15%">Rate per</th>
+                                        <th  width="25%">Amount in INR</th>
+                                    </tr>
+                                    <tr>
+                                        <td><apex:outputField value="{!invoiceList.Description1__c}"/> </td>
+                                        <td><apex:outputField value="{!invoiceList.No_of_Trips__c }"/> </td>  
+                                        <td><apex:outputField value="{!invoiceList.Rate_per_Trip__c }"/> </td>
+                                        <td><apex:outputField value="{!invoiceList.AmountsR__c }"/> </td>
+                                    </tr>
+                                </table>  
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                
+                
+                <table style="width:100% " >
+                    
+                    <tr>
+                        <td/>
+                        <td colspan="2" style="text-align:right;">Sub-Total :{!subtotalR} 
+                        <span style="{!IF(showcgst, 'display:block', 'display:none')}">SGST @ 6% :{!sgstR}</span>
+                            <span style="{!IF(showcgst, 'display:block', 'display:none')}">CGST @ 6% :{!CGSTR}</span>
+                            <span style="{!IF(showcgst, 'display:none', 'display:block')}">IGST @ 12% :{!IGSTRr}</span>
+                        </td>
+                        
+                    </tr> 
+                  <!--  <tr style="{!IF(showcgst, 'display:block', 'display:none')};{text-align:right !important;}">
+                        <td/>
+                        <td colspan="2" style="text-align:right;">SGST @ 6% :{!sgstR}</td>
+                    </tr>      
+                    <tr style="{!IF(showcgst, 'display:block', 'display:none')};{text-align:right !important;}">
+                        <td/>
+                        <td colspan="2" style="text-align:right;">CGST @ 6% :{!CGSTR}</td>
+                    </tr>
+                    <tr style="{!IF(showcgst, 'display:none', 'display:block')};{text-align:right !important;}">
+                        <td/>
+                        <td colspan="2" style="text-align:right;">IGST @ 12% :{!IGSTRr}</td></tr> -->
+                </table> 
+                <table style="width:100% ">
+                    <tr>
+                        <td width="50%"><b>Amount in words:</b> </td>
+                        <td width="50%" style="text-align:right;"><b>Total :</b>{!totalR}</td> </tr> 
+                    
+                </table> 
+                
+                <div class="" style=" padding-left:5px;">
+                    <p>
+                        <b>  ( {!numtowordR} Rupees only)    </b>   </p>
+                    
+                    
+                </div>
+                
+                <div class="" style=" padding-left:5px;">
+                    
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div style="font-size: 10px;font-weight: 450;color:#000;font-family:'cursive', sans-serif;padding-top 20px">
+                            <p> Whether tax is payable under Reverse Charge : No  </p>	
+                            <p> <i> Reference:</i> Transport Solution Agreement Dated  &nbsp;&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                <apex:param value="{!invoiceList.Contract__r.StartDate}" /> 
+                                </apex:outputText>	</p>
+                            
+                            <p>  State Code:{!invoiceList.Campus__r.Billing_Zip_Postal_Code__c}	</p>
+                            <p>  SAC Code: 996601	</p>
+                            <p>  PAN:{!invoiceList.Campus__r.PAN__c}	</p>
+                            <p>  Note:- Payment should be sent along with payment advice	</p>
+                            <p>  Bank:- {!bilc.Bank_Name__c}</p>	
+                            <p>  A/c No.: {!bilc.Account_Number__c}	</p>
+                            <p> IFSC Code:{!bilc.IFSC_Code__c} </p>	
+                            <p> Branch: {!bilc.Branch__c}</p>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </apex:form> 
+    </apex:outputPanel> 
+    <apex:outputPanel rendered="{!IF(invoiceList.RecordTypeId=='0125D000000QxgtQAC',true,false)}">
+        
+        <apex:form >        
+            <div style="border:2px solid black;">
+                <div style="text-align: left; background-color: rgb(255, 255, 255);display:inline-block;float:left;font-family: Arial Unicode MS; font-size: 10pt;">
+                    <apex:image url="{!$Resource.Lithiumlogo}" style=" width:100px; margin-right:2.5px; margin-bottom:1px"/>               
+                </div>
+                <div style="text-align: left; background-color: rgb(255, 255, 255);float:left">
+                    
+                    <div style="font-size:20px!important;"><Strong>Lithium Urban Technology Private Limited</Strong></div>
+                    CIN:U74900KA2014PTCO76835 <br/>
+                    GSTIN No:{!billoc.GSTIN__c}<br/>
+                    {!billoc.Street_Address__c} <br/>	
+                    {!billoc.City__c}<br/>
+                    {!billoc.state__c} ,{!billoc.Zip_Code__c}. 
+                    <br/>
+                    <div style="color:blue;">
+                        <a href="www.project-lithium.com">www.project-lithium.com</a><br/>
+                        
+                        <a href=" accountingandtaxation@project-lithium.com"> accountingandtaxation@project-lithium.com</a><br/>
+                    </div> 
+                    
+                </div>   
+                
+                <hr style="margin-top:160px;border:1px solid #000;"/>  
+                <div>
+                    <br/>
+                    <article class="slds-card" style="background-color: blue">
+                        <div class="slds-card__body slds-card__body_inner display:inline-block;">
+                            <div style="text-align:center"><Strong>INVOICE</Strong></div>
+                        </div>
+                    </article> 
+                    <br/>
+                </div>
+                <table style="width:100%">
+                    <tr>
+                        <td width="33%">
+                            <b>To:</b>                </td>
+                        <td width="33%">
+                            <b> Place of Supply:</b>
+                        </td>
+                        <td width="33%">
+                            <b>  Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                            </b> <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!invoiceList.Date__c}" /> 
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Party Name: {!invoiceList.Account__r.Name}</td> 
+                        <td>Party Name: {!invoiceList.Account__r.Name}</td>
+                        <td><b>Credit Note #&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Street: {!invoiceList.Campus__r.Billing_Street__c}</td> 
+                        <td>Street:{!invoiceList.Campus__r.Shipping_Street__c}</td>
+                        <td><b>Invoice Ref No&nbsp;&nbsp;&nbsp;&nbsp;: {!invoiceList.Name}</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>City: {!invoiceList.Campus__r.Billing_City__c}
+                        </td>
+                        <td> City:{!invoiceList.Campus__r.Shipping_City__c}
+                        </td>
+                        <td><b>Agreement No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {!invoiceList.Contract__r.ContractNumber}
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            State:{!invoiceList.Campus__r.Billing_State_Province__c}
+                        </td>
+                        <td>
+                            State: {!invoiceList.Campus__r.Shipping_State_Province__c}
+                        </td>
+                        <td>
+                            <b>Agreement Dated:
+                            </b> <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!invoiceList.Contract__r.StartDate}" /> 
+                            </apex:outputText>
+                            
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>StateCode: {!invoiceList.Campus__r.Billing_Zip_Postal_Code__c}
+                        </td>
+                        <td>StateCode: {!invoiceList.Campus__r.Shipping_Zip_Postal_Code__c}
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td>GSTIN No: {!invoiceList.Campus__r.GSTN__c}
+                        </td>
+                        <td>GSTIN No: {!invoiceList.Campus__r.GSTN__c}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>PAN No:{!invoiceList.Campus__r.PAN__c} </td>
+                        <td>PAN No:{!invoiceList.Campus__r.PAN__c} </td>
+                    </tr>
+                </table>
+                <br/><br/> 
+                <article>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-card" style="display:inline-block;width:100%">
+                            <div class="slds-card__body slds-card__body_inner">
+                                <table border="1" width="100%" style="border-collapse:collapse;" >
+                                    <tr>
+                                        <th width="70%">Description</th>
+                                        
+                                        <th width="30%">Amount in INR</th>
+                                    </tr>
+                                    <tr>
+                                        <td><apex:outputField value="{!invoiceList.Description4__c}"/> </td>
+                                        
+                                        <td><apex:outputField value="{!invoiceList.AmountG__c}"/> </td>
+                                    </tr>
+                                </table>  
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                            
+                <table style="width:100% " >
+                    
+                    <tr>
+                        <td/>
+                        <td colspan="2" style="text-align:right;">Sub-Total :{!subtotalG}
+                        <span style="{!IF(showcgst, 'display:block', 'display:none')}">SGST @ 6% :{!sgstG}</span>
+                            <span style="{!IF(showcgst, 'display:block', 'display:none')}">CGST @ 6% :{!CGSTG}</span>
+                            <span style="{!IF(showcgst, 'display:none', 'display:block')}">IGST @ 12% :{!IGSTG}</span>
+                        </td>
+                        
+                    </tr>
+                  <!--  <tr style="{!IF(showcgst, 'display:block', 'display:none')};{text-align:right !important;}">
+                        <td/>
+                        <td colspan="2" style="text-align:right;">SGST @ 6% :{!sgstG}</td>
+                    </tr>      
+                    <tr style="{!IF(showcgst, 'display:block', 'display:none')};{text-align:right !important;}">
+                        <td/>
+                        <td colspan="2" style="text-align:right;">CGST @ 6% :{!CGSTG}</td>
+                    </tr>
+                    <tr style="{!IF(showcgst, 'display:none', 'display:block')};{text-align:right !important;}">
+                        <td/>
+                        <td colspan="2" style="text-align:right;">IGST @ 12% :{!IGSTG}</td>
+                    </tr>  -->
+                </table>
+                <table style="width:100% ">
+                    <tr>
+                        <td width="50%"><b>Amount in words:</b></td>
+                        <td width="50%" style="text-align:right;"><b>Total :</b>{!totalG}</td> </tr>
+                    
+                </table> 
+                
+                <div class="">
+                    <div class="" style=" padding-left:5px;" >
+                        <p>
+                            <b> ( {!numtowordG} Rupees only) </b>	
+                            
+                        </p>
+                        
+                        
+                    </div>
+                </div>
+                <div class="" style=" padding-left:5px;">
+                    
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div style="font-size: 10px;font-weight: 450;color:#000;font-family:'cursive', sans-serif;padding-top 20px">
+                            <p><i>Reference:</i> Transport Solution Agreement Dated  &nbsp;&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                <apex:param value="{!invoiceList.Contract__r.StartDate}" /> 
+                                </apex:outputText></p>
+                            
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </apex:form> 
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!IF(invoiceList.RecordTypeId=='0125D000000QjOsQAK',true,false)}">
+        <apex:form >        
+            <div style="border:2px solid black;">
+                
+                
+                <div style="text-align: left; background-color: rgb(255, 255, 255);display:inline-block;float:left;font-family: Arial Unicode MS; font-size: 10pt;">
+                    <apex:image url="{!$Resource.Lithiumlogo}" style=" width:100px; margin-right:2.5px; margin-bottom:1px"/>               
+                </div>
+                <div style="text-align: left; background-color: rgb(255, 255, 255);float:left;font-size:11pt;">
+                    
+                    <div style="font-size:20px!important;"><Strong>Lithium Urban Technology Private Limited</Strong></div>
+                    CIN:U74900KA2014PTCO76835 <br/>
+                    GSTIN No:{!billoc.GSTIN__c}<br/>
+                    {!billoc.Street_Address__c} <br/>	
+                    {!billoc.City__c}<br/>
+                    {!billoc.state__c} ,{!billoc.Zip_Code__c}.
+                    <br/>
+                    <div style="color:blue;">
+                        <a href="www.project-lithium.com">www.project-lithium.com</a><br/>
+                        
+                        <a href=" accountingandtaxation@project-lithium.com"> accountingandtaxation@project-lithium.com</a><br/>
+                    </div>                     
+                </div>   
+                
+                <hr style="margin-top:160px;border:1px solid #000;"/>  
+                <div>
+                    <br/>
+                    <article class="slds-card" style="background-color: blue">
+                        <div class="slds-card__body slds-card__body_inner display:inline-block;">
+                            <div style="text-align:center;font-family: Arial Unicode MS;"><Strong><b>INVOICE</b></Strong></div>
+                        </div>
+                    </article> 
+                    <br/>
+                </div>
+                <table style="width:100%;font-size:11pt;">
+                    <tr>
+                        <td width="33%">
+                            <b>Invoice To:</b>
+                        </td>
+                        <td width="33%">
+                            <b>Place of Supply:</b>
+                        </td>
+                        <td width="33%">
+                            <b>Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                            </b>  <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!invoiceList.Date__c}" /> 
+                            </apex:outputText> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Party Name:{!invoiceList.Account__r.Name}</td> 
+                        <td>Party Name:{!invoiceList.Account__r.Name}</td>
+                        <td><b>Invoice #&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {!invoiceList.Name}</td>
+                    </tr>
+                    <tr>
+                        <td>Street:{!invoiceList.Campus__r.Billing_Street__c}</td> 
+                        <td>Street:{!invoiceList.Campus__r.Shipping_Street__c}</td>
+                        <td><b>Agreement No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {!invoiceList.Contract__r.ContractNumber}</td>
+                    </tr>
+                    <tr>
+                        <td>City:{!invoiceList.Campus__r.Billing_City__c}
+                        </td>
+                        <td>City:{!invoiceList.Campus__r.Shipping_City__c}
+                        </td>
+                        <td><b>Agreement Dated:
+                            </b><apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!invoiceList.Contract__r.StartDate}" /> 
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            State:{!invoiceList.Campus__r.Billing_State_Province__c}
+                        </td>
+                        <td>
+                            State:{!invoiceList.Campus__r.Shipping_State_Province__c}
+                        </td>
+                        <td>
+                            <b> Due Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                            </b> <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!invoiceList.Due_Date__c}" /> 
+                            </apex:outputText>                
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>State Code:{!invoiceList.Campus__r.Billing_Zip_Postal_Code__c}
+                        </td>
+                        <td>State code:{!invoiceList.Campus__r.Shipping_Zip_Postal_Code__c}
+                        </td>
+                        <td>
+                            <b>Payment Terms&nbsp;&nbsp;&nbsp;&nbsp;:</b> Net{!invoiceList.Campus__r.Payment_Terms__c}
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>GSTIN No: {!invoiceList.Campus__r.GSTN__c}
+                        </td>
+                        <td>GSTIN No: {!invoiceList.Campus__r.GSTN__c}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>PAN No:{!invoiceList.Campus__r.PAN__c} </td>
+                        <td>PAN No:{!invoiceList.Campus__r.PAN__c} </td>
+                    </tr>
+                </table>
+                <br/> 
+                <article>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-card" style="display:inline-block;width:100%">
+                            <div class="slds-card__body slds-card__body_inner">
+                                
+                                <table border="1" width="100%" style="border-collapse:collapse;">
+                                    <tr>
+                                        <th width="55%">Description</th>
+                                        <th width="10%">No of Vehicles</th>
+                                        <th width="10%" >Rate per car</th>
+                                        <th width="25%">Amount in INR</th>
+                                    </tr>
+                                    <tr>
+                                        <td><apex:outputField value="{!invoiceList.Description__c}"/> </td>
+                                        <td><apex:outputField value="{!invoiceList.No_of_Vehicles__c}"/> </td>  
+                                        <td><apex:outputField value="{!invoiceList.Rate_per_Car__c}"/> </td>
+                                        <td><apex:outputField value="{!invoiceList.Amount_Reg__c}"/> </td>
+                                    </tr>
+                                </table>  
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                
+                
+                <table style="width:100% " >
+                    
+                    <tr>
+                        <td/>
+                        <td colspan="2" style="text-align:right;">Sub-Total :{!subtotalreg}
+                                   <span style="{!IF(showcgst, 'display:block', 'display:none')}">SGST @ 6% :{!sgstreg}</span>
+                            <span style="{!IF(showcgst, 'display:block', 'display:none')}">CGST @ 6% :{!CGSTreg}</span>
+                            <span style="{!IF(showcgst, 'display:none', 'display:block')}">IGST @ 12% :{!IGSTreg}</span>
+                        </td>
+                       
+                    </tr> 
+                  <!--  <tr style="{!IF(showcgst, 'display:block', 'display:none')},text-align:right;" >
+                        <td/>
+                        <td colspan="2" style="text-align:right;">SGST @ 6% :{!sgst}</td>
+                    </tr>      
+                    <tr style="{!IF(showcgst, 'display:block', 'display:none')},text-align:right;">
+                        <td/>
+                        <td colspan="2" style="text-align:right;">CGST @ 6% :{!CGST}</td>
+                    </tr>
+                    <tr style="{!IF(showcgst, 'display:none', 'display:block')},text-align:right;">
+                        <td/>
+                        <td colspan="2" style="text-align:right;">IGST @ 12% :{!IGSTR}</td>
+                    </tr>  -->
+                </table>
+                <table width="100%">
+                    <tr>
+                        <td width="50%"><b>Amount in words:</b></td>
+                        <td width="50%" style="text-align:right;"><b>Total :</b>{!totalreg}
+                        </td> 
+                    </tr>
+                    
+                </table> 
+                
+                <div style="font-size:11pt; padding-left:5px;" >
+                    <p>
+                        <b> ( {!numtowordreg} Rupees only) </b> 	
+                        
+                    </p>
+                    
+                </div>
+                <div class=""  style=" padding-left:5px;" >
+                    
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div style="font-size: 10px;font-weight: 450;color:#000;font-family:'cursive', sans-serif;padding-top 20px">
+                            <p> Whether tax is payable under Reverse Charge : No  </p>	
+                            <p> <i> Reference:</i> Transport Solution Agreement Dated &nbsp;&nbsp;<apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                <apex:param value="{!invoiceList.Contract__r.StartDate}" /> 
+                                </apex:outputText>
+                            </p>
+                            <p>  State Code:{!invoiceList.Campus__r.Billing_Zip_Postal_Code__c}	</p>
+                            <p>  SAC Code: 996601	</p>
+                            <p>  PAN:{!invoiceList.Campus__r.PAN__c}	</p>
+                            <p>  Note:- Payment should be sent along with payment advice	</p>
+                            <p>  Bank:- {!bilc.Bank_Name__c}</p>	
+                            <p>  A/c No.: {!bilc.Account_Number__c}	</p>
+                            <p> IFSC Code:{!bilc.IFSC_Code__c} </p>	
+                            <p> Branch: {!bilc.Branch__c}</p>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </apex:form>  
+    </apex:outputPanel>
+</apex:page>

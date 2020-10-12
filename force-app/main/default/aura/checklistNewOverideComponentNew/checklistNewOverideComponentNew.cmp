@@ -1,0 +1,40 @@
+<aura:component  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,lightning:hasPageReference,lightning:isUrlAddressable,lightning:actionOverride,force:hasSObjectName"
+              controller="CheckListRecordTypeController"  access="global" >
+	    <aura:handler name="init" value="{!this}" action="{!c.doint}"/>
+       
+    <aura:attribute name="lstOfRecordType" type="list"/>
+    <aura:attribute name="recordTypeId" type="String" />
+    <aura:attribute name="pdi" type="Boolean" />
+    <aura:attribute name="assecary" type="Boolean" />
+    <aura:attribute name="daily" type="Boolean" />
+    <aura:attribute name="monthly" type="Boolean" />
+    <aura:attribute name="weekly" type="Boolean" />
+     <aura:attribute name="issuecheck" type="Boolean" />
+	<aura:attribute name="parentrecid" type="String" />
+    
+    <aura:if isTrue="{!v.pdi}">
+        
+        <c:Checklist parentrecid="{!v.parentrecid}"/>
+    </aura:if> 
+    <aura:if isTrue="{!v.assecary}">
+        
+            <c:ChecklistAccessories parentrecid="{!v.parentrecid}"/>
+    </aura:if> 
+  <aura:if isTrue="{!v.daily}">
+        
+            <c:DailyVehicleChecklist parentrecid="{!v.parentrecid}"/>
+    </aura:if> 
+    <aura:if isTrue="{!v.monthly}">
+        
+            <c:MonthlyChecklist parentrecid="{!v.parentrecid}"/>
+    </aura:if> 
+    <aura:if isTrue="{!v.weekly}">
+        
+            <c:WeeklyChecklist parentrecid="{!v.parentrecid}"/>
+    </aura:if> 
+    <aura:if isTrue="{!v.issuecheck}">
+        
+        <c:IssueAccessories parentrecid="{!v.parentrecid}"/>
+    </aura:if> 
+    
+</aura:component>

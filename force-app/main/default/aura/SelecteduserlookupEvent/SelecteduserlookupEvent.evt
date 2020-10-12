@@ -1,0 +1,7 @@
+<aura:event type="COMPONENT" description="by this event we are pass the selected sObject(lookup list record) in the parent component">
+    <aura:attribute name="recordByEvent" type="sObject"/>
+    <aura:attribute name="passingid" type="boolean"/>
+    <aura:attribute name="indexnum" type="integer"/>
+    <aura:attribute name="whichtaskList" type="string"/>
+    <aura:attribute name="IsServiceProvider" type="boolean"/>
+</aura:event>

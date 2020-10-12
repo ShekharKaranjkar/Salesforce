@@ -1,0 +1,42 @@
+<apex:page controller="ZipAttachments">
+    <apex:includeScript value="/soap/ajax/34.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/34.0/apex.js"/>
+    <apex:includescript value="//code.jquery.com/jquery-1.11.1.min.js" />
+    <apex:includeScript value="{!URLFOR($Resource.jszip, 'jszip/dist/jszip.js')}"/>
+    
+    <script type="text/javascript">
+    var j$ = jQuery.noConflict();
+    //var accountId = '{!accountRecordId}';
+    var accountId = '00Q5D000002JeZqUAK';
+    var zipFile = new JSZip();
+    var jsAtt;
+    //Invokes apex method to get attachments
+    j$(document).ready(function() {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.ZipAttachments.getAttachments}',
+            accountId,
+            function(result,event) {
+                if(event.status){
+                    jsAtt = result;
+                    j$.each(jsAtt, function(key,value) {
+                        compressFile(zipFile, value.attName, value.attEncodedBody);
+                    });
+                    downloadZip(zipFile);
+                }
+            });
+        
+    });
+    
+    function compressFile(zipFile, name, data) {
+        zipFile.file(name, data, {base64:true});
+    }
+    
+    function downloadZip(zipFile){
+        sforce.connection.sessionId = '{!$Api.Session_ID}';
+        var attachmentData = zipFile.generate();
+        var fileName = 'Attachments.zip';
+        var docID = sforce.apex.execute("accountAttachments","saveToDocument",{zipFileData:attachmentData, fileName:fileName});
+        window.location.href = '/'+ docID;
+    }
+    </script>
+</apex:page>

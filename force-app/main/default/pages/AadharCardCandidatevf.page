@@ -1,0 +1,424 @@
+<apex:page standardController="Candidate__c" extensions="AadharCardCandidate">
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"/>
+    
+    <apex:slds />
+    <style>
+        .c{
+        transform: rotate(1deg) !important;
+        
+        }
+        .slds-scope .slds-button__icon {
+        width: .875rem;
+        height: .875rem;
+        
+        fill: red;
+        transform: rotate(1deg) !important;
+        }
+        
+        .slds-scope .slds-button_brand, .slds-scope .slds-button--brand {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        text-align: center;
+        vertical-align: middle;
+        justify-content: center;
+        border: 1px solid rgb(221, 219, 218);
+        transition: border .15s linear;
+        background-color: rgba(27, 82, 151, 1);
+        border-color: rgba(27, 82, 151, 1);
+        color: rgb(255, 255, 255);
+        margin-right: 3px;
+        }
+        .slds-scope .slds-pill__remove {
+        width: 2rem;
+        height: 1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: .25rem;
+        border-radius: .125rem;
+        }
+        .slds-scope .slds-form-element__control {
+        clear: left;
+        position: relative;
+        margin-left: 11px;
+        }
+        .slds-scope .slds-file-selector__dropzone {
+        padding: .125rem;
+        border: 1px dashed rgb(221, 219, 218);
+        border-radius: .25rem;
+        margin-left: 11px;
+        }
+    </style>
+    
+    <script type="text/javascript">
+    var maxStringSize = 6000000;    //Maximum String size is 6,000,000 characters
+    var maxFileSize = 4350000;      //After Base64 Encoding, this is the max file size
+    var chunkSize = 950000;         //Maximum Javascript Remoting message size is 1,000,000 characters
+    var attachment;
+    var filetName;
+    var fileSize;
+    var positionIndex;
+    var doneUploading;
+    
+    //Method to prepare a file to be attached to the Account bound to the page by the standardController
+    function uploadFile() {
+        
+        var file = document.getElementById('attachtFile').files[0];
+        console.log(file);
+        if(file != undefined) {
+            if(file.size <= maxFileSize) {
+                filetName = file.name;
+                var fileReader = new FileReader();
+                fileReader.onloadend = function(e) {
+                    attachment = window.btoa(this.result);  //Base 64 encode the file before sending it
+                    positionIndex=0;
+                    fileSize = attachment.length;
+                    console.log("Total Attachment Length: " + fileSize);
+                    doneUploading = false;
+                    if(fileSize < maxStringSize) {
+                        uploadAttachment(null);
+                    } else {
+                        alert("Base 64 Encoded file is too large.  Maximum size is " + maxStringSize + " your file is " + fileSize + ".");
+                    }
+                    
+                }
+                fileReader.onerror = function(e) {
+                    alert("There was an error reading the file.  Please try again.");
+                }
+                fileReader.onabort = function(e) {
+                    alert("There was an error reading the file.  Please try again.");
+                }
+                
+                fileReader.readAsBinaryString(file);  //Read the body of the file
+                
+            } else {
+                alert("File must be under 4.3 MB in size.  Your file is too large.  Please try again.");
+            }
+        } else {
+            alert("You must choose a file before trying to upload it");
+        }
+    }
+    
+    
+    function uploadAttachment(fileId) {
+        // alert("File start Uploading");
+        var base64Data = "";
+        if(fileSize <= positionIndex + chunkSize) {
+            base64Data = attachment.substring(positionIndex);
+            doneUploading = true;
+        } else {
+            base64Data = attachment.substring(positionIndex, positionIndex + chunkSize);
+        }
+        console.log("Uploading " + base64Data.length + " chars of " + fileSize);
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.AadharCardCandidate.uploadfiles}',
+            '{!Candidate__c.Id}', base64Data,filetName ,
+            function(result, event) {
+                console.log(result);
+                if(event.type === 'exception') {
+                    console.log("exception");
+                    console.log(event);
+                } else if(event.status) {
+                    alert("File uploaded successfully")
+                    location.reload();
+                    if(result.substring(0,3) == '00P') {
+                        if(doneUploading == true) {
+                            window.location.reload();
+                        } else {
+                            positionIndex += chunkSize;
+                            uploadAttachment(result);
+                        }
+                    }
+                } else {
+                    console.log(event.message);
+                }
+            },
+            {buffer: true, escape: true, timeout: 120000}
+        );
+    }
+    function updatefilename(cententversionid){
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.AadharCardCandidate.uploadfiles}',
+            '{!Candidate__c.Id}',cententversionid  ,
+            function(result, event) {
+                console.log(result);
+                if(event.type === 'exception') {
+                    console.log("exception");
+                    //console.log(event);
+                } else if(event.status) {
+                    alert("File uploaded successfully")
+                    location.reload();
+                    /* if(result.substring(0,3) == '00P') {
+                        if(doneUploading == true) {
+                               window.location.reload();
+                        } else {
+                            //positionIndex += chunkSize;
+                            //uploadAttachment(result);
+                        }
+                    }*/
+                } else {
+                    console.log(event.message);
+                }
+            },
+            {buffer: true, escape: true, timeout: 120000}
+        );
+    }
+    </script>
+    <script type='text/javascript'>
+    var fileLenght=0; 
+    var FileUploading = 0;           
+    var FileUploaded = 0;           
+    var ids = new Array();
+     var myFuncCalls = 0;
+    function uploaddocuments(){
+        debugger;
+          myFuncCalls++;
+        $('[id*=spinner1]').show();
+        var v=document.getElementById('attachtFile');               
+        console.log(v.files.length);              
+        fileLenght = v.files.length; 
+        
+        if(fileLenght ==0) {
+            alert('Please select Image');
+            // showtoast('missingField_Toast');
+        }
+        
+        //   alert(v.files.[0].name);
+                  if(myFuncCalls==1){
+            for (var i = 0; i < v.files.length; i++) { 
+                var file = v.files[i];
+                if((file.name.includes('.png'))||(file.name.includes('.jpg'))||(file.name.includes('.jpeg'))){
+                    uploadSelectedFile(v.files[i], function(err, res){          
+                    FileUploading += 1;                  
+                    if (FileUploading === FileUploaded){ 
+                        //alert('upload completed');     
+                        //blank input file value                   
+                        document.getElementById('attachtFile').value = "";          
+                    }                
+                })   
+                    } else 
+                        {
+                       alert ('This file is not supported, Please select the file of formate jpg, png and jpeg');
+                             document.getElementById('attachtFile').value = ""; 
+                  window.reload();
+                            }
+            }
+                }
+            else
+                console.log('Metod Called 2 times console');
+            // console.log(response.id); 
+    }
+    var uploadSelectedFile = function(file, callback) {  
+        //alert(where);
+        filetoBase64(file, function(err, content){  
+            // alert('Content');
+            var conVer_object = {                  
+                
+                VersionData : content,                     
+                PathOnClient : file.name,                     
+                Title : file.name ,
+                FirstPublishLocationId  : '{!serviceProviderId}',
+            };                  
+            $.ajax({ 
+                
+                url: '{!$Label.Community_user_file_upload_redirect_url}',                    
+                data: JSON.stringify(conVer_object ),                
+                type: 'POST',                 
+                processData: false,                    
+                contentType: false,                    
+                headers: {'Authorization': 'Bearer {!$Api.Session_ID}', 'Content-Type': 'application/json'},                
+                xhr: function(){                   
+                    var xhr = new window.XMLHttpRequest();                       //Upload progress                      
+                    xhr.upload.addEventListener("progress", function(evt){                     
+                        if (evt.lengthComputable) {  
+                            $('[id*=spinner1]').hide();
+                            $('#progress_bar_container').css('display', 'block');                    
+                            var percentComplete = evt.loaded / evt.total;                      
+                            console.log('percentComplete '+percentComplete );                     
+                            var percentCompletex= percentComplete*100;                          
+                            $('#percentText').html("Uploading. Please wait... "+Math.round(percentCompletex)+"%");      
+                            $('.progress').css('width', percentCompletex+ "%");                         
+                            if(percentCompletex == 100){                           
+                                $('#progress_bar_container').css('display', 'none');                       
+                            }                      }                     }, false);                     
+                    return xhr;                    },                  
+                success: function(response) { 
+                    // alert('Success');
+                    FileUploaded += 1;                     
+                    console.log(response.id); 
+                    updatefilename(response.id)
+                    // the id of the attachment                     
+                    ids.push(response.id);                      
+                    console.log('Ids: ' +ids);                      
+                    $('#records').html('File has been uploeded. Uploaded File ids: ' +ids);                      
+                    if(fileLenght == FileUploaded ){                      
+                        //calculateLocation(ids.toString());        
+                    }                   
+                    callback(null, true) 
+                      document.getElementById('attachtFile').value = ""; 
+                },
+                error : function(response) {
+                    
+                    // alert("Failed" + '{!$Label.Error_found_please_contact_system_admin}');
+                    //alert('log::'+JSON.stringify(response));
+                    console.log('response:'+response.message)
+                },
+            });                
+        });              
+    }  
+    var filetoBase64 = function(file, callback){ 
+        //debugger;
+        var reader = new FileReader();                 
+        reader.onload = function() {                 
+            var myFileContents = reader.result;                  
+            var base64Mark = 'base64,';                  
+            var dataStart = myFileContents.indexOf(base64Mark) + base64Mark.length;       
+            myFileContents = myFileContents.substring(dataStart);               
+            callback(null, myFileContents);  
+            //alert('alert');
+        }              
+        reader.readAsDataURL(file);              
+    }
+    </script>
+    <script type='text/javascript'>
+  function showfilename(input)  {
+            var v=document.getElementById('attachtFile'); 
+            //uploaddocuments();
+            //  alert(document.getElementById('attachtFile').files.length);
+            var filelen =document.getElementById('attachtFile').files.length;
+            if(filelen ==0){
+                alert('Please Choose Alteast one file');
+            }
+            else{
+                 for (var i = 0; i < v.files.length; i++) {             
+               var file = v.files[i];
+                if((file.name.includes('.png'))||(file.name.includes('.jpg'))||(file.name.includes('.jpeg'))){
+                    } else 
+                       alert ('This file is not supported, Please select the file of formate jpg, png and jpeg');              
+            } 
+                
+                alert(v.files[0].name); 
+                /* if(v.files[0].name.includes('.pdf')){
+                    alert('This file is not supported, Please select the file of formate jpg, png and jpeg');
+                    
+                    document.getElementById("attachtFile").value = "";
+                }
+                else if(v.files[0].name.includes('.csv')){
+                    alert('This file is not supported, Please select the file of formate jpg, png and jpeg');
+                    
+                    document.getElementById("attachtFile").value = "";
+                }
+                    else if(v.files[0].name.includes('.xlsx')){
+                        alert('This file is not supported, Please select the file of formate jpg, png and jpeg');
+                        
+                        document.getElementById("attachtFile").value = "";
+                    }
+                        else if(v.files[0].name.includes('.webm')){
+                            alert('This file is not supported, Please select the file of formate jpg, png and jpeg');
+                            
+                            document.getElementById("attachtFile").value = "";
+                        }
+                            else if(v.files[0].name.includes('.mp4')){
+                                alert('This file is not supported, Please select the file of formate jpg, png and jpeg');
+                                
+                                document.getElementById("attachtFile").value = "";
+                            }
+                                else if(v.files[0].name.includes('.mp3')){
+                                    alert('This file is not supported, Please select the file of formate jpg, png and jpeg');
+                                    
+                                    document.getElementById("attachtFile").value = "";
+                                }
+                
+                                    else if(v.files[0].name.includes('.jar')){
+                                        alert('This file is not supported, Please select the file of formate jpg, png and jpeg');
+                                        
+                                        document.getElementById("attachtFile").value = "";
+                                    }
+                
+                                        else if(v.files[0].name.includes('.html')){
+                                            alert('This file is not supported, Please select the file of formate jpg, png and jpeg');
+                                            
+                                            document.getElementById("attachtFile").value = "";
+                                        }
+                                            else if(v.files[0].name.includes('.zip')){
+                                                alert('This file is not supported, Please select the file of formate jpg, png and jpeg');
+                                                
+                                                document.getElementById("attachtFile").value = "";
+                                            }
+                                                else if(v.files[0].name.includes('.exe')){
+                                                    alert('This file is not supported, Please select the file of formate jpg, png and jpeg');
+                                                    
+                                                    document.getElementById("attachtFile").value = "";
+                                                }
+                */
+                
+                
+                
+                
+            }  
+        }
+    
+    </script>
+    
+    
+    <apex:form >
+        
+        <apex:actionFunction name="deletedriverProofFile" action="{!deleteRecord}" id="deletedriverProofFile"  >
+            
+            
+        </apex:actionFunction>
+        
+        <table width="100%">
+            <tr><td >Aadhar Card
+                
+                </td>
+                <apex:outputPanel rendered="{!drivingLicence}">
+                    <td >
+                        
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <div class="slds-file-selector slds-file-selector_files">
+                                    <div class="slds-file-selector__dropzone">
+                                        <input type="file" class="slds-file-selector__input slds-assistive-text" accept=".jpg,jepg,.png" id="attachtFile" aria-labelledby="file-selector-primary-label file-selector-secondary-label" onchange="showfilename(this)" />
+                                        <label class="slds-file-selector__body" for="attachtFile" id="file-selector-secondary-label">
+                                            <span class="slds-file-selector__button slds-button slds-button_neutral">
+                                                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#upload')}"></use>
+                                                </svg>Upload Files</span>
+                                            <span class="slds-file-selector__text slds-medium-show">or Drop Files</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        
+                    </td>
+                    <td>
+                        <div class="slds-form-element">
+                            
+                            <button class="slds-button slds-button_brand"  onclick="uploaddocuments();return false;">Save</button></div>
+                        
+                    </td>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!!drivingLicence}">
+                    
+                    <td>
+                        
+                        <apex:outputLink value="/{!myCustomObject.Aadhar_Card_Picture__c}"  id="theLink1">  {!driverProofNm}</apex:outputLink>
+                        
+                    </td>
+                    <td>
+                        <button class="slds-button slds-button_icon_large slds-button_icon slds-pill__remove" title="Remove" onclick="deletedriverProofFile();return false;">
+                            
+                            <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" >
+                                <use  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#delete')}"></use>
+                            </svg>
+                        </button>  
+                    </td>
+                </apex:outputPanel>                
+            </tr>                       
+        </table>        
+    </apex:form>
+</apex:page>

@@ -1,0 +1,8 @@
+<apex:page >
+    <script>
+        document.cookie = 'Uid={!$User.Id}';
+        function getSFUID(){
+            return '{!$User.Id}';
+        }
+    </script>
+</apex:page>

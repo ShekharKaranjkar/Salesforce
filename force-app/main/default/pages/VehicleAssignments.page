@@ -1,0 +1,105 @@
+<apex:page standardStylesheets="false" showheader="false" sidebar="false" docType="html-5.0" controller="vehicleAssignment" >
+    <apex:stylesheet value="/resource/1sd576580677000/Tsheet"/>
+    <apex:slds />
+    <style>
+         .slds-scope .slds-pill__remove {
+    width:  2.875rem;
+    height:2.875rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: .25rem;
+    border-radius: .125rem;
+}
+        .slds-scope .slds-pill__remove svg {
+    width: 3.875rem;
+    height: 1.875rem;
+}
+        .test{
+        backgrung:white !important;
+        }
+        .c{
+        transform: rotate(1deg) !important;
+        
+        }
+        .slds-scope .slds-button__icon {
+        width: 2.875rem;
+        height:2.35rem;
+        fill: mediumaquamarine;
+        transform: rotate(1deg) !important;}
+        . slds-scope h1, .slds-scope h2, .slds-scope h3, .slds-scope h4, .slds-scope h5, .slds-scope h6, .slds-scope p, .slds-scope ol, .slds-scope ul, .slds-scope dl, .slds-scope fieldset {
+        margin: 6px;
+        padding: 0px;
+        }
+        .slds-scope {
+        font-family: 'Salesforce Sans',Arial,sans-serif;
+        font-size: 100%;
+        line-height: 2.5;
+        background: rgba(255, 255, 255, 1);
+        color: rgb(8, 7, 7);
+        -webkit-tap-highlight-color: transparent;
+        }
+        .slds-scope caption, .slds-scope th, .slds-scope td {
+        text-align: center !important;
+        }
+        
+    </style>
+    
+    
+    <apex:form style="float:center !important; margin-top:3px !important; background-color:white !important; background: white !important; height: 590px">
+        <apex:actionFunction name="driver" action="{!page}" id="driver"  >
+
+        </apex:actionFunction>
+        <div class="test">
+            
+            
+            <div class="slds-scope">
+                <div style="text-align:center;">
+                    <apex:image url="{!$Resource.Lithiumimg}" style=" width:290px; margin-left:6px; margin-bottom:4px; float-center"/> 
+                </div>
+                <table width="100" align="center">
+                    
+                    <tr>
+                        <td>
+                           <button class="slds-button slds-button_icon_large slds-button_icon slds-pill__remove" title="Assigned Vechile" onclick="driver();return false;" >
+                            <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                <use  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#travel_and_places')}"></use>
+                            </svg>
+                              </button>
+                            <p>
+                                Assigned Vechile
+                            </p>
+                           
+                        </td> 
+                        <td>
+                            <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" onclick="">
+                                <use  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#component_customization') }"></use>
+                            </svg>
+                            <p>
+                                Repairs
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" onclick="">
+                                <use  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#weeklyview')}"></use>
+                            </svg>
+                            <p>
+                                Breakdown
+                            </p>
+                        </td>
+                        <td>
+                            <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" onclick="">
+                                <use  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#report_issue')}"></use>
+                            </svg>
+                            <p>
+                                Report Accident
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </apex:form>     
+</apex:page>

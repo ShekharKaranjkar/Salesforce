@@ -1,0 +1,381 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="Momdetails">
+     <aura:attribute name="eventobj" type="Event" default="{'Id':'','Meeting_Summary__c':'','Over__c':'',
+                                                          'Vehicles__c':'','Drivers__c':'','Operations__c':'','New_Opportunities__c':'',
+                                                          'Technology__c':'','Threats__c':''}"/> 
+    <aura:attribute name="actualeventobj" type="sObject" default="{'Id':'','Meeting_Summary__c':'','Over__c':'',
+                                                          'Vehicles__c':'','Drivers__c':'','Operations__c':'','New_Opportunities__c':'',
+                                                          'Technology__c':'','Threats__c':''}"/>
+     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+      <aura:attribute name="TaskList" type="Task[]"/> 
+    <aura:attribute name="TaskList1" type="Task[]" />
+     <aura:attribute name="TaskList2" type="Task[]"/>
+     <aura:attribute name="TaskList3" type="Task[]"/>
+     <aura:attribute name="TaskList4" type="Task[]"/>
+     <aura:attribute name="TaskList5" type="Task[]"/>
+         <aura:attribute name="TaskList6" type="Task[]"/>
+         <aura:attribute name="Meeting" type="boolean" default="true"/>
+         <aura:attribute name="Overfall" type="boolean" default="true"/>
+             <aura:attribute name="Save" type="boolean" default="false"/>
+    <lightning:card >
+        <div class="slds-box">
+            <div class="slds-grid slds-gutters">
+  <div class="slds-col">
+
+      <div  >
+       <div style="float:left;font-size: 16px;" >
+        <b style="float:left">Meeting Summary</b>
+           <br/> 
+           <br></br>
+           <div class="slds-border_bottom" >
+           <aura:if  isTrue="{!v.Meeting}">
+        {!v.eventobj.Meeting_Summary__c} &nbsp;&nbsp; <lightning:icon iconName="utility:edit" size="xx-small" onclick="{!c.edit}"/>
+        <aura:set attribute="else">
+	<lightning:input value="{!v.eventobj.Meeting_Summary__c}" type="textarea"></lightning:input>
+    </aura:set>
+           </aura:if>
+           </div>
+      <aura:if isTrue="{!v.Save}">
+           </aura:if>
+          </div>
+        </div>
+        </div>
+        <br/>
+         <br/>
+        <br></br>
+                  <div class="slds-col">
+
+        <div>
+          <div style="float:left;font-size: 16px;">
+       <b style="float:left">Overall Temperature</b>
+           <br/>
+                         <br></br>
+
+              <div class="slds-border_bottom" >
+             <aura:if  isTrue="{!v.Overfall}">
+            {!v.eventobj.Over__c} &nbsp;&nbsp;  <lightning:icon iconName="utility:edit" size="xx-small" onclick="{!c.edit1}"/>
+          <aura:set attribute="else">
+<div class="slds-grid" style="width: 140px;" >
+        <div class="slds-col" >
+    <lightning:icon iconName="utility:routing_offline" size="medium" onclick="{!c.toggleIconcolor}" aura:id="Red" title="Red" variant="error"/>
+    <lightning:icon iconName="utility:routing_offline" size="medium" onclick="{!c.toggleIconcolor}" aura:id="Yellow" title="Yellow" variant="warning"/>
+    <lightning:icon iconName="utility:routing_offline" size="medium" onclick="{!c.toggleIconcolor}" aura:id="Green" title="Green" variant="success"/>
+        </div>
+    </div>                 </aura:set>
+              </aura:if>
+              </div>
+            </div>
+                      </div>
+                         </div>
+    </div>
+        </div>
+        <br></br>
+               <aura:if isTrue="{!v.Save}">
+                     <lightning:button variant="brand" label="Save" title="Save" onclick="{! c.OnSubmit}"/>
+                      <lightning:button variant="Neutral" label="Cancel" title="Save" onclick="{! c.OnCancel}"/> 
+           </aura:if>
+        <br/>
+ <div style="font-size: 16px;">
+        <b >Discussion Points</b>
+    </div>
+        <br/>
+        <aura:if isTrue="{!v.eventobj.Vehicles__c}">
+        <h3 class="slds-section-title--divider">Vehicles </h3>
+            <br/>
+            <br/>
+      <table class="slds-table  slds-table_cell-buffer" > 
+        <thead>
+            <tr>
+                <th scope="col" style="width:200px;">
+                    <div class="slds-truncate"  title="Category">Category</div>
+                </th >
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="details">Details</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="Temperature">Temperature</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="AssignedTo">Assigned To</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="DueDate">Due Date</div>
+                </th>
+            </tr>
+        </thead> 
+        <tbody>  
+            <aura:iteration items="{!v.TaskList1}" var="task" indexVar="index">
+                <tr>
+                    <td>
+                        {!task.Subject}
+                     <!-- <lightning:input value="{!task.Subject}" ></lightning:input> -->
+  
+                    </td>
+                    <td >
+                        {!task.Discussion_Points__c}
+                    </td>
+                    
+                    <td >
+                      {!task.Temperature__c}
+                    </td>
+                    <td>
+                       {!task.Owner.Name}
+                    </td>
+                    <td>
+                        {!task.ActivityDate}
+                    </td>
+                      
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+        </aura:if>
+       <br/>
+        <aura:if isTrue="{!v.eventobj.Operations__c}">
+        <h3 class="slds-section-title--divider">Operations </h3>
+        <br/>
+            <br/>
+
+     <table class="slds-table  slds-table_cell-buffer" > 
+        <thead>
+            <tr>
+                                <th scope="col" style="width:200px;">
+                    <div class="slds-truncate"  title="Category">Category</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="details">Details</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="Temperature">Temperature</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="AssignedTo">Assigned To</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="DueDate">Due Date</div>
+                </th>
+            </tr>
+        </thead> 
+        <tbody>  
+            <aura:iteration items="{!v.TaskList2}" var="task" indexVar="index">
+           <tr>
+                    <td>
+                        {!task.Subject}
+                    </td>
+                    <td >
+                        {!task.Discussion_Points__c}
+                    </td>
+                    
+                    <td >
+                      {!task.Temperature__c}
+                    </td>
+                    <td>
+                       {!task.Owner.Name}
+                    </td>
+                    <td>
+                        {!task.ActivityDate}
+                    </td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+       
+        </aura:if>        <br/>
+        <aura:if isTrue="{!v.eventobj.Drivers__c}">
+       <h3 class="slds-section-title--divider">Drivers </h3>
+        <br/>
+
+      <table class="slds-table  slds-table_cell-buffer" > 
+        <thead>
+            <tr>
+                                <th scope="col" style="width:200px;">
+                    <div class="slds-truncate"  title="Category">Category</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="details">Details</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="Temperature">Temperature</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="AssignedTo">Assigned To</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="DueDate">Due Date</div>
+                </th>
+            </tr>
+        </thead> 
+        <tbody>  
+            <aura:iteration items="{!v.TaskList3}" var="task" indexVar="index">
+  <tr>
+                    <td>
+                        {!task.Subject}
+                    </td>
+                    <td >
+                        {!task.Discussion_Points__c}
+                    </td>
+                    
+                    <td >
+                      {!task.Temperature__c}
+                    </td>
+                    <td>
+                       {!task.Owner.Name}
+                    </td>
+                    <td>
+                        {!task.ActivityDate}
+                    </td>
+                      
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+        <br/></aura:if>
+        <aura:if isTrue="{!v.eventobj.New_Opportunities__c}">
+        <h3 class="slds-section-title--divider">New Opportunities </h3>
+        <br/>
+     
+      <table class="slds-table  slds-table_cell-buffer" > 
+        <thead>
+            <tr>
+                                <th scope="col" style="width:200px;">
+                    <div class="slds-truncate"  title="Category">Category</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="details">Details</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="Temperature">Temperature</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="AssignedTo">Assigned To</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="DueDate">Due Date</div>
+                </th>
+            </tr>
+        </thead> 
+        <tbody>  
+            <aura:iteration items="{!v.TaskList4}" var="task" indexVar="index">
+                 <tr>
+                    <td>
+                        {!task.Subject}
+                    </td>
+                    <td>
+                        {!task.Discussion_Points__c}
+                    </td>
+                    
+                    <td >
+                      {!task.Temperature__c}
+                    </td>
+                    <td>
+                       {!task.Owner.Name}
+                    </td>
+                    <td>
+                        {!task.ActivityDate}
+                    </td>
+                      
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+            <br/></aura:if>
+        <aura:if isTrue="{!v.eventobj.Threats__c}">
+        <h3 class="slds-section-title--divider">Threats </h3>
+        <br/>
+        
+      <table class="slds-table  slds-table_cell-buffer" > 
+        <thead>
+            <tr>
+                                <th scope="col" style="width:200px;">
+                    <div class="slds-truncate"  title="Category">Category</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="details">Details</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="Temperature">Temperature</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="AssignedTo">Assigned To</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="DueDate">Due Date</div>
+                </th>
+            </tr>
+        </thead> 
+        <tbody>  
+            <aura:iteration items="{!v.TaskList5}" var="task" indexVar="index">
+                 <tr>
+                    <td>
+                        {!task.Subject}
+                    </td>
+                    <td >
+                        {!task.Discussion_Points__c}
+                    </td>
+                    
+                    <td >
+                      {!task.Temperature__c}
+                    </td>
+                    <td>
+                       {!task.Owner.Name}
+                    </td>
+                    <td>
+                        {!task.ActivityDate}
+                    </td>
+                      
+                </tr>
+            </aura:iteration>
+        </tbody>
+            </table></aura:if>
+        <br/><aura:if isTrue="{!v.eventobj.Technology__c}">
+        <h3 class="slds-section-title--divider">Technology </h3>
+        <br/>
+        
+      <table class="slds-table  slds-table_cell-buffer" > 
+        <thead>
+            <tr>
+                                <th scope="col" style="width:200px;">
+                    <div class="slds-truncate"  title="Category">Category</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="details">Details</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="Temperature">Temperature</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="AssignedTo">Assigned To</div>
+                </th>
+                                <th scope="col" style="width:140px;">
+                    <div class="slds-truncate"  title="DueDate">Due Date</div>
+                </th>
+            </tr>
+        </thead> 
+        <tbody>  
+            <aura:iteration items="{!v.TaskList6}" var="task" indexVar="index">
+                <tr>
+                    <td>
+                        {!task.Subject}
+                    </td>
+                    <td >
+                        {!task.Discussion_Points__c}
+                    </td>
+                    
+                    <td >
+                      {!task.Temperature__c}
+                    </td>
+                    <td>
+                       {!task.Owner.Name}
+                    </td>
+                    <td>
+                        {!task.ActivityDate}
+                    </td>
+                      
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+        </aura:if>
+        <br/>
+           
+    </lightning:card>
+</aura:component>

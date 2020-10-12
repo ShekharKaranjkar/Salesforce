@@ -1,0 +1,55 @@
+<apex:page docType="html-5.0" showQuickActionVfHeader="false"  showHeader="false" sidebar="false" applyBodyTag="false"
+           applyHtmlTag="false" cache="false" expires="50" lightningStylesheets="true" >
+    
+    <script>
+    var video = document.getElementById('video');
+    
+    // Get access to the camera!
+    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        
+        navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+            
+            video.srcObject = stream;
+            video.play();
+        });
+    }
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    var video = document.getElementById('video');
+    
+    // Trigger photo take
+    document.getElementById("snap").addEventListener("click", function() {
+        context.drawImage(video, 0, 0, 640, 480);
+    });
+    </script>
+    <div>
+        <video id="video" width="640" height="480" autoplay="true"></video>
+        <button id="snap">Snap Photo</button>
+        <canvas id="canvas" width="640" height="480"></canvas>
+    </div>
+        <!--
+ <div class="container">CameraAccess
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="jumbotron">
+                <h1> Camera Access in Visualforce using HTML 5 </h1>
+                <a href="https://jitendrazaa.com">https://jitendrazaa.com</a>
+            </div>
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <apex:form >
+                     <p>
+                        <apex:inputFile value="{!cont.VersionData}"  accept="image/*;capture=camera" filename="{!cont.Title}" />
+                     </p>
+
+                     <p>
+                        <apex:commandButton StyleClass="btn btn-danger" action="{!saveFile}" value="Save File" />
+                     </p>
+                    </apex:form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+</apex:page>

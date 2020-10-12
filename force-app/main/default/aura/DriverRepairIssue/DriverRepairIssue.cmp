@@ -1,0 +1,41 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="showchild" type="boolean" default="false"/>
+    <aura:attribute name="showparent" type="boolean" default="true"/>
+    <aura:if isTrue="{!v.showparent}">
+    <lightning:card>
+    <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+        <div class="slds-media">
+            <div class="slds-media__figure">
+                <lightning:icon iconName="custom:custom19" alternativeText=""/>
+            </div>
+            <div class="slds-media__body">
+                <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Driver-Repair-Issue">Driver-Repair-Issue</h1>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div>
+        <lightning:select name="Issuewith" label="Issue with?" required="true">
+            <option value="">choose one...</option>
+            <option value="Brake">Brake</option>
+            <option value="Battery">Battery</option>
+        </lightning:select>
+        <br/>
+        <lightning:select name="SelectarelevantKnowledgebase" label="Select a relevant Knowledge base" required="true">
+            <option value="">choose one...</option>
+            <option value="Brake Sqeal">Brake Squeal</option>
+            <option value="The Brake pads are worn out">The Brake pads are worn out</option>
+            <option value="The parking brake does not work">The parking brake does not work</option>
+            <option value="The tires are flat">The tires are flat</option>
+            <option value="The wheel wobbles">The wheel wobbles</option>
+        </lightning:select>
+    </div><br/>
+    <div class="slds-float_right">
+        <lightning:button variant="success" label="Next" title="Next" onclick="{! c.nextComponent}"/>
+    </div>
+    </lightning:card>
+        <lightning:navigation aura:id="navService"/></aura:if>
+    <aura:if isTrue="{!v.showchild}">
+    <div id="childdiv"><c:DriverRepairIssueResolved/></div>
+    </aura:if>
+</aura:component>

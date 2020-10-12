@@ -1,0 +1,34 @@
+<aura:component controller="productSelectionController">
+    <!-- on component load, fetch picklist values dynamically from apex controller -->   
+    
+    <aura:registerEvent name="listofOne" type="c:oneDList"/>
+    <!--declare aura attributes-->
+    <aura:attribute name="objInfoForPicklistValues" type="account" default="{sobjectType : 'Account'}" description="object information to fetch picklist values"/>
+    <aura:attribute name="ratingPicklistOpts" type="string[]" description="store picklist options values"/> 
+    <aura:attribute name="showSaveCancelBtn" type="boolean"/>
+    <aura:attribute name="showErrorClass" type="boolean" default="false"/>
+    
+    <aura:attribute name="singleRec" type="object"/>
+    <aura:attribute name="pursuitEditMode" type="boolean" default="false" />
+    <aura:attribute name="tripEditMode" type="boolean" default="false" />
+    <aura:attribute name="priceCarEditMode" type="boolean" default="false" />
+    <!--Table Row Start-->  
+    
+    
+    
+      
+         
+    <aura:iteration items = "{!v.singleRec.olislab}" var = "item">
+        <c:SummarySlab singleRec = "{!item}" />
+    </aura:iteration>
+        <aura:iteration items = "{!v.singleRec.oliflat}" var = "item">
+        <c:SummaryFlat singleRec = "{!item}" />
+    </aura:iteration>
+
+   
+    
+    
+    
+    
+    
+</aura:component>

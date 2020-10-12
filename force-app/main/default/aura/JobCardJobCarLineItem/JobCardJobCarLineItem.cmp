@@ -1,0 +1,100 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:lightningQuickActionWithoutHeader,force:hasRecordId,forceCommunity:availableForAllPageTypes"
+                access="global" 
+                controller="JobCardJobCarLineItem" >
+    
+    <aura:handler name = "init" value = "{!this}" action = "{!c.doInit}"/>
+    <aura:handler name="DeleteRowEvt" event="c:DeleteRowEvt" action="{!c.removeDeletedRow}"/>
+    <aura:handler name="AddNewRowEvt" event="c:AddNewRowEvt" action="{!c.addNewRowjoblineitem}"/>
+        <aura:handler name="DeleteGeneralRow" event="c:DeleteGeneralRow" action="{!c.removeDeletedGeneral}"/>
+    <aura:handler name="AddNewRowEvtflat" event="c:AddNewRowEvtflat" action="{!c.addNewRowjoblineitemGeneral}"/>
+    <aura:handler name="DeleteRowEvt1D" event="c:DeleteRowEvt1D" action="{!c.removeDeletedRowIventory}"/>
+    <aura:handler name="AddNewRowEvt1D" event="c:AddNewRowEvt1D" action="{!c.createObjectIventory}"/>    
+    <aura:handler name="oSelectedServicelookupIdEvent1" event="c:SelectedMultiplelookupEvent" action="{!c.handlemultipleComponentEvent}"/>
+    <aura:attribute name = "DeleteoneDList" type = "list"/>
+    
+    
+    <aura:attribute name="selectedLookUpCampus" type="object" default="{}"/>
+    <!--   <aura:attribute name="selectedLookUpRecords" type="sObject[]" default="[]"/>--> 
+    
+    <!-- here c: is org. namespace prefix-->    
+    
+    <aura:attribute name="issuesRec" type="Issues__c"/>
+    <aura:attribute name="vehiclerec" type="Campus__c"/>
+    
+    <aura:attribute name="date" type="String"/>
+    <aura:attribute name="odometerReading" type="String"/>
+    <aura:attribute name="techicianName" type="String"/>
+    <aura:attribute name = "jobCardLineItemList" type = "object"/>
+    <aura:attribute name="city" type="String"/>
+    <aura:attribute name="campusid" type="String"/>
+    <aura:attribute name="campusflag" type="boolean" default="true"/>
+    <aura:attribute name="job" type="boolean" default="false"/>
+     <aura:attribute name="issueFlag" type="boolean" default="false"/>
+    <aura:html tag="style">
+        .slds-modal__container {
+        width : 100% !important;
+        max-width : 100% !important;
+        height : 100% !important;
+        
+        max-height:100% !important;
+        }
+    </aura:html>
+
+    
+    <aura:if isTrue="{!v.issueFlag}">
+ <div class="slds-box">
+        <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+            <div class="slds-size_1-of-2 slds-p-around_xxx-small">
+                <lightning:input name="input5" disabled="true" value="{!v.jobCardLineItemList.issue}"  label="Issue" />
+            </div>
+            <div class="slds-size_1-of-2 slds-p-around_xxx-small">
+                <lightning:input type="date"  required="true"  name="input1" label="Enter date" value="{!v.jobCardLineItemList.date}" />
+            </div>
+            <div class="slds-size_1-of-2 slds-p-around_xxx-small">
+                <lightning:input name="number"  required="true"  value="{!v.jobCardLineItemList.reading}" label="Odometer Reading" />
+            </div>
+            <div class="slds-size_1-of-2 slds-p-around_xxx-small">
+                <lightning:input type="text"  required="true"  name="input1" label=" Technician Name" value="{!v.jobCardLineItemList.technicianName}" />
+            </div>
+            <div class="slds-size_1-of-2 slds-p-around_xxx-small">
+                <lightning:input name="input5" disabled="true" value="{!v.jobCardLineItemList.vehicle}"  label="Vehicle" />
+            </div>
+            <div class="slds-size_1-of-2 slds-p-around_xxx-small">
+                <c:LookupComponent   objectName="Campus__c" fieldName="Name" Label="Campus Name" 
+                                   selectRecordId="{!v.jobCardLineItemList.campusId}" selectRecordName="{!v.jobCardLineItemList.campusName}" 
+                                   required="false" iconName="action:user"/>
+            </div>
+        </div>
+    </div>
+    
+    <div class="slds-box slds-p-around_x-small">
+        <div >
+            <div class = "slds-form-element slds-p-horizontal_x-small">
+                <c:JobCardTable jobcardItemInstance="{!v.jobCardLineItemList}" />
+            </div>               
+        </div>     
+    </div>
+    
+    <div class="slds-p-top_small">
+        <div class="slds-clearfix">
+            <div class="slds-float_right">
+                
+                <span class = "slds-p-around_small">
+                    
+                    <lightning:button label = "Cancel" onclick = "{!c.goesBack}"/>
+                </span>
+                
+                <span >
+                    <button class = "slds-button slds-button_brand"  onclick = "{!c.Save}">Save</button>
+                </span>
+                
+            </div>
+        </div>
+    </div>
+
+
+  </aura:if>         
+ 
+    
+   
+</aura:component>

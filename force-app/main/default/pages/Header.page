@@ -1,0 +1,200 @@
+<apex:page showHeader="false" sidebar="false" showQuickActionVfHeader="false" lightningStylesheets="true" controller="CommunityHeader">
+    <apex:slds />
+    
+    <!---->
+    <style>
+           .c{
+        transform: rotate(1deg) !important;
+        
+        }
+        .slds-scope .slds-button__icon {
+        width: .875rem;
+        height: .875rem;
+        
+        fill: green;
+        transform: rotate(1deg) !important;
+        }
+        .slds-scope .slds-pill__remove {
+        width: 2rem;
+        height: 1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: .25rem;
+        border-radius: .125rem;
+        }
+        .slds-scope .slds-form-element__control {
+    clear: left;
+    position: relative;
+    margin-left: 47px;
+}
+        .slds-scope .slds-pill__remove svg {
+    width: 3.875rem;
+    height: 1.875rem;
+}
+        .slds-scope .slds-button__icon {
+    width: .875rem;
+    height: .875rem;
+  
+    fill: #37bfb1;
+    transform: rotate(1deg) !important;
+}
+    </style>
+    <body >
+    <apex:form >
+    <apex:actionFunction name="LogoutFunc" action="{!Logout}"/>
+       <!--  <apex:actionFunction name="NotificationFunc" action="{!Notification}"/> -->
+    <div class="slds-scope">
+    <div class="slds-page-header slds-page-header_related-list">
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                    <div class="slds-media__body">
+                        <div class="slds-page-header__name">
+                            <div class="slds-page-header__name-title">
+                                <h1>
+                                    <span class="slds-page-header__title slds-truncate" title="Mobile No">Name: {!$User.FirstName} {!$User.LastName}</span>
+                                	
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-page-header__col-actions">
+                <div class="slds-page-header__controls">
+                    <div class="slds-page-header__control">
+                        <ul class="slds-button-group-list">
+                             <li>
+                                  <button  style="width: 40px;" class="slds-button slds-button_icon_large slds-button_icon slds-pill__remove" title="Help Desk" onclick="redirectToContactDetilas();return false">
+                            
+                            <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" style="
+    margin-right: -4px;
+" >
+                                <use  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#questions_and_answers')}"></use>
+                            </svg>
+                        </button>  
+                                 
+                              <!--  <apex:commandLink value="Notification" onclick="redirectToNotification();return false" styleclass="slds-button slds-button_success"/>-->
+                            </li>
+                          
+                             <li>
+                                  <button  style="width: 40px;" class="slds-button slds-button_icon_large slds-button_icon slds-pill__remove" title="Notificatios" onclick="redirectToNotification();return false">
+                            
+                            <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" >
+                                <use  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#notification')}"></use>
+                            </svg>
+                        </button>  
+                                 
+                              <!--  <apex:commandLink value="Notification" onclick="redirectToNotification();return false" styleclass="slds-button slds-button_success"/>-->
+                            </li>
+                            
+                            <li>
+                                <apex:commandLink value="Logout" action="{!Logout}" styleclass="slds-button slds-button_success" style="background-color: #37bfb1;margin-top: -6px;"/>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---->
+    </div>
+        
+        <script>
+        function setCookie(){
+            //console.log(self.parent.window.opener.document);
+            //self.parent.window.opener.document.cookie = 'Uid={!$User.Id}';
+            //document.cookie = 'Uid={!$User.Id}';
+        }
+        function onCookieDel(){
+            //   	document.cookie = "Uid=; max-age=0";
+            //  LogoutFunc();return false;
+            }	
+        /*  function redirectToNotification(){
+            //console.log(UITheme);
+            debugger;
+            //alert(UITheme);
+            //console.log('UITheme'+ UITheme);
+            //alert(UITheme.getUITheme());
+           
+            //alert('{!$User.UIThemeDisplayed}');
+            // alert('theme  '+theme );
+          
+            
+            // alert('hi'+dailyDriverCovid);
+            //  console.log('vehicleassignid ',vehicleassignid);
+            //console.log('theme ',theme);
+            //alert('1'+theme);
+            //debugger;
+           
+            //  window.location=domain+'/Notificationsvf?core.apexpages.request.devconsole=1';
+            
+                    sforce.one.navigateToURL('Driver_Attendence?core.apexpages.request.devconsole=1');
+                
+            
+            
+           
+         } */
+        
+        function redirectToNotification(){
+            // alert('from header');
+            debugger;
+            
+        var domain = "{!$Label.Driver_Menu_Domain}";
+        if(!window.location.href.includes(domain))
+            domain = '/apex';
+            //alert(domain);
+            var theme = '{!$User.UITheme}';
+            // alert(theme);
+                if (theme === 'Theme4d' || theme === 'Theme4u'){
+                    
+                        sforce.one.navigateToURL(domain+'/Notificationsvf');
+                } 
+                else if(theme ==='Theme4t'){
+                    if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                        sforce.one.navigateToURL(domain+'/apex/Notificationsvf');
+                    else
+                        window.location=domain+'/Notificationsvf';
+                }    
+                    else {
+                        //alert();
+                        window.location.href=domain+'/Notificationsvf';
+                    }
+           
+        }        </script>
+        <script>
+        function redirectToContactDetilas(){
+            
+            //console.log(UITheme);
+            debugger;
+            
+            var domain = "{!$Label.Driver_Menu_Domain}";
+            if(!window.location.href.includes(domain))
+                domain = '/apex';
+            var theme = '{!$User.UITheme}';
+            
+            
+            
+            if (theme === 'Theme4d' || theme === 'Theme4u'){
+                
+                sforce.one.navigateToURL(domain+'/ContactDetiailsLoutvf');
+            } 
+            else if(theme ==='Theme4t'){
+                if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                    sforce.one.navigateToURL(domain+'/apex/ContactDetiailsLoutvf');
+                else
+                    window.location=domain+'/ContactDetiailsLoutvf';
+            }    
+                else {
+                    //alert();
+                    window.location.href=domain+'/ContactDetiailsLoutvf';
+                }
+        }
+        
+        </script>
+         
+    </apex:form>
+    </body>
+</apex:page>

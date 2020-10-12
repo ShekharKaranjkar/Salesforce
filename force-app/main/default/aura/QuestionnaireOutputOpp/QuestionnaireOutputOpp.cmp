@@ -1,0 +1,58 @@
+<aura:component controller="OPPController"  implements="flexipage:availableForAllPageTypes,force:appHostable,force:hasRecordId">
+ 
+<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+   
+   
+    <aura:attribute name="overall" type="Opportunity"/>
+    <aura:attribute name="overall1" type="Lead"/>
+    <aura:attribute name="overall2" type="Lead"/>
+    <aura:attribute name="overall3" type="Lead"/>
+    <aura:attribute name="overall4" type="Lead"/>
+    <aura:attribute name="oppObj" type="Opportunity" default="{'Id':'',
+                                                           'Overall_Transportation_Cost__c':'',
+                                                          'Occupancy_Increase__c':'',
+                                                          'Diesel_abatement_cost_anually__c':'',
+                                                          'Fleet_Size_Reduction__c':'',
+                                                        'Co2e_footprint_abatement_MT_annually__c':''
+                                                        }" access="global"/>
+    <div style="float:left;font-size: 12px;">
+        <b style="float:left">Overall Transportation Cost</b>
+    </div>
+           
+            <br/>
+    {!v.overall.Overall_Transportation_Cost__c}
+    <br/>
+    <br/>
+
+    <div style="float:left;font-size: 12px;">
+        <b style="float:left">Occupancy Increase</b>
+    </div>
+            <br/>
+    {!v.overall.Occupancy_Increase__c}
+    <br/>
+    <br/>
+
+     <div style="float:left;font-size: 12px;">
+        <b style="float:left">Diesel abatement cost anually</b>
+    </div>
+            <br/>
+   <p><lightning:formattedNumber value="{!v.overall.Diesel_abatement_cost_anually__c}" style="currency" currencyCode="INR"/></p>
+
+    <br/>
+    <div style="float:left;font-size: 12px;">
+        <b style="float:left">Fleet Size Reduction</b>
+    </div>
+            <br/>
+    {!v.overall.Fleet_Size_Reduction__c}
+    <br/>
+    <br/>
+    <div style="float:left;font-size: 12px;">
+        <b style="float:left">Co2e footprint abatement (MT) annually</b>
+    </div>
+            <br/>
+    {!v.overall.Co2e_footprint_abatement_MT_annually__c}
+    <br/>
+    <br/>
+         
+     
+</aura:component>

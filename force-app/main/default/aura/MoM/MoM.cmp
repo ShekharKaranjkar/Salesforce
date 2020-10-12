@@ -1,0 +1,627 @@
+<aura:component controller="eventctrl" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
+    <aura:attribute name="record" type="Object"/>
+    <aura:attribute name="simpleRecord" type="Object"/>
+    <aura:attribute name="accForm" type="Contact" default="{'sobjectType' : 'Contact'}"/>
+    <aura:attribute name="recordError" type="String"/>
+    <aura:attribute name="overAllTemperature" type="String"/>
+    <aura:attribute name="assignedto" type="String"/>
+    <aura:attribute name="removeLogIds" type="List"/>
+
+    <aura:attribute name="eventobj" type="Event" default="{'Id':'','Meeting_Summary__c':'','Over__c':'',
+                                                          'Vehicles__c':'','Drivers__c':'','Operations__c':'','New_Opportunities__c':'',
+                                                          'Technology__c':'','Threats__c':'','WhatId':''}"/>
+    <aura:attribute name="taskobj" type="Task" default="{'sobjectType' : 'Task'}"/>
+    <aura:attribute name="TaskList" type="Task[]"/> 
+    <aura:attribute name="TaskList1" type="Task[]" />
+    <aura:attribute name="TaskList2" type="Task[]"/>
+    <aura:attribute name="TaskList3" type="Task[]"/>
+    <aura:attribute name="TaskList4" type="Task[]"/>
+    <aura:attribute name="TaskList5" type="Task[]"/>
+    <aura:attribute name="TaskList6" type="Task[]"/>
+    
+    <aura:attribute name="LookUpRecords" type="sObject[]" default="[]"/>
+    <aura:attribute name="LookUpRecords1" type="sObject[]" default="[]"/>
+    <aura:attribute name="LookUpRecords2" type="sObject[]" default="[]"/>
+    <aura:attribute name="LookUpRecords3" type="sObject[]" default="[]"/>
+    <aura:attribute name="LookUpRecords4" type="sObject[]" default="[]"/>
+    <aura:attribute name="LookUpRecords5" type="sObject[]" default="[]"/>
+    
+       <aura:attribute name="CheckDate" type="boolean" default="false"/>
+<aura:attribute name="CheckDate1" type="boolean" default="false"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="oSelecteduserlookupIdEvent" event="c:SelecteduserlookupEvent" action="{!c.handleComponentEvent}"/>
+    <aura:handler name="SelectedTemperatureIconcolor" event="c:TemperatureIconEvent" action="{!c.handleTemperatureIconEvent}"/>
+    <aura:attribute name="options" type="List" default="[
+                                                        {'label': 'Maintenance', 'value': 'Maintenance'},
+                                                        {'label': 'Cleanliness', 'value': 'Cleanliness'},
+                                                        {'label': 'Missing Accessorries', 'value': 'Missing Accessorries'},
+                                                        {'label': 'Breakdowns', 'value': 'Breakdowns'},
+                                                        {'label': 'Accidents', 'value': 'Accidents'},
+                                                        {'label': 'RCA', 'value': 'RCA'},{'label': 'Compliance', 'value': 'Compliance'},
+                                                        ]"/>
+    <aura:attribute name="options1" type="List" default="[
+                                                         {'label': 'Team Issues', 'value': 'Team Issues'},
+                                                         {'label': 'Ground Team Capacity', 'value': 'Ground Team Capacity'},
+                                                         {'label': 'Timeliness', 'value': 'Timeliness'},
+                                                         ]"/>
+    <aura:attribute name="options2" type="List" default="[
+                                                         {'label': 'Driver Behaviour', 'value': 'Driver Behaviour'},
+                                                         {'label': 'Driver Grooming', 'value': 'Driver Grooming'},
+                                                         {'label': 'Driver Shortage', 'value': 'Driver Shortage'},
+                                                         ]"/>
+    <aura:attribute name="options3" type="List" default="[
+                                                         {'label': 'New Site', 'value': 'New Site'},
+                                                         {'label': 'New Location', 'value': 'New Location'},
+                                                         {'label': 'Change in Shifts', 'value': 'Change in Shifts'},
+                                                         {'label': 'Increase in Vehicles', 'value': 'Increase in Vehicles'},
+                                                         ]"/>
+    <aura:attribute name="options4" type="List" default="[
+                                                         {'label': 'New Vendor', 'value': 'New Vendor '},
+                                                         {'label': 'New EV', 'value': 'New EV'},
+                                                         {'label': 'Reduction in Employee Count', 'value': 'Reduction in Employee Count'},
+                                                         {'label': 'Reduction in Shifts', 'value': 'Reduction in Shifts'},
+                                                         {'label': 'Reduction in no.of Cars', 'value': 'Reduction in no.of Cars'},
+                                                         
+                                                         ]"/>
+    <aura:attribute name="options5" type="List" default="[
+                                                         {'label': 'Current Technology Change', 'value': 'Current Technology Change'},
+                                                         {'label': 'New Devices', 'value': 'New Devices'},
+                                                         {'label': 'Safety', 'value': 'Safety'},
+                                                         ]"/>
+    <aura:html tag="style">
+        .slds-modal__header {
+        padding: 0.5rem !important;
+        width:1000px;
+        
+        }
+        .slds-p-around--medium {
+        padding: 0rem !important;
+        }
+        .slds-modal__content{
+        height:unset !important;
+        max-height:unset !important;
+        width:1000px;
+        padding: 0.5rem !important;
+  
+        }
+        .slds-modal__footer{
+        width:1000px;
+        }
+         .slds-text-heading_medium{
+        // margin-left:-47px;
+        }
+			.slds-fade-in-open {
+    margin-left: -300px;}
+       .likeicon svg{
+    fill:blue !important;
+}
+        .popupiconcolor svg{
+    fill:white !important;
+}
+.likeicon1 {
+    background-color:#16325c;
+
+
+
+ !important;
+}
+        .field{
+  padding: 5px;
+  border: 1px solid #dce4ec;
+  border-radius: 2px;
+}
+    </aura:html> 
+      <aura:if  isTrue="{!v.CheckDate}">
+    <div class="modal-header slds-modal__header slds-size_1-of-1">
+        <b>
+        <h4 class="title slds-text-heading--medium">CREATE MoM</h4>
+        </b>
+    </div>
+    <div class="slds-modal__content slds-size_1-of-1 slds-is-relative" aura:id="modalbody" id="modalbody">
+        <form class="slds-form--stacked">
+          
+                <div>
+                    <b>
+                        <lightning:input label="Meeting Summary"  style="width: 930px;" value="{!v.eventobj.Meeting_Summary__c}" ></lightning:input> 
+                    </b>
+                </div>
+                <br/>
+                <div>
+                    <div style="float:left;font-size: 12px;">
+                        <b style="float:left">Overall Temperature</b>
+                    </div>
+                </div>
+                <br/>
+ <div class="slds-grid" style="width: 140px;" >
+        <div class="slds-col" >
+    <lightning:icon iconName="utility:routing_offline" size="medium" onclick="{!c.toggleIconcolor}" aura:id="Red" title="Red" variant="error"/>
+    <lightning:icon iconName="utility:routing_offline" size="medium" onclick="{!c.toggleIconcolor}" aura:id="Yellow" title="Yellow" variant="warning"/>
+    <lightning:icon iconName="utility:routing_offline" size="medium" onclick="{!c.toggleIconcolor}" aura:id="Green" title="Green" variant="success"/>
+        </div>
+    </div>
+                <br/>
+                <div style="font-size: 12px;">
+                    <b >Discussion Points</b>
+                </div>
+                <br/>
+                <h3 class="slds-section-title--divider">Vehicles </h3>
+                <br/>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <lightning:icon iconName="utility:like" alternativeText="likeICON" size="medium"  class="likeicon" onclick="{!c.redclassfunction}" aura:id="Vehicles__c"/>
+                        <!--<lightning:icon iconName="utility:setup_assistant_guide"  aura:id="show" alternativeText="Error!" variant="error" onclick="{!c.show}"/>-->
+                    <lightning:icon src="{! $Resource.fireSVG+ '#example3'}" alternativeText="Fire" onclick="{!c.show}" aura:id="FIREICON"/>
+                    </div>
+                </div>
+                <br/>
+                <div  class="slds-hide" aura:id="show_combo">
+                    <table class="slds-table  slds-table_cell-buffer" > 
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 140px;">
+                                    <div class="slds-truncate "  title="Category">Category</div>
+                                </th>
+                                <th scope="col" style="width: 140px;">
+                                    <div class="slds-truncate "  title="details">Details</div>
+                                </th>
+                                <th scope="col" style="width: 140px;">
+                                    <div class="slds-truncate "  title="Temperature">Temperature</div>
+                                </th>
+                                <th scope="col" style="width:140px">
+                                    <div class="slds-truncate"  title="AssignedTo">Assigned To</div>
+                                </th>
+                                <th scope="col"  style="width:140px">
+                                    <div class="slds-truncate"  title="DueDate">Due Date</div>
+                                </th>
+                            </tr>
+                        </thead> 
+                        <tbody>  
+                            <aura:iteration items="{!v.TaskList1}" var="task" indexVar="index">
+                                <tr>
+                                    <td>
+                                        <lightning:combobox name="type" style="width: 150px;" label="" class="Category" value="{!task.Subject}" placeholder="" options="{! v.options}"/>                        
+                                    </td>
+                                    <td style="padding-top:5px;">
+                                        <lightning:textarea name="dailydetail" style="width: 150px;" type="textarea"  maxlength="32768"  value="{!task.Discussion_Points__c}" class="detailbox"/>
+                                    </td>
+                                    
+                                    <td style="padding-top:5px;">
+                                        <c:TemperatureIcon index = "{!index}" whichtaskList="TaskList1"/>
+                                    </td>
+                                    <td>
+                                        <c:userlookupmultiselect objectAPIName="User"
+                                                                 IconName="standard:user"
+                                                                 lstSelectedRecords="{!v.LookUpRecords}" index = "{!index}" whichtaskList="TaskList1"
+                                                                 />
+                                    </td>
+                                    <td>
+                                        <!--<lightning:input type="date" name="input1"  value="{!task.ActivityDate}"/>-->
+                                        <ui:inputDate  class="field" value="{!task.ActivityDate}" displayDatePicker="true" />
+                                    </td>
+                                    <tr>
+                                        <td style="padding-top: 28px;">
+                                            <aura:if isTrue="{!v.TaskList1.length != 1}">
+                                                <lightning:button label="-"  title="Neutral action" name="{!index}" onclick="{! c.removeRow }" class=""/>
+                                            </aura:if>
+                                        </td>
+                                        <td style="padding-top: 28px;">
+                                            <aura:if isTrue="{!v.TaskList1.length -1 == index}">
+                                                <lightning:button label="+"  title="Neutral action" onclick="{! c.addRow }"  class=""/>
+                                            </aura:if>
+                                        </td>
+                                    </tr>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+                <br/>
+                <h3 class="slds-section-title--divider">Operations </h3>
+                <br/>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                       <lightning:icon iconName="utility:like" alternativeText="likeICON1" size="medium"  class="likeicon" onclick="{!c.redclassfunction}" aura:id="Operations__c"/>
+                        <lightning:icon src="{! $Resource.fireSVG+ '#example3'}" alternativeText="Fire" onclick="{!c.show1}" aura:id="FIREICON1"/>
+                        </div>
+                    </div>
+                <br/>
+                <div  class="slds-hide" aura:id="show_combo1">
+                    <table class="slds-table  slds-table_cell-buffer" > 
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate "  title="Category">Category</div>
+                                </th >
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate "  title="details">Details</div>
+                                </th>
+                                <th scope="col" style="width: 140px;">
+                                    <div class="slds-truncate "  title="Temperature">Temperature</div>
+                                </th>
+                                <th scope="col" style="width:140px">
+                                    <div class="slds-truncate"  title="AssignedTo">Assigned To</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate"  title="DueDate">Due Date</div>
+                                </th>
+                            </tr>
+                        </thead> 
+                        <tbody>  
+                            <aura:iteration items="{!v.TaskList2}" var="task" indexVar="index">
+                                <tr>
+                                    <td>
+                                        <lightning:combobox name="type" style="width: 150px;" label="" class="Category" value="{!task.Subject}" placeholder="" options="{! v.options1}"/>                        
+                                    </td>
+                                    <td style="padding-top:5px;">
+                                        <lightning:textarea name="dailydetail" style="width: 150px;" type="textarea"  maxlength="32768"  value="{!task.Discussion_Points__c}" class="detailbox"/>
+                                    </td>
+                                    
+                                    <td style="padding-top:5px;">
+                      <c:TemperatureIcon index = "{!index}" whichtaskList="TaskList2"/>
+ 
+                                    </td>
+                                    <td>
+                                        <c:userlookupmultiselect objectAPIName="User"
+                                                                 IconName="standard:user"
+                                                                 lstSelectedRecords="{!v.LookUpRecords1}" index = "{!index}" whichtaskList="TaskList2"
+                                                                 />
+                                    </td>
+                                    <td>
+                                        <ui:inputDate  class="field" value="{!task.ActivityDate}" displayDatePicker="true" />
+                                    </td>
+                                    <tr>
+                                        <td style="padding-top: 28px;">
+                                            <aura:if isTrue="{!v.TaskList2.length != 1}">
+                                                <lightning:button label="-"  title="Neutral action" name="{!index}" onclick="{! c.remove }" class=""/>
+                                            </aura:if>
+                                        </td>
+                                        <td style="padding-top: 28px;">
+                                            <aura:if isTrue="{!v.TaskList2.length -1 == index}">
+                                                <lightning:button label="+"  title="Neutral action" onclick="{! c.add}"  class=""/>
+                                            </aura:if>
+                                        </td>
+                                    </tr>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+                <br/>
+                <h3 class="slds-section-title--divider">Drivers </h3>
+                <br/>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <lightning:icon iconName="utility:like" alternativeText="likeICON2" size="medium"  class="likeicon" onclick="{!c.redclassfunction}" aura:id="Drivers__c"/>
+                        <lightning:icon src="{! $Resource.fireSVG+ '#example3'}" alternativeText="Fire" onclick="{!c.show2}" aura:id="FIREICON2"/>
+                        <!--<lightning:icon iconName="utility:error" alternativeText="Error!" variant="error" onclick="{!c.show2}"/>-->
+                    </div>
+                </div>
+            <br></br>
+                <div  class="slds-hide" aura:id="show_combo2">
+                    <table class="slds-table  slds-table_cell-buffer" > 
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate "  title="Category">Category</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate "  title="details">Details</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate "  title="Temperature">Temperature</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate"  title="AssignedTo">Assigned To</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate"  title="DueDate">Due Date</div>
+                                </th>
+                            </tr>
+                        </thead> 
+                        <tbody>  
+                            <aura:iteration items="{!v.TaskList3}" var="task" indexVar="index">
+                                <tr>
+                                    <td>
+                                        <lightning:combobox name="type" style="width: 150px;" label="" class="Category" value="{!task.Subject}" placeholder="" options="{! v.options2}"/>                        
+                                    </td>
+                                    <td style="padding-top:5px;">
+                                        <lightning:textarea name="dailydetail" style="width: 150px;" type="textarea"  maxlength="32768"  value="{!task.Discussion_Points__c}" class="detailbox"/>
+                                    </td>
+                                    
+                                    <td style="padding-top:5px;">
+                   <c:TemperatureIcon index = "{!index}" whichtaskList="TaskList3"/>
+
+                                    </td>
+                                    <td>
+                                        <c:userlookupmultiselect objectAPIName="User"
+                                                                 IconName="standard:user"
+                                                                 lstSelectedRecords="{!v.LookUpRecords2}" index = "{!index}" whichtaskList="TaskList3"
+                                                                 />
+                                    </td>
+                                    <td>
+                                        <ui:inputDate class="field" value="{!task.ActivityDate}" displayDatePicker="true" />
+                                    </td>
+                                    <tr>
+                                        <td style="padding-top: 28px;">
+                                            <aura:if isTrue="{!v.TaskList3.length != 1}">
+                                                <lightning:button label="-"  title="Neutral action" name="{!index}" onclick="{!c.removeRow3 }" class=""/>
+                                            </aura:if>
+                                        </td>
+                                        <td style="padding-top: 28px;">
+                                            <aura:if isTrue="{!v.TaskList3.length -1 == index}">
+                                                <lightning:button label="+"  title="Neutral action" onclick="{!c.addRow3 }"  class=""/>
+                                            </aura:if>
+                                        </td>
+                                    </tr>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+                <br/>
+                <h3 class="slds-section-title--divider">New Opportunities </h3>
+                <br/>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <lightning:icon iconName="utility:like" alternativeText="likeICON3" size="medium"  class="likeicon" onclick="{!c.redclassfunction}" aura:id="New_Opportunities__c"/>
+                        <lightning:icon src="{! $Resource.fireSVG+ '#example3'}" alternativeText="Fire" onclick="{!c.show3}" aura:id="FIREICON3"/>                    </div>
+                </div>
+            <br>
+            </br>
+                <div  class="slds-hide" aura:id="show_combo3">
+                    <table class="slds-table  slds-table_cell-buffer" > 
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate "  title="Category">Category</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate "  title="details">Details</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate "  title="Temperature">Temperature</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate"  title="AssignedTo">Assigned To</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate"  title="DueDate">Due Date</div>
+                                </th>
+                            </tr>
+                        </thead> 
+                        <tbody>  
+                            <aura:iteration items="{!v.TaskList4}" var="task" indexVar="index">
+                                <tr>
+                                    <td>
+                                        <lightning:combobox name="type" style="width: 150px;" label="" class="Category" value="{!task.Subject}" placeholder="" options="{! v.options3}"/>                        
+                                    </td>
+                                    <td style="padding-top:5px;">
+                                        <lightning:textarea name="dailydetail" style="width: 150px;" type="textarea"  maxlength="32768"  value="{!task.Discussion_Points__c}" class="detailbox"/>
+                                    </td>
+                                    
+                                    <td style="padding-top:5px;">
+                             <c:TemperatureIcon index = "{!index}" whichtaskList="TaskList4"/>
+  
+                                    </td>
+                                    <td>
+                                        <c:userlookupmultiselect objectAPIName="User"
+                                                                 IconName="standard:user"
+                                                                 lstSelectedRecords="{!v.LookUpRecords3}" index = "{!index}" whichtaskList="TaskList4"
+                                                                 />
+                                    </td>
+                                    <td>
+                                        <ui:inputDate class="field" value="{!task.ActivityDate}" displayDatePicker="true" />
+                                    </td>
+                                    <tr>
+                                        <td style="padding-top: 28px;">
+                                            <aura:if isTrue="{!v.TaskList4.length != 1}">
+                                                <lightning:button label="-"  title="Neutral action" name="{!index}" onclick="{! c.removeRow4 }" class=""/>
+                                            </aura:if>
+                                        </td>
+                                        <td style="padding-top: 28px;">
+                                            <aura:if isTrue="{!v.TaskList4.length -1 == index}">
+                                                <lightning:button label="+"  title="Neutral action" onclick="{! c.addRow4 }"  class=""/>
+                                            </aura:if>
+                                        </td>
+                                    </tr>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+                <br/>
+                <h3 class="slds-section-title--divider">Threats </h3>
+                <br/>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <lightning:icon iconName="utility:like" alternativeText="likeICON4" size="medium"  class="likeicon" onclick="{!c.redclassfunction}" aura:id="Threats__c"/>
+                        <lightning:icon src="{! $Resource.fireSVG+ '#example3'}" alternativeText="Fire" onclick="{!c.show4}" aura:id="FIREICON4"/>                    </div>
+                </div>
+            <br>
+            </br>
+                <div  class="slds-hide" aura:id="show_combo4">
+                    <table class="slds-table  slds-table_cell-buffer" > 
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate "  title="Category">Category</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate "  title="details">Details</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate "  title="Temperature">Temperature</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate"  title="AssignedTo">Assigned To</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate"  title="DueDate">Due Date</div>
+                                </th>
+                            </tr>
+                        </thead> 
+                        <tbody>  
+                            <aura:iteration items="{!v.TaskList5}" var="task" indexVar="index">
+                                <tr>
+                                    <td>
+                                        <lightning:combobox name="type" style="width: 150px;" label="" class="Category" value="{!task.Subject}" placeholder="" options="{! v.options4}"/>                        
+                                    </td>
+                                    <td style="padding-top:5px;">
+                                        <lightning:textarea name="dailydetail" style="width: 150px;" type="textarea"  maxlength="32768"  value="{!task.Discussion_Points__c}" class="detailbox"/>
+                                    </td>
+                                    
+                                    <td style="padding-top:5px;">
+                                   <c:TemperatureIcon index = "{!index}" whichtaskList="TaskList5"/>
+
+                                    </td>
+                                    <td>
+                                        <c:userlookupmultiselect objectAPIName="User"
+                                                                 IconName="standard:user"
+                                                                 lstSelectedRecords="{!v.LookUpRecords4}" index = "{!index}" whichtaskList="TaskList5"
+                                                                 />
+                                    </td>
+                                    <td>
+                                        <ui:inputDate class="field" value="{!task.ActivityDate}" displayDatePicker="true" />
+                                    </td>
+                                    <tr>
+                                        <td style="padding-top: 28px;">
+                                            <aura:if isTrue="{!v.TaskList5.length != 1}">
+                                                <lightning:button label="-"  title="Neutral action" name="{!index}" onclick="{! c.removeRow5 }" class=""/>
+                                            </aura:if>
+                                        </td>
+                                        <td style="padding-top: 28px;">
+                                            <aura:if isTrue="{!v.TaskList5.length -1 == index}">
+                                                <lightning:button label="+"  title="Neutral action" onclick="{! c.addRow5 }"  class=""/>
+                                            </aura:if>
+                                        </td>
+                                    </tr>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+                <br/>
+                <h3 class="slds-section-title--divider">Technology </h3>
+                <br/>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <lightning:icon iconName="utility:like" alternativeText="likeICON5" size="medium"  class="likeicon" onclick="{!c.redclassfunction}" aura:id="Technology__c"/>
+                        <lightning:icon src="{! $Resource.fireSVG+ '#example3'}" alternativeText="Fire" onclick="{!c.show5}" aura:id="FIREICON5"/>                    </div>
+                </div>
+           <br>
+            </br>
+                <div  class="slds-hide" aura:id="show_combo5">
+                    <table class="slds-table  slds-table_cell-buffer" > 
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate "  title="Category">Category</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate "  title="details">Details</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate "  title="Temperature">Temperature</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate"  title="AssignedTo">Assigned To</div>
+                                </th>
+                                <th scope="col" style="width:140px;">
+                                    <div class="slds-truncate"  title="DueDate">Due Date</div>
+                                </th>
+                            </tr>
+                        </thead> 
+                        <tbody>  
+                            <aura:iteration items="{!v.TaskList6}" var="task" indexVar="index">
+                                <tr>
+                                    <td>
+                                        <lightning:combobox name="type" style="width: 150px;" label="" class="Category" value="{!task.Subject}" placeholder="" options="{! v.options5}"/>                        
+                                    </td>
+                                    <td style="padding-top:5px;">
+                                        <lightning:textarea name="dailydetail" style="width: 150px;" type="textarea"  maxlength="32768"  value="{!task.Discussion_Points__c}" class="detailbox"/>
+                                    </td>
+                                    
+                                    <td style="padding-top:5px;">
+                                 <c:TemperatureIcon index = "{!index}" whichtaskList="TaskList6"/>
+
+                                    </td>
+                                    <td>
+                                        <c:userlookupmultiselect objectAPIName="User"
+                                                                 IconName="standard:user"
+                                                                 lstSelectedRecords="{!v.LookUpRecords5}" index = "{!index}" whichtaskList="TaskList6"
+                                                                 />
+                                    </td>
+                                    <td>
+                                        <ui:inputDate class="field" value="{!task.ActivityDate}" displayDatePicker="true" />
+                                    </td>
+                                    <tr>
+                                        <td style="padding-top: 28px;">
+                                            <aura:if isTrue="{!v.TaskList6.length != 1}">
+                                                <lightning:button label="-"  title="Neutral action" name="{!index}" onclick="{! c.removeRow6 }" class=""/>
+                                            </aura:if>
+                                        </td>
+                                        <td style="padding-top: 28px;">
+                                            <aura:if isTrue="{!v.TaskList6.length -1 == index}">
+                                                <lightning:button label="+"  title="Neutral action" onclick="{! c.addRow6}"  class=""/>
+                                            </aura:if>
+                                        </td>
+                                    </tr>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                        <br></br>
+                        <br></br>
+                        <br></br>
+                        <br></br>
+                    </table>
+                </div>
+                <br/>
+            
+        </form>
+    </div>
+    <lightning:spinner alternativeText="Loading" size="large" class="slds-hide" aura:id="spinnerID"/>
+    <footer class="slds-modal__footer">
+        <section aria-describedby="dialog-body-id-97" aria-labelledby="dialog-heading-id-1" class="slds-popover slds-popover_error slds-nubbin_bottom-right slds-hide" role="dialog" style="margin-right: 3%;  margin-bottom: 1%;margin-left: 63%;" aura:id="showpopupid">
+            <button class="slds-button slds-button_icon slds-button_icon-small slds-float_right slds-popover__close slds-button_icon-inverse" title="Close dialog">
+                    <lightning:icon iconName="utility:close" size="x-small" class="popupiconcolor" onclick="{!c.handlepopup}"/>
+                <span class="slds-assistive-text">Close dialog</span>
+            </button>
+            <header class="slds-popover__header">
+                <div class="slds-media slds-media_center slds-has-flexi-truncate ">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-utility-error">
+                            <lightning:icon iconName="utility:error" size="x-small" class="popupiconcolor"/>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2 class="slds-truncate slds-text-heading_medium" id="dialog-heading-id-1" title="Resolve error" style="text-align: center;">Resolve error</h2>
+                    </div>
+                </div>
+            </header>
+            <div class="slds-popover__body" id="dialog-body-id-97">
+                <p style="text-align: left;">Please select the user to whom the task to assigned. 
+                </p>
+            </div>
+        </section>
+        <div class="slds-p-right_x-large"><lightning:button variant="brand" label="Save" title="Save" onclick="{! c.OnSubmit}" disabled="false" aura:id="savebutton"/></div>
+            </footer> 
+
+    </aura:if>
+<aura:if  isTrue="{!v.CheckDate1}">
+    <section aria-describedby="dialog-body-id-97" aria-labelledby="dialog-heading-id-1" class="slds-popover slds-popover_error " role="dialog" style="width: 100%;">
+           
+    <header class="slds-popover__header">
+                <div class="slds-media slds-media_center slds-has-flexi-truncate ">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-utility-error">
+                            <lightning:icon iconName="utility:error" size="x-small" class="popupiconcolor"/>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2 class="slds-truncate slds-text-heading_medium" id="dialog-heading-id-1" title="You cannot create a MoM for future date" style="text-align: center;">You cannot create a MoM for future date</h2>
+                    </div>
+                </div>
+            </header>
+    </section>
+    </aura:if>
+</aura:component>

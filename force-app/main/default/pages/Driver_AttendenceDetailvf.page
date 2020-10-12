@@ -1,0 +1,312 @@
+<apex:page docType="html-5.0"  showHeader="false" sidebar="false" applyBodyTag="false" applyHtmlTag="false" cache="true" expires="50"  lightningStylesheets="true">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+        <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"/>
+        <apex:includeScript value="https://code.jquery.com/jquery-1.11.3.js"/>
+        <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+        <script src="js/WebAudioRecorder.min.js"></script>
+        <script src="js/app.js"></script>
+        <script src="../../soap/ajax/47.0/connection.js"
+        type="text/javascript"></script>
+        <apex:includeScript value="{!$Resource.jquerymin}"/>
+        <style>
+            .slds-scope .slds-notify_toast{
+            min-width: 0rem;
+            }
+        </style>
+        <apex:slds />
+        
+        <div class="slds-scope">
+            <div class="demo-only" style="height:4rem; display:none;" id="Success_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+                        <span class="slds-assistive-text">success</span>
+                        <span class="slds-icon_container slds-icon-utility-success slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Issue_Created_successfully}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Success_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only" style="height:4rem; display:none;" id="Error_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Unable_to_creating_issue_please_contact_admin}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Error_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only" style="height:4rem; display:none;" id="UnableError_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Error_found_please_contact_system_admin}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('UnableError_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only" style="height:4rem; display:none;" id="Location_Not_Found_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Location_Not_Found}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Location_Not_Found_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only" style="height:4rem; display:none;" id="Unable_to_record_the_Audio_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Unable_to_record_the_Audio}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Location_Not_Found_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <apex:outputPanel style="display:block;" id="Driver_Repair_Issue_Details">
+                <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom15" >
+                                <svg aria-hidden="true" class="slds-icon slds-icon_large">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                         xlink:href="/apexpages/slds/latest/assets/icons/custom-sprite/svg/symbols.svg#custom15">
+                                    </use>
+                                </svg>
+                                <span class="slds-assistive-text">custom</span>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Driver-Repair-Issue-Details" style="color: #54698d;font-size: 1.5rem;">{!$Label.Attendance}</h1>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <apex:form >
+                    <div class="slds-form slds-box">
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small "><b>{!$Label.Driver_Details}</b></h2>
+                        </div>
+                        <br/>
+                        
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                            <span class="slds-form-element__label">{!$Label.Lithium_ID}</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static"><output name="repairissuewith" id="repairissuewith">LITH 001</output></div>
+                            </div>
+                        </div><br/>
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                            <span class="slds-form-element__label">{!$Label.Name}</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static"></div>
+                            </div>
+                        </div><br/>
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                            <span class="slds-form-element__label">Type</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static"></div>
+                            </div>
+                        </div>
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                            <span class="slds-form-element__label">Shift Start</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static"></div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                            <span class="slds-form-element__label">Shift End</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static"></div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                            <span class="slds-form-element__label">Login</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static"></div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                            <span class="slds-form-element__label">Logout</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static"></div>
+                            </div>
+                        </div>
+                        <br/>
+                       <!-- <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="Comments">{!$Label.Comments}</label>
+                            <div class="slds-form-element__control">
+                                <input type="text" id="Comments" placeholder="" class="slds-input" />
+                            </div>
+                        </div><br/> -->
+                   <!--     <div class="slds-form-element">
+                            <span class="slds-form-element__label" id="Details_File_Label">{!$Label.Upload_Image_and_Audio}</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-file-selector slds-file-selector_files ">
+                                    <div class="slds-file-selector__dropzone">
+                                        <input type="file" class="slds-file-selector__input slds-assistive-text" id="Details_File" aria-labelledby="Details_File_Label Details_File_Label2" onchange="uploaddocuments();return false;" capture="camera" accept="image/*"/>
+                                       
+                                        <label class="slds-file-selector__body" for="Details_File" id="Details_File_Label2">
+                                            <span class="slds-file-selector__button slds-button slds-button_neutral">
+                                                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#upload')}"></use>
+                                                </svg>{!$Label.Upload_Files}</span>
+                                            <span class="slds-file-selector__text slds-medium-show">{!$Label.or_drop_Files}</span>
+                                        </label>
+                                        <div class="spinner-border text-primary" role="status" id="spinner1" style="display:none;">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                        <div  id="filenames1"/>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div id="progress_bar_container" style="display:none; padding:10px; width: 50%;">                
+                                    <span id="percentText"></span>                  
+                                    <div class="slds-progress-bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" role="progressbar"> 
+                                        <span class="slds-progress-bar__value progress" style=" width: 0%;">                    
+                                            <span class="slds-assistive-text">Progress: 25%</span>                     
+                                        </span>                  
+                                    </div>                 
+                                </div>
+                            </div>
+                        </div>-->
+                        <br/> 
+                        <!--  <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent" id="Repair_Audio_Div">
+<span class="slds-form-element__label">{!$Label.Record_Audio}</span>
+<div class="slds-form-element__control">
+<div class="slds-form-element__static">
+<svg aria-hidden="true" class="slds-icon slds-icon_small" id="recordButton" style="fill: black;">
+<use xmlns:xlink="http://www.w3.org/1999/xlink" 
+xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#unmuted">
+</use>
+</svg>
+<svg aria-hidden="true" class="slds-icon slds-icon_small" id="pauseButton" style="fill: black;display:none;">
+<use xmlns:xlink="http://www.w3.org/1999/xlink" 
+xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#pause">
+</use>
+</svg>
+<svg aria-hidden="true" class="slds-icon slds-icon_small" id="stopButton" style="fill: black;display:none;">
+<use xmlns:xlink="http://www.w3.org/1999/xlink" 
+xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#stop">
+</use>
+</svg><br/>
+<span id="audiostage"></span>
+<button class="slds-button slds-button_success" disabled="true" id="timierSetup" style="display:none;"><output name="xyx" id="outputtime">00:00</output></button>
+<span id="uploadid"><audio id="audiorecord"></audio></span>
+<div id="progress_bar_container1" style="display:none; padding:10px; width: 50%;">                
+<span id="percentText1"></span>                  
+<div class="slds-progress-bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" role="progressbar"> 
+<span class="slds-progress-bar__value progress" style=" width: 0%;">                    
+<span class="slds-assistive-text">Progress: 25%</span>                     
+</span>                  
+</div>                 
+</div>
+</div>
+</div>
+
+</div> -->
+                        
+                        <div class="slds-align_absolute-center">
+                            <button class="slds-button slds-button_success" onclick="login();return false;">{!$Label.Login}</button><span style="width: 40px;"></span>
+                            <button class="slds-button slds-button_success" onclick="logout();return false;">{!$Label.Logout}</button><span style="width: 40px;"></span>
+                            <button class="slds-button slds-button_destructive" onclick="gotodrivermenu();return false;">{!$Label.Cancel}</button>
+                        </div></div>
+                    <input type="hidden" value="" id="fileidhidden"/>
+                    <apex:actionStatus id="status">
+                        <apex:facet name="start">
+                            <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.75; z-index: 1000; background-color: black;">
+                                &nbsp;
+                            </div>
+                            <div style="position: fixed; left: 0; top: 0; bottom: 0; right: 0; z-index: 1001; margin: 30% 50%">
+                                <img src="http://upload.wikimedia.org/wikipedia/commons/e/ed/Cursor_Windows_Vista.gif" />
+                            </div>
+                        </apex:facet>
+                    </apex:actionStatus>
+                    <apex:actionFunction name="delcontentfiles" action="{!delcontentfiles}" oncomplete="allclear();return false;"  status="status">
+                        <apex:param value="" name="firstParam"/>
+                    </apex:actionFunction>
+                    <!-- <input type="file" accept="audio/*" capture="" id="recorder"/>-->
+                    
+                </apex:form>
+            </apex:outputPanel>
+            
+        </div>
+    </html>
+</apex:page>

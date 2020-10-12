@@ -1,0 +1,78 @@
+<aura:component controller="AttendanceHistoryController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="leave30Days" type="list"/>
+     <aura:attribute name="redirecttovf" type="object"/>
+     <aura:attribute name="currentDate" type="Date"/>
+    <aura:html tag="style">
+    .slds-scope .slds-p-top_large, .slds-scope .slds-p-top--large {
+    padding-top: 0.5rem;
+}
+    .slds-scope .slds-tabs_default__item.slds-is-active:after, .slds-scope .slds-tabs--default__item.slds-active:after, .slds-scope .slds-tabs--default__item.slds-is-active:after {
+    background-color:#3abeb1;
+    x: .1875rem;
+}
+    </aura:html>
+     <div class="slds-box slds-theme_default"  style="
+    border: none;" >
+    <div class="slds-box"  >
+       <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+        <div class="slds-media">
+            <div class="slds-media__figure">
+                <lightning:icon iconName="custom:custom95" alternativeText="" style="background: #3abeb1;"/>
+            </div>
+            <div class="slds-media__body">
+                <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Daily Covid Activity- Vehicle">{!$Label.c.Attendance_History}</h1>
+            </div>
+               <lightning:icon class="some-indicator slds-p-top_large " variant="info"
+                                iconName="action:back" alternativeText="check" onclick="{!c.backmethod}" size="small" aura:id="fILE_NAMES" style="margin-top: -6px; !important"/>
+                              <!--  <apex:commandLink value="Notification" onclick="redirectToNotification();return false" styleclass="slds-button slds-button_success"/>-->
+                            
+        </div>
+    </div>
+        <div class="slds-box" style="border: none;">
+    <lightning:tabset  >
+        <lightning:tab label="{!$Label.c.Days30}"  >
+        <div style="background-color: green;"></div>
+            <table>
+                                <tbody>
+                                    <aura:iteration items = "{!v.leave30Days}" var = "lea30"  > 
+                                        <div class = "slds-box slds-theme_shade" style="background: #cdefeb8a;">
+                                            <tr>   
+                                                <b><td>{!$Label.c.Name}	 </td></b><td>: {!lea30.Lithium_ID__c}</td><br /></tr>
+                                           <tr> <b><td>{!$Label.c.Login} </td> </b> <td>: <lightning:formattedDateTime aura:id="dt"
+                                     value="{!lea30.Login__c}"
+                                     month="short"
+                                     day="numeric"
+                                     year="numeric"
+                                     hour="2-digit"
+                                     minute="2-digit"
+                                   
+                                     hour12="true"
+                                    timeZone="{!$Locale.timezone}"/><br /></td></tr>
+                                            <tr>  <b><td>{!$Label.c.Logout} </td></b><td>: <lightning:formattedDateTime aura:id="dt"
+                                     value="{!lea30.Logout__c}"
+                                     month="short"
+                                     day="numeric"
+                                     year="numeric"
+                                     hour="2-digit"
+                                     minute="2-digit"
+                                     hour12="true"
+									 timeZone="{!$Locale.timezone}"/><br /></td></tr>
+                                            <tr>   <b><td>{!$Label.c.Status}	</td> </b><td>: {!lea30.Status__c}<br /></td></tr>
+
+                                                
+                                          
+                                        </div><br />
+                                    </aura:iteration>
+                                </tbody>
+                            </table>
+            <div class="slds-align_absolute-center">
+            <lightning:button label="{!$Label.c.Back}" onclick="{!c.backmethod}" variant="destructive"/> 
+            </div> 
+        </lightning:tab>
+        
+    </lightning:tabset>
+         </div>
+    </div>
+    </div>
+</aura:component>

@@ -1,0 +1,15 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+       <aura:attribute name="Issue" type="Issues__c"/>
+    <div class="slds-page-header"    iconName="custom:custom19" title="Report Issue" />
+    
+     <div class="slds-p-left_large slds-p-right_medium">	
+    <lightning:recordForm   aura:id="recordForm"
+                            feildApiName="Others"
+                            objectApiName="Issues__c"
+                            fields="Account_Name__c	,Contact_Name__c,Issue_Owner__c	,Case_Reason__c	,Case_Origin__c,Internal_Comments__c,InternalType__c,Compliance_Issue_Status__c	,Subject__c"
+                            columns=""
+                            layoutType ="Compact"
+                            mode="edit"
+                                    />
+        </div>
+</aura:component>

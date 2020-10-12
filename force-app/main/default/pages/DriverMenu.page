@@ -1,0 +1,1433 @@
+<apex:page docType="html-5.0" showQuickActionVfHeader="false"  showHeader="false" sidebar="false" applyBodyTag="false" applyHtmlTag="false" cache="false" expires="50" controller="DriverMenuCtrl" lightningStylesheets="true" language="{!userLanguage}">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <apex:includeScript value="https://code.jquery.com/jquery-1.11.3.js"/>
+        
+        <apex:slds />
+        <apex:includeLightning />
+        <style>
+            .slds-scope .slds-notify_toast{
+            min-width: 0rem;
+            }
+            .btn{
+            
+            
+            background:#37bfb1;
+            }
+        </style>
+        
+        <script>
+        
+        
+        
+        
+        /* var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+        alert('platform : '+navigator.platform);
+        alert('appName : '+navigator.appName);
+        alert('appCodeName : '+navigator.appCodeName);
+        alert('product : '+navigator.product);
+        alert('appVersion : '+navigator.appVersion);*/
+        var userAgent = navigator.userAgent;
+        //alert('{!userLanguage}');
+        //var isMobile = window.orientation > -1;
+        // alert(isMobile);
+        // var parentId = '{!$CurrentPage.parameters.latitudeval}';
+        // alert(parentId);
+        //debugger;
+        /* function getcurrentPosition(){
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+        function showPosition(position) {
+            debugger;
+            $('[id$=latitude]').val(position.coords.latitude);
+            $('[id$=longitude]').val(position.coords.longitude);
+            //alert(position.coords.longitude);
+            latvar = position.coords.latitude;
+            longvar = position.coords.longitude;
+           
+        }*/
+        //}
+        var pagename;
+        var issueid;
+        var priority;
+        //debugger;
+        var currentparameter = '{!$CurrentPage.parameters.panelname}';
+        var domain = "{!$Label.Driver_Menu_Domain}";
+        if(!window.location.href.includes(domain))
+            domain = '/apex';
+        //alert(domain);
+        var foundtheme;
+        var theme = '{!$User.UITheme}';
+        if (theme === 'Theme4d' || theme === 'Theme4u'){
+            foundtheme = 'Lightning';
+        } 
+        else if(theme ==='Theme4t'){
+            if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                foundtheme = 'Mobile App';
+            else
+                foundtheme = 'Mobile Browser';
+        }             
+            else {
+                foundtheme = 'Non Lightning';
+            }
+        function showoutput(outputid){
+            $('[id$=headerline]').hide();
+            
+            //alert('dM97'+outputid);
+            debugger;
+            var vehicleassignid = '{!VehicleAssignment.Id}';
+            if(vehicleassignid.length>0){
+                if(outputid == 'Driver_Breakdown_Issue_Resolved'){
+                    var picval = $('[id$=Breakdownissue_issue_with]').val(); 
+                    if(picval == 'None'){
+                        alert('{!$Label.Please_Select_Issue_With}');
+                    }else{
+                        $('[id$='+outputid+']').show();
+                        $('[id$='+currentopenpanel+']').hide();}
+                }
+                else if(outputid == 'Driver_Repair_Issue'){
+                    $('[id$='+outputid+']').show();
+                    $('[id$='+currentopenpanel+']').hide();
+                    //   alert('dm92'+currentopenpanel);
+                    document.getElementById('lightningoutcmp').innerHTML = null;
+                    showSpinner('loadingspinner3');
+                    calllightningcmp('repairicon','lightningoutcmp','{!$Label.Driver_Repair_Issue}','{!$Label.Driver_Repair_Issue_Resolved}');
+                }else if(outputid == 'Breakdown_Issue'){
+                    $('[id$='+outputid+']').show();
+                    $('[id$='+currentopenpanel+']').hide();
+                    document.getElementById('breakdownlight').innerHTML = null;
+                    showSpinner('loadingspinner3');
+                    calllightningcmp('breakdownicon','breakdownlight','{!$Label.Driver_Breakdown_Issue}','{!$Label.Driver_Breakdown_Issue_Resolved}');
+                }
+                    else{
+                        $('[id$='+outputid+']').show();
+                        $('[id$='+currentopenpanel+']').hide();
+                    }
+                currentopenpanel = outputid;
+            }else{
+                showtoast('Error_Toast');
+            }
+            return false;
+        }
+        function redirectToCovidDeclaration(){
+            //console.log(UITheme);
+            debugger;
+            //alert(UITheme);
+            //console.log('UITheme'+ UITheme);
+            //alert(UITheme.getUITheme());
+            var theme = '{!$User.UITheme}';
+            //alert('{!$User.UIThemeDisplayed}');
+            // alert('theme  '+theme );
+     
+            //console.log('theme ',theme);
+            //alert('1'+theme);
+            //debugger;
+
+                if (theme === 'Theme4d' || theme === 'Theme4u'){
+                    if(domain !='/apex')
+                        window.location=domain+'/CovidDeclaration?core.apexpages.request.devconsole=1';
+                    else
+                        sforce.one.navigateToURL(domain+'/CovidDeclaration?core.apexpages.request.devconsole=1');
+                } 
+                else if(theme ==='Theme4t'){
+                    if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                        sforce.one.navigateToURL(domain+'/apex/CovidDeclaration?core.apexpages.request.devconsole=1');
+                    else
+                        window.location=domain+'/CovidDeclaration?core.apexpages.request.devconsole=1';
+                }    
+                    else {
+                        //alert();
+                        window.location=domain+'/CovidDeclaration?core.apexpages.request.devconsole=1';
+                    }
+           
+            
+            //location.href ="/apex/driver?id={!VehicleAssignment.Id}";
+        }
+        function redirectToDailyDriverActivities(){
+            //console.log(UITheme);
+            debugger;
+            //alert(UITheme);
+            //console.log('UITheme'+ UITheme);
+            //alert(UITheme.getUITheme());
+            var theme = '{!$User.UITheme}';
+            //alert('{!$User.UIThemeDisplayed}');
+            // alert('theme  '+theme );
+        
+            
+            // alert('hi'+dailyDriverCovid);
+            //console.log('vehicleassignid ',vehicleassignid);
+            //console.log('theme ',theme);
+            //alert('1'+theme);
+            //debugger;
+                if (theme === 'Theme4d' || theme === 'Theme4u'){
+                    if(domain !='/apex')
+                        window.location=domain+'/DailycovidactivitiesDriver?core.apexpages.request.devconsole=1';
+                    else
+                        sforce.one.navigateToURL(domain+'/DailycovidactivitiesDriver?core.apexpages.request.devconsole=1');
+                } 
+                else if(theme ==='Theme4t'){
+                    if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                        sforce.one.navigateToURL(domain+'/apex/DailycovidactivitiesDriver?core.apexpages.request.devconsole=1');
+                    else
+                        window.location=domain+'/DailycovidactivitiesDriver?core.apexpages.request.devconsole=1';
+                }    
+                    else {
+                        //alert();
+                        window.location=domain+'/DailycovidactivitiesDriver?core.apexpages.request.devconsole=1';
+                    }
+          
+            
+            
+            //location.href ="/apex/driver?id={!VehicleAssignment.Id}";
+        }
+        function redirectToDailyVehicleActivities(){
+            //console.log(UITheme);
+            debugger;
+            //alert(UITheme);
+            //console.log('UITheme'+ UITheme);
+            //alert(UITheme.getUITheme());
+            var theme = '{!$User.UITheme}';
+            //alert('{!$User.UIThemeDisplayed}');
+            // alert('theme  '+theme );
+       
+                if (theme === 'Theme4d' || theme === 'Theme4u'){
+                    if(domain !='/apex')
+                        window.location=domain+'/DailyCovidActivityVehiclePage?core.apexpages.request.devconsole=1';
+                    else
+                        sforce.one.navigateToURL(domain+'/DailyCovidActivityVehiclePage?core.apexpages.request.devconsole=1');
+                } 
+                else if(theme ==='Theme4t'){
+                    if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                        sforce.one.navigateToURL(domain+'/apex/DailyCovidActivityVehiclePage?core.apexpages.request.devconsole=1');
+                    else
+                        window.location=domain+'/DailyCovidActivityVehiclePage?core.apexpages.request.devconsole=1';
+                }    
+                    else {
+                        //alert();
+                        window.location=domain+'/DailyCovidActivityVehiclePage?core.apexpages.request.devconsole=1';
+                    }
+            
+        }
+        function redirectToApplyLeave(){
+            debugger;
+            var theme = '{!$User.UITheme}';
+            var vehicleassignid = '{!VehicleAssignment.Id}';
+            console.log('vehicleassignid ',vehicleassignid);
+            
+            if (theme === 'Theme4d' || theme === 'Theme4u'){
+                if(domain !='/apex')
+                    window.location=domain+'/ApplyLeavePage?core.apexpages.request.devconsole=1';
+                else
+                    sforce.one.navigateToURL(domain+'/ApplyLeavePage?core.apexpages.request.devconsole=1');
+            } 
+            else if(theme ==='Theme4t'){
+                if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                    sforce.one.navigateToURL(domain+'/apex/ApplyLeavePage?core.apexpages.request.devconsole=1');
+                else
+                    window.location=domain+'/ApplyLeavePage?core.apexpages.request.devconsole=1';
+            }    
+                else {
+                    //alert();
+                    window.location=domain+'/ApplyLeavePage?core.apexpages.request.devconsole=1';
+                }
+            
+            
+        }
+        function redirecttovehicleassignment(){
+            //console.log(UITheme);
+            debugger;
+            //alert(UITheme);
+            //console.log('UITheme'+ UITheme);
+            //alert(UITheme.getUITheme());
+            var theme = '{!$User.UITheme}';
+            //alert('{!$User.UIThemeDisplayed}');
+            // alert('theme  '+theme );
+            
+            var vehicleassignid = '{!VehicleAssignment.Id}';
+            console.log('vehicleassignid ',vehicleassignid);
+            //console.log('theme ',theme);
+            //alert('1'+theme);
+            //debugger;
+            if(vehicleassignid.length>0){
+                if (theme === 'Theme4d' || theme === 'Theme4u'){
+                    if(domain !='/apex')
+                        window.location=domain+'/Driver_Vehicle_Assigned_Form?id={!VehicleAssignment.Id}';
+                    else
+                        sforce.one.navigateToURL(domain+'/Driver_Vehicle_Assigned_Form?id={!VehicleAssignment.Id}');
+                } 
+                else if(theme ==='Theme4t'){
+                    if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                        sforce.one.navigateToURL(domain+'/apex/Driver_Vehicle_Assigned_Form?id={!VehicleAssignment.Id}');
+                    else
+                        window.location=domain+'/Driver_Vehicle_Assigned_Form?id={!VehicleAssignment.Id}';
+                }    
+                    else {
+                        //alert();
+                        window.location=domain+'/Driver_Vehicle_Assigned_Form?id={!VehicleAssignment.Id}';
+                    }
+            }else{
+                showtoast('Error_Toast');
+            }
+            
+            //location.href ="/apex/driver?id={!VehicleAssignment.Id}";
+        }
+        function redirectToAttedance(){
+            //console.log(UITheme);
+            debugger;
+            //alert(UITheme);
+            //console.log('UITheme'+ UITheme);
+            //alert(UITheme.getUITheme());
+            var theme = '{!$User.UITheme}';
+            //alert('{!$User.UIThemeDisplayed}');
+            // alert('theme  '+theme );
+            var vehicleassignid = '{!VehicleAssignment.Id}';
+            
+            // alert('hi'+dailyDriverCovid);
+            console.log('vehicleassignid ',vehicleassignid);
+            //console.log('theme ',theme);
+            //alert('1'+theme);
+            //debugger;
+            
+            if (theme === 'Theme4d' || theme === 'Theme4u'){
+                if(domain !='/apex')
+                    window.location=domain+'/Driver_Attendence?core.apexpages.request.devconsole=1';
+                
+                else
+                    sforce.one.navigateToURL(domain+'Driver_Attendence?core.apexpages.request.devconsole=1');
+            } 
+            else if(theme ==='Theme4t'){
+                if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                    sforce.one.navigateToURL(domain+'/apex/Driver_Attendence?core.apexpages.request.devconsole=1');
+                else
+                    window.location=domain+'/Driver_Attendence?core.apexpages.request.devconsole=1';
+            }    
+                else {
+                    //alert();
+                    window.location=domain+'/Driver_Attendence?core.apexpages.request.devconsole=1';
+                }
+            
+            
+            
+            
+            
+            //location.href ="/apex/driver?id={!VehicleAssignment.Id}";
+        }
+        function gotosubmitform(pagename,issueid,reason){
+            debugger;
+            var issuewith = $('[id$='+issueid+']').val();
+            var accidenttype = $('[id$=accidenttype]').val();
+            var theme = '{!$User.UITheme}';
+            var category = $('[id$=issuecategory]').val();
+            var knowledge =  $('[id$=issuekowledge]').val();
+            if (theme === 'Theme4d' || theme === 'Theme4u'){
+                sforce.one.navigateToURL(domain+'/'+pagename+'?issuewith='+issuewith+'&accidenttype='+accidenttype+'&priority='+priority+'&category='+category+'&reason='+reason);
+            }
+            else if(theme ==='Theme4t'){
+                if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1")){
+                    //alert('from mobile');
+                    sforce.one.navigateToURL(domain+'/'+pagename+'?issuewith='+issuewith+'&accidenttype='+accidenttype+'&priority='+priority+'&category='+category+'&reason='+reason);
+                    
+                }
+                else
+                    window.location=domain+'/'+pagename+'?issuewith='+issuewith+'&accidenttype='+accidenttype+'&priority='+priority+'&category='+category+'&reason='+reason;
+            } 
+                else {
+                    window.location=domain+'/'+pagename+'?issuewith='+issuewith+'&accidenttype='+accidenttype+'&priority='+priority+'&category='+category+'&reason='+reason;
+                }
+            
+        }
+        function accidentcheckfunction(accidenettype){
+            debugger;
+            var vehicleassignid = '{!VehicleAssignment.Id}';
+            if(vehicleassignid.length>0){
+                $('[id$=Driver_Accident_Replacement]').show();
+                $('[id$='+currentopenpanel+']').hide();
+                currentopenpanel = 'Driver_Accident_Replacement';
+                $('[id$=accidenttype]').val(accidenettype);
+                
+            }else{
+                showtoast('Error_Toast');
+            }
+            
+        }
+        function showSpinner(spinnerid){
+            var element = document.getElementById(spinnerid);
+            $(element).removeClass("slds-hide");
+            $(element).addClass("slds-show");
+            
+        }
+        function hideSpinner(spinnerid){
+            var element = document.getElementById(spinnerid);
+            $(element).removeClass("slds-show");
+            $(element).addClass("slds-hide");
+        }
+        function showtoast(toastid){
+            $('[id$='+toastid+']').show();
+        }
+        function hidetoast(toastid){
+            $('[id$='+toastid+']').hide();
+        }
+        </script>
+        <script>
+        
+        function calllightningcmp(iconvalue,lightningplace,headervalue,resolveheadervalue){
+            $Lightning.use("c:LightningOutToastMessage", function() {
+                $Lightning.createComponent("c:IssuewithSearchBarCMP",{redirecttovf:callbackmethod,iconvalue:iconvalue,headervalue:headervalue,
+                                                                      uitheme:'{!$User.UITheme}',resolveheadervalue:resolveheadervalue,
+                                                                      userlanguage:'{!userLanguage}'},lightningplace,
+                                           function(component) {
+                                               // debugger;
+                                               hideSpinner('loadingspinner3');
+                                           });
+            });
+        }
+        function callbackmethod(issuewith,button,knowledge,category,Priority){
+            //  alert('call back ');
+            debugger;
+            if(button == 'Back')
+                showoutput('Driver_Menu');
+            else if(button == 'breaknext'){
+                // alert('267dm'+button);
+                showoutput('Driver_Breakdown_Replacement');   
+                $('[id$=RepairIssue_with]').val(issuewith);
+                $('[id$=issuecategory]').val(category);
+                $('[id$=issuekowledge]').val(knowledge);
+                priority = Priority;
+            }
+            
+            return false;
+        } 
+        </script>
+         <script>
+        function redirectToContactDetilas(){
+            
+            //console.log(UITheme);
+            debugger;
+            
+            var domain = "{!$Label.Driver_Menu_Domain}";
+            if(!window.location.href.includes(domain))
+                domain = '/apex';
+            var theme = '{!$User.UITheme}';
+            
+            
+            
+            if (theme === 'Theme4d' || theme === 'Theme4u'){
+                
+                sforce.one.navigateToURL(domain+'/ContactDetiailsLoutvf');
+            } 
+            else if(theme ==='Theme4t'){
+                if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                    sforce.one.navigateToURL(domain+'/apex/ContactDetiailsLoutvf');
+                else
+                    window.location=domain+'/ContactDetiailsLoutvf';
+            }    
+                else {
+                    //alert();
+                    window.location.href=domain+'/ContactDetiailsLoutvf';
+                }
+        }
+        
+        </script>
+        <div class="slds-scope">
+            <apex:include pageName="Header"/>
+            <div class="demo-only" style="height:4rem; display:none;" id="Success_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+                        <span class="slds-assistive-text">success</span>
+                        <span class="slds-icon_container slds-icon-utility-success slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Issue_Created_successfully}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Success_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only" style="height:4rem; display:none;" id="Error_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.No_vehicle_assigned}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Error_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only slds-hide" style="height:6rem;" id="loadingspinner3">
+                <div role="status" class="slds-spinner slds-spinner_medium">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+            
+            <apex:outputPanel id="Driver_Menu" style="display:none;">
+                <div style="text-align:center;">
+                    <apex:image url="{!$Resource.Lithiumimg}" style=" width:200px; heigth=230px; margin-left:6px; margin-bottom:4px; float-center"/> 
+                </div>
+                <br/>
+                <!--
+<div class="demo-only" id="newTest"  style="padding:0.5rem;background:#e7e8e8">
+
+<div class="slds-button-group" role="group">
+<button class="slds-button slds-button_inverse "  id="covidpage" 
+style="display:none; background:#37bfb1;"
+onclick="redirectToCovidDeclaration()">{!$Label.Self}<br/>{!$Label.Declaration}
+</button>
+<button class="slds-button slds-button_inverse"   id="vehiclepage"
+style=" background:#37bfb1; " 
+onclick="redirectToDailyVehicleActivities()">{!$Label.Daily_Vehicle_Check}</button>
+
+
+<button class="slds-button slds-button_inverse"   id="driverpage" 
+style="display:none; background:#37bfb1;"
+onclick="redirectToDailyDriverActivities()" >{!$Label.Daily_SP}<br/>{!$Label.Health_Check}    
+</button>
+</div>
+
+</div>
+--><!--
+<div class="demo-only" id="newTest"  style="padding:0.5rem;background:#e7e8e8">
+
+<div class="slds-button-group" role="group">
+<button class="slds-button slds-button_inverse "  id="driverpage" 
+style="display:none; background:#37bfb1;"
+onclick="redirectToCovidDeclaration()">{!$Label.Self}<br/>{!$Label.Declaration}
+</button>
+<button class="slds-button slds-button_inverse"   id="vehiclepage"
+style=" background:#37bfb1; " 
+onclick="redirectToDailyVehicleActivities()">{!$Label.Daily_Vehicle_Check}</button>
+
+<button class="slds-button slds-button_inverse"   id="vehiclepage"
+style=" background:#37bfb1; " 
+onclick="redirectToDailyVehicleActivities()">{!$Label.Daily_Vehicle_Check}</button>
+</div>
+
+</div>
+-->
+                <!--
+<div class="demo-only" id="newTest"  style="padding:0.5rem;background:#e7e8e8">
+
+<div class="slds-button-group" role="group">
+<button class="slds-button slds-button_inverse "  id="covidpage" 
+style="display:none; background:#37bfb1;"
+onclick="redirectToCovidDeclaration()">{!$Label.Self}<br/>{!$Label.Declaration}
+</button>
+<button class="slds-button slds-button_inverse"   id="vehiclepage"
+style=" background:#37bfb1; " 
+onclick="redirectToDailyVehicleActivities()">{!$Label.Daily_Vehicle_Check}</button>
+
+<button class="slds-button slds-button_inverse"   id="vehiclepage"
+style=" background:#37bfb1; " 
+onclick="redirectToDailyVehicleActivities()">{!$Label.Daily_Vehicle_Check}</button>
+</div>
+
+</div>
+-->
+                <!--
+<div class="demo-only" id="newTest"  style="padding:0.5rem;background:#e7e8e8">
+
+
+<button class="slds-button slds-button_inverse "  id="covidpage" 
+style="display:none; background:#37bfb1;"
+onclick="redirectToCovidDeclaration()">{!$Label.Self}<br/>{!$Label.Declaration}
+</button>
+
+
+
+</div>
+
+-->
+                <!--
+<div class="slds-grid slds-gutters">
+<div class="slds-col">
+<span>              <button class="slds-button slds-button_inverse"   id="vehiclepage"
+style=" background:#37bfb1; " 
+onclick="redirectToDailyVehicleActivities()">{!$Label.Daily_Vehicle_Check}</button> </span>
+</div>
+<div class="slds-col">
+<span>              <button class="slds-button slds-button_inverse"   id="vehiclepage"
+style=" background:#37bfb1; " 
+onclick="redirectToDailyVehicleActivities()">{!$Label.Daily_Vehicle_Check}</button> </span>
+</div>
+
+</div>
+-->
+                
+                <!--
+
+<div style="text-align: center;">
+<b >{!$Label.Covid_Related_Activities} </b>
+</div>
+<div class="demo-only"  style="padding:0.5rem;background:#e7e8e8">
+
+
+<div class="slds-button-group" role="group">
+<button class="slds-button slds-button_inverse btn"  id="covidpage" 
+style="display:none;  "
+onclick="redirectToCovidDeclaration()">{!$Label.Self}<br/>{!$Label.Declaration}
+</button>
+<button class="slds-button slds-button_inverse"   id="vehiclepage"
+style="display:none; " 
+onclick="redirectToDailyVehicleActivities()">{!$Label.Daily_Vehicle_Check}</button>
+<button class="slds-button slds-button_inverse"   id="driverpage" 
+style="display:none;"
+onclick="redirectToDailyDriverActivities()" >{!$Label.Daily_SP}<br/>{!$Label.Health_Check}    
+</button>
+</div>
+</div>
+
+
+-->
+                
+                <!--   
+<div class="slds-grid slds-gutters">
+<div class="slds-col">
+<span>                <button  >
+test1
+</button>            </span>
+</div>
+<div class="slds-col">
+<span>                <button>
+test2
+</button> </span>
+</div>
+<div class="slds-col">
+<span>3</span>
+</div>
+</div>
+-->
+                <div style="text-align: center;">
+                    <b >{!$Label.Covid_Related_Activities} </b>
+                </div>
+               <!--  <div style="text-align: left;">
+                  
+                                  <button  style="width: 40px;" class="slds-button slds-button_icon_large slds-button_icon slds-pill__remove" title="Help Desk" onclick="redirectToContactDetilas();return false">
+                            
+                            <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" >
+                                <use  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#questions_and_answers')}"></use>
+                            </svg>
+                        </button>  
+                                 
+                             
+                           
+                </div>-->
+                
+                <div class="demo-only"   id="threeButton" style="padding:0.5rem;background:#e7e8e8; text-align: center; ">
+                    <div class="slds-button-group" style="width: 100%;"  role="group">
+                        <button class="slds-button slds-button_inverse  "  id="covidpage" 
+                                style=" background:#37bfb1; line-height: 1.2; width:100%; padding: 5px 0px 5px 0px;; 
+                                       border-radius: 5px; margin-right: 1%; "
+                                onclick="redirectToCovidDeclaration()">{!$Label.Self}<br/>{!$Label.Declaration}
+                        </button>
+                        <button class="slds-button slds-button_inverse "   id="vehiclepage"
+                                style=" background:#37bfb1; line-height: 1.2;width:100%; padding: 5px 0px 5px 0px;; 
+                                       border-radius: 5px; margin-right: 1%; " 
+                                onclick="redirectToDailyVehicleActivities()"> {!$Label.Daily_Vehicle}<br/>{!$Label.Check}
+                            
+                        </button>
+                        <button class="slds-button slds-button_inverse "   id="driverpage" 
+                                style="background:#37bfb1; line-height: 1.2;width:100%; padding: 5px 0px 5px 0px;; 
+                                       border-radius: 5px; margin-right: 1%;"
+                                onclick="redirectToDailyDriverActivities()" >{!$Label.Daily_SP}<br/>{!$Label.Health_Check}    
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="demo-only"   id="twoButton" style="padding:0.5rem;background:#e7e8e8;text-align: center; ">
+                    <div class="slds-button-group" style="width: 100%;" role="group">
+                        <button class="slds-button slds-button_inverse  "  id="covidpage" 
+                                style=" background:#37bfb1; line-height: 1.2; padding: 5px 0px 5px 0px;; 
+                                       border-radius: 5px;  width:100%; margin-right: 1%;"
+                                onclick="redirectToCovidDeclaration()">{!$Label.Self}<br/>{!$Label.Declaration}
+                        </button>
+                        <button class="slds-button slds-button_inverse "   id="vehiclepage"
+                                style=" background:#37bfb1; line-height: 1.2; padding: 5px 0px 5px 0px;; 
+                                       border-radius: 5px; width:100%; margin-right: 1%;" 
+                                onclick="redirectToDailyVehicleActivities()"> {!$Label.Daily_Vehicle}<br/>{!$Label.Check}</button>
+                        <button class="slds-button slds-button_inverse "   id="driverpage" 
+                                style="background:#37bfb1; line-height: 1.2; padding: 5px 0px 5px 0px;; 
+                                       border-radius: 5px; width:100%; margin-right: 1%; "
+                                onclick="redirectToDailyDriverActivities()" >{!$Label.Daily_SP}<br/>{!$Label.Health_Check}    
+                        </button>
+                    </div>
+                </div>
+                
+                
+                
+                <div class="demo-only"   id="singleButton" style="padding:0.5rem;background:#e7e8e8;text-align: center; ">
+                    <div class="slds-button-group" style="width: 100%;" role="group">
+                        <button class="slds-button slds-button_inverse  "  id="covidpage" 
+                                style=" background:#37bfb1; line-height: 1.2; padding: 5px 0px 5px 0px;; 
+                                       border-radius: 5px;  width:100%; margin-right: 1%;"
+                                onclick="redirectToCovidDeclaration()">{!$Label.Self}<br/>{!$Label.Declaration}
+                        </button>
+                        <button class="slds-button slds-button_inverse "   id="vehiclepage"
+                                style=" background:#37bfb1; line-height: 1.2; padding: 5px 0px 5px 0px;; 
+                                       border-radius: 5px; width:100%; margin-right: 1%;" 
+                                onclick="redirectToDailyVehicleActivities()"> {!$Label.Daily_Vehicle}<br/>{!$Label.Check}</button>
+                        <button class="slds-button slds-button_inverse "   id="driverpage" 
+                                style="background:#37bfb1; line-height: 1.2; padding: 5px 0px 5px 0px;; 
+                                       border-radius: 5px; width:100%; margin-right: 1%; "
+                                onclick="redirectToDailyDriverActivities()" >{!$Label.Daily_SP}<br/>{!$Label.Health_Check}    
+                        </button>
+                    </div>
+                </div>
+                <table width="100" align="center">
+                    
+                    <tr>
+                        <td>
+                            <span class="slds-icon_container" >
+                                <svg aria-hidden="true" class="hometabicons" style="background-color: #3abeb1;" onclick="redirecttovehicleassignment();">
+                                    <use xlink:href="{!URLFOR($Resource.AssignedIcon, '#AssignedIcon')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">utility</span>
+                            </span><br/>
+                            <p style="font-size: 15px;"><br/>
+                                {!$Label.Assigned_Vehicles}
+                            </p>
+                            <br/>                           
+                        </td> 
+                        <td>
+                            <span class="slds-icon_container" >
+                                <svg aria-hidden="true" class="hometabicons" style="background-color: #3abeb1;" onclick="showoutput('Driver_Repair_Issue');">
+                                    <use xlink:href="{!URLFOR($Resource.RepairIcon, '#RepairIcon')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">utility</span>
+                            </span><br/>
+                            <p style="font-size: 15px;"><br/>
+                                {!$Label.Request_Repair}
+                            </p><br/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="slds-icon_container" >
+                                <svg aria-hidden="true" class="hometabicons" style="background-color: #3abeb1;" onclick="showoutput('Breakdown_Issue');">
+                                    <use xlink:href="{!URLFOR($Resource.TowingIcon, '#TowingIcon')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">utility</span>
+                            </span><br/>
+                            <p style="font-size: 15px;"><br/>
+                                {!$Label.Report_Breakdown}
+                            </p><br/>
+                        </td>
+                        <td>
+                            <span class="slds-icon_container" >
+                                <svg aria-hidden="true" class="hometabicons" style="background-color: #3abeb1;" onclick="showoutput('Driver_Accident_Human_Injuries');">
+                                    <use xlink:href="{!URLFOR($Resource.AccidentIcon, '#AccidentIcon')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">utility</span>
+                            </span><br/>
+                            <p style="font-size: 15px;"><br/>
+                                {!$Label.Report_Accident}
+                            </p><br/>
+                        </td>
+                    </tr>
+                    <!--<tr>
+                        <a  onclick="redirectToContactDetilas();return false;"> Contact Detilas</a>
+                    
+                    </tr>-->
+                    <tr >
+                        <td id="">
+                            <span class="slds-icon_container" >
+                                <svg aria-hidden="true" class="hometabicons" style="background-color: #3abeb1;" onclick="redirectToAttedance()">
+                                    <use xlink:href="{!URLFOR($Resource.AttendanceIcon2, '#AttendanceIcon')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">utility</span>
+                            </span><br/>
+                            <p style="font-size: 15px;"><br/>
+                                {!$Label.Attendance}
+                            </p><br/>
+                        </td> 
+                        
+                        <td>
+                            <span class="slds-icon_container" >
+                                <svg aria-hidden="true" class="hometabicons" style="background-color: #3abeb1;" onclick="redirectToApplyLeave()">
+                                    <use xlink:href="{!URLFOR($Resource.LeaveIcon, '#LeaveIcon')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">utility</span>
+                            </span><br/>
+                            <p style="font-size: 15px;"><br/>
+                                {!$Label.Leave}
+                            </p><br/>
+                        </td> 
+                        
+                        
+                    </tr>
+                  <!-- <tr>
+                     <td>
+                            <span class="slds-icon_container" >
+                                <svg aria-hidden="true" class="hometabicons" style="background-color: #3abeb1;" onclick="redirectToContactDetilas();return false;">
+                                    <use xlink:href="{!URLFOR($Resource.phoneIcon, '#phoneIcon')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">utility</span>
+                            </span><br/>
+                            <p style="font-size: 15px;"><br/>
+                                Help Desk
+                            </p><br/>
+                        </td> 
+                    
+                    </tr>-->
+                    <br/>                    
+                    <br/>
+                   
+                </table>
+            </apex:outputPanel>
+            <apex:outputPanel style="display:none;" id="covidApp">
+                <apex:form >
+                    
+                    <div id="lightningoutcmp2" />
+                </apex:form></apex:outputPanel>
+            <apex:outputPanel style="display:none;" id="Driver_Repair_Issue">
+                
+                <br/>
+                <apex:form >
+                    
+                    <div id="lightningoutcmp" />
+                </apex:form></apex:outputPanel>
+            <apex:outputPanel style="display:none;" id="Driver_Repair_Issue_Resolved"> 
+                <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom19" >
+                                <svg aria-hidden="true" class="slds-icon slds-icon_large">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                         xlink:href="/apexpages/slds/latest/assets/icons/custom-sprite/svg/symbols.svg#custom19">
+                                    </use>
+                                </svg>
+                                <span class="slds-assistive-text">custom</span>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Test" style="color: #54698d;font-size: 1.5rem;">Test788</h1>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div style="text-align:center;">
+                    <apex:image url="{!$Resource.IssueResolved}" style="float-center"/> 
+                </div>
+                <br/>
+                <div class="slds-align_absolute-center"> <font size="4" > 
+                    <p>
+                        {$Label.Is_your_Issue_Resolved}
+                    </p>
+                    </font><br/><br/></div>
+                <div class="slds-align_absolute-center">
+                    <button class="slds-button slds-button_neutral" onclick="showoutput('Driver_Repair_Issue');">
+                        {!$Label.Back}
+                    </button>
+                    <span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_success" onclick="showoutput('Driver_Menu');">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#check')}"></use>
+                            </svg>{!$Label.Yes}</span>
+                    </button>
+                    <span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_destructive" onclick="gotosubmitform('Driver_Repair_Form','RepairIssue_with');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                            </svg>{!$Label.No}</span>
+                    </button>
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel style="display:none;" id="Driver_Breakdown_Issue">
+                <div id="breakdownlight"> </div>
+            </apex:outputPanel>
+            <apex:outputPanel style="display:none;" id="Driver_Breakdown_Issue_Resolved"> 
+                <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom19" >
+                                <svg aria-hidden="true" class="slds-icon slds-icon_large">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                         xlink:href="/apexpages/slds/latest/assets/icons/custom-sprite/svg/symbols.svg#custom19">
+                                    </use>
+                                </svg>
+                                <span class="slds-assistive-text">custom</span>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Test" style="color: #54698d;font-size: 1.5rem;">Test{!$Label.Driver_Breakdown_Issue_Resolved}</h1>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div style="text-align:center;">
+                    <apex:image url="{!$Resource.IssueResolved}" style="float-center"/> 
+                </div>
+                <br/>
+                <div class="slds-align_absolute-center"> <font size="4" > 
+                    <p>
+                        {!$Label.Is_your_Issue_Resolved}
+                    </p>
+                    </font><br/><br/></div>
+                <div class="slds-align_absolute-center">
+                    <button class="slds-button slds-button_neutral" onclick="showoutput('Driver_Breakdown_Issue');">
+                        {!$Label.Back}
+                    </button><span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_success" onclick="showoutput('Driver_Menu');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#check')}"></use>
+                            </svg>{!$Label.Yes}</span>
+                    </button>
+                    <span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_destructive" onclick="showoutput('Driver_Breakdown_Replacement');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                            </svg>{!$Label.No}</span>
+                    </button>
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel style="display:none;" id="Driver_Breakdown_Replacement"> 
+                <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom19" >
+                                <svg aria-hidden="true" class="slds-icon slds-icon_large">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                         xlink:href="/apexpages/slds/latest/assets/icons/custom-sprite/svg/symbols.svg#custom19">
+                                    </use>
+                                </svg>
+                                <span class="slds-assistive-text">custom</span>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Driver-Breakdown-Replacement" style="color: #54698d;font-size: 1.5rem;">{!$Label.Driver_Breakdown_Replacement}</h1>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:center;">
+                    <apex:image url="{!$Resource.Replacement}" style="float-center"/> 
+                </div>
+                <br/>
+                <div class="slds-align_absolute-center"> <font size="4" > 
+                    <p>
+                        {!$Label.Replacement_Vehicle_needed}   
+                    </p>
+                    </font><br/><br/></div>
+                <div class="slds-align_absolute-center">
+                    <button class="slds-button slds-button_neutral" onclick="showoutput('Driver_Breakdown_Issue_Resolved');">
+                        {!$Label.Back}
+                    </button><span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_success" onclick="gotosubmitform('Driver_BreakDown_Form','RepairIssue_with','Breakdown');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#check')}"></use>
+                            </svg>{!$Label.Yes}</span>
+                    </button>
+                    <span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_destructive" onclick="showoutput('Driver_Breakdown_On_Spot_Repair');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                            </svg>{!$Label.No}</span>
+                    </button>
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel style="display:none;" id="Driver_Breakdown_On_Spot_Repair"> 
+                <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom19" >
+                                <svg aria-hidden="true" class="slds-icon slds-icon_large">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                         xlink:href="/apexpages/slds/latest/assets/icons/custom-sprite/svg/symbols.svg#custom19">
+                                    </use>
+                                </svg>
+                                <span class="slds-assistive-text">custom</span>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Driver-Breakdown-On-Spot_Repair" style="color: #54698d;font-size: 1.5rem;">{!$Label.Driver_Breakdown_On_Spot_Repair}</h1>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:center;">
+                    <apex:image url="{!$Resource.OnStopRepair}" style="float-center"/> 
+                </div>
+                <br/>
+                <div class="slds-align_absolute-center"> <font size="4" > 
+                    <p>
+                        {!$Label.ON_Spot_Repair_Needed}
+                    </p>
+                    </font><br/><br/></div>
+                <div class="slds-align_absolute-center">
+                    <button class="slds-button slds-button_neutral" onclick="showoutput('Driver_Breakdown_Replacement');">
+                        {!$Label.Back}
+                    </button><span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_success" onclick="gotosubmitform('Driver_Onspot_Repair','RepairIssue_with','Breakdown');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#check')}"></use>
+                            </svg>{!$Label.Yes}</span>
+                    </button>
+                    <span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_destructive" onclick="showoutput('Driver_Breakdown_Towing');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                            </svg>{!$Label.No}</span>
+                    </button>
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel style="display:none;" id="Driver_Breakdown_Towing"> 
+                <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom19" >
+                                <svg aria-hidden="true" class="slds-icon slds-icon_large">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                         xlink:href="/apexpages/slds/latest/assets/icons/custom-sprite/svg/symbols.svg#custom19">
+                                    </use>
+                                </svg>
+                                <span class="slds-assistive-text">custom</span>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Driver-Breakdown-Towing" style="color: #54698d;font-size: 1.5rem;">{!$Label.Driver_Breakdown_Towing}</h1>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:center;">
+                    <apex:image url="{!$Resource.TowingReq}" style="height: 300px;"/> 
+                </div>
+                <br/>
+                <div class="slds-align_absolute-center"> <font size="4" > 
+                    <p>
+                        {!$Label.Vehicle_Towing_Required}
+                    </p>
+                    </font><br/><br/></div>
+                <div class="slds-align_absolute-center">
+                    <button class="slds-button slds-button_neutral" onclick="showoutput('Driver_Breakdown_On_Spot_Repair');">
+                        {!$Label.Back}
+                    </button><span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_success" onclick="gotosubmitform('Driver_Towing_Form','Breakdownissue_issue_with','Breakdown');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#check')}"></use>
+                            </svg>{!$Label.Yes}</span>
+                    </button>
+                    <span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_destructive" onclick="showoutput('Driver_Menu');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                            </svg>{!$Label.No}</span>
+                    </button>
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel style="display:none;" id="Driver_Accident_Classification_Minor">
+                <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-standard-avatar" >
+                                <svg aria-hidden="true" class="slds-icon slds-icon_large">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                         xlink:href="/apexpages/slds/latest/assets/icons/standard-sprite/svg/symbols.svg#avatar">
+                                    </use>
+                                </svg>
+                                <span class="slds-assistive-text">avatar</span>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Driver-Accident-Classification-Minor" style="color: #54698d;font-size: 1.5rem;">Driver-Accident-Classification-Minor</h1>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <apex:form >
+                    <div class="slds-form slds-box">
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                            <span class="slds-form-element__label">Issue</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">Breakdown</div>
+                            </div>
+                        </div><br/>
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                            <span class="slds-form-element__label">Issue With</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">Brake</div>
+                            </div>
+                        </div><br/>
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                            <span class="slds-form-element__label">Comments</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">The brakes are not working properly and squealing when we apply the brakes</div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="slds-align_absolute-center">
+                            <button class="slds-button slds-button_neutral" onclick="showoutput('Driver_Menu');">
+                                {!$Label.Back}
+                            </button><span style="width: 40px;"></span>
+                            <button class="slds-button slds-button_success" onclick="showoutput('Driver_Menu');return false;">Save</button><span style="width: 40px;"></span>
+                            <button class="slds-button slds-button_destructive" onclick="showoutput('Driver_Menu');return false;">Cancel</button>
+                        </div></div>
+                </apex:form>
+            </apex:outputPanel>
+            <apex:outputPanel style="display:none;" id="Driver_Accident_Human_Injuries"> 
+                <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom19" >
+                                <svg aria-hidden="true" class="slds-icon slds-icon_large">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                         xlink:href="/apexpages/slds/latest/assets/icons/custom-sprite/svg/symbols.svg#custom19">
+                                    </use>
+                                </svg>
+                                <span class="slds-assistive-text">custom</span>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Driver-Accident-Human Injuries" style="color: #54698d;font-size: 1.5rem;">{!$Label.Driver_Accident_Human_Injuries}</h1>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div style="text-align:center;">
+                    <apex:image url="{!$Resource.HumanInjury}" style="float-center"/> 
+                </div>
+                <br/>
+                <div class="slds-align_absolute-center"> <font size="4" > 
+                    <p>
+                        {!$Label.Any_Human_Injury}
+                    </p>
+                    </font><br/><br/></div>
+                <div class="slds-align_absolute-center">
+                    <button class="slds-button slds-button_neutral" onclick="showoutput('Driver_Menu');">
+                        {!$Label.Back}
+                    </button><span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_success" onclick="accidentcheckfunction('Major');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#check')}"></use>
+                            </svg>{!$Label.Yes}</span>
+                    </button>
+                    <span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_destructive" onclick="accidentcheckfunction('Minor');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                            </svg>{!$Label.No}</span>
+                    </button>
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel style="display:none;" id="Driver_Accident_Replacement"> 
+                <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom19" >
+                                <svg aria-hidden="true" class="slds-icon slds-icon_large">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                         xlink:href="/apexpages/slds/latest/assets/icons/custom-sprite/svg/symbols.svg#custom19">
+                                    </use>
+                                </svg>
+                                <span class="slds-assistive-text">custom</span>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Driver-Accident-Replacement" style="color: #54698d;font-size: 1.5rem;">{!$Label.Driver_Accident_Replacement}</h1>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:center;">
+                    <apex:image url="{!$Resource.Replacement}" style="float-center"/> 
+                </div>
+                <br/>
+                <div class="slds-align_absolute-center"> <font size="4" > 
+                    <p>
+                        {!$Label.Replacement_Vehicle_needed}
+                    </p>
+                    </font><br/><br/></div>
+                <div class="slds-align_absolute-center">
+                    <button class="slds-button slds-button_neutral" onclick="showoutput('Driver_Accident_Human_Injuries');">
+                        {!$Label.Back}
+                    </button><span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_success" onclick="gotosubmitform('Driver_Accident_Form','accidentrepairrequiredisse','Accident');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#check')}"></use>
+                            </svg>{!$Label.Yes}</span>
+                    </button>
+                    <span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_destructive" onclick="showoutput('Driver_Accident_On_Spot_Repair');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                            </svg>{!$Label.No}</span>
+                    </button>
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel style="display:none;" id="Driver_Accident_On_Spot_Repair"> 
+                <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom19" >
+                                <svg aria-hidden="true" class="slds-icon slds-icon_large">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                         xlink:href="/apexpages/slds/latest/assets/icons/custom-sprite/svg/symbols.svg#custom19">
+                                    </use>
+                                </svg>
+                                <span class="slds-assistive-text">custom</span>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Driver-Breakdown-On-Spot_Repair" style="color: #54698d;font-size: 1.5rem;">{!$Label.Driver_Breakdown_On_Spot_Repair}</h1>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:center;">
+                    <apex:image url="{!$Resource.OnStopRepair}" style="float-center"/> 
+                </div>
+                <br/>
+                <div class="slds-align_absolute-center"> <font size="4" > 
+                    <p>
+                        {!$Label.ON_Spot_Repair_Needed}
+                    </p>
+                    </font><br/><br/></div>
+                <div class="slds-align_absolute-center">
+                    <button class="slds-button slds-button_neutral" onclick="showoutput('Driver_Accident_Replacement');">
+                        {!$Label.Back}
+                    </button><span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_success" onclick="gotosubmitform('Driver_Onspot_Repair','accidentrepairrequiredisse','Accident');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#check')}"></use>
+                            </svg>{!$Label.Yes}</span>
+                    </button>
+                    <span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_destructive" onclick="showoutput('Driver_Accident_Towing');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                            </svg>{!$Label.No}</span>
+                    </button>
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel style="display:none;" id="Driver_Accident_Towing"> 
+                <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom19" >
+                                <svg aria-hidden="true" class="slds-icon slds-icon_large">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                         xlink:href="/apexpages/slds/latest/assets/icons/custom-sprite/svg/symbols.svg#custom31">
+                                    </use>
+                                </svg>
+                                <span class="slds-assistive-text">custom</span>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Driver-Accident-Towing" style="color: #54698d;font-size: 1.5rem;">{!$Label.Driver_Accident_Towing}</h1>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:center;">
+                    <apex:image url="{!$Resource.TowingReq}" style="height: 300px;"/> 
+                </div>
+                <br/>
+                <div class="slds-align_absolute-center"> <font size="4" > 
+                    <p>
+                        {!$Label.Vehicle_Towing_Required}
+                    </p>
+                    </font><br/><br/></div>
+                <div class="slds-align_absolute-center">
+                    <button class="slds-button slds-button_neutral" onclick="showoutput('Driver_Accident_On_Spot_Repair');">
+                        {!$Label.Back}
+                    </button><span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_success" onclick="gotosubmitform('Driver_Towing_Form','accidentrepairrequiredisse','Accident');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#check')}"></use>
+                            </svg>{!$Label.Yes}</span>
+                    </button>
+                    <span style="width: 40px;"></span>
+                    <button class="slds-button slds-button_destructive" onclick="showoutput('Driver_Menu');return false;">
+                        <span class="slds-text-selected">
+                            <svg class="slds-button__icon slds-button__icon_small slds-button__icon_left" aria-hidden="true">
+                                <!-- <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>  -->
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                            </svg>{!$Label.No}</span>
+                    </button>
+                </div>
+            </apex:outputPanel>
+            <apex:form >
+                <input type="hidden" value="" id="fileidhiddendailycovid"/> 
+                <input type="hidden" value="" id="fileidhidden"/>
+                <input type="hidden" value="" id="latitude"/>
+                <input type="hidden" value="" id="longitude"/>
+                <input type="hidden" value="" id="pagename"/>
+                <input type="hidden" value="" id="issueid"/>
+                <input type="hidden" value="" id="Towingrequiredisse"/>
+                <input type="hidden" value="" id="accidenttype"/>
+                <input type="hidden" value="Accident" id="accidentrepairrequiredisse"/>
+                <input type="hidden" value="" id="RepairIssue_with"/>
+                <input type="hidden" value="" id="issuecategory"/>
+                <input type="hidden" value="" id="issuekowledge"/>
+                <!--<apex:actionFunction name="createIssueORservicerequestRec" action="{!createIssueORservicerequestRec}" oncomplete="alert('Issue Created');window.location.reload();">
+<apex:param value="" name="issuewith"/>
+<apex:param value="" name="inputfileids"/>
+<apex:param value="" name="objectname"/>
+<apex:param value="" name="requesttype"/>
+<apex:param value="" name="latitude"/>
+<apex:param value="" name="longitude"/>
+</apex:actionFunction>-->
+                <apex:actionStatus id="status">
+                    <apex:facet name="start">
+                        <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.75; z-index: 1000; background-color: black;">
+                            &nbsp;
+                        </div>
+                        <div style="position: fixed; left: 0; top: 0; bottom: 0; right: 0; z-index: 1001; margin: 30% 50%">
+                            <img src="http://upload.wikimedia.org/wikipedia/commons/e/ed/Cursor_Windows_Vista.gif" />
+                        </div>
+                    </apex:facet>
+                </apex:actionStatus>
+                <apex:actionFunction name="delcontentfiles" action="{!delcontentfiles}" oncomplete="allclear();return false;"  status="status">
+                    <apex:param value="" name="firstParam"/>
+                </apex:actionFunction>
+                <!--<apex:actionFunction name="setlatlong" action="{!setlatlong}" rerender="none">
+<apex:param value="" name="latitudeval"/>
+<apex:param value="" name="longitudeval"/>
+</apex:actionFunction>-->
+            </apex:form> 
+        </div>
+        <style>
+            .slds-scope caption, .slds-scope th, .slds-scope td {
+            text-align: center !important;
+            }
+            .hometabicons{
+            width: 7rem;
+            height: 6rem;
+            border-radius: 7%;
+            }
+        </style>
+        <script> 
+        $('[id$=attdencepage]').hide();
+        $('[id$=driverpage]').hide();
+        document.getElementById('covidpage').style.width = '100%'; 
+        
+        var dailyCovid = '{!showCovid}';
+        var dailyDriverCovid = '{!showDriver}';
+        
+        var count=0;
+        // alert('dailyCovid'+dailyCovid);
+        //   alert('dailyDriverCovid'+dailyDriverCovid);
+        
+        // alert('show'+dailyDriverCovid);
+        
+        
+        if(dailyDriverCovid == 'false'){
+            //alert('showalert');
+            $('[id$=driverpage]').show();
+            count++;
+        }else{
+            $('[id$=driverpage]').hide();
+        }
+        
+        if(dailyCovid == 'false'){
+            
+                       $('[id$=covidpage]').show();
+            //alert('showalert');
+              count++;
+           
+        }else{
+      
+      $('[id$=covidpage]').hide();
+        }
+        console.log('count=='+count);
+        if(count==1){
+            console.log('ID@@@1---------' +document.getElementById('vehiclepage'));
+            /*
+                        $('[id$=singleButton]').hide(); 
+             $('[id$=threeButton]').show();
+              $('[id$=twoButton]').hide(); 
+            */
+            $('[id$=singleButton]').hide(); 
+            $('[id$=threeButton]').hide();
+            $('[id$=twoButton]').show(); 
+        }
+        else if(count==2){
+            console.log('ID@@@2---------' +document.getElementById('vehiclepage'));
+            
+            $('[id$=singleButton]').hide(); 
+            $('[id$=threeButton]').hide();
+            $('[id$=twoButton]').show(); 
+        }
+            else if(count==0){
+                $('[id$=twoButton]').hide(); 
+                $('[id$=singleButton]').show();    
+                $('[id$=threeButton]').hide(); 
+                //    console.log('ID@@@0--------' +document.getElementById('vehiclepage'));
+                //    document.getElementById('vehiclepage').style.width = '100%';  
+            }
+        
+        </script>
+        <script>
+        var currentopenpanel;
+        if(currentparameter !=undefined && currentparameter.length>0){
+            currentopenpanel=currentparameter;
+            $('[id$='+currentopenpanel+']').show();
+            $('[id$=Driver_Menu]').hide();
+        }else{
+            currentopenpanel = 'Driver_Menu';$('[id$=Driver_Menu]').show();
+            //document.getElementById('Driver_Menu').style="display:block"
+        }
+        $('[id$=fileidhidden]').val('');
+        $('[id$=Breakdownissue_issue_with]').val('{!Issuerec.Issue_With__c}');
+        
+        </script>
+    </html>
+</apex:page>

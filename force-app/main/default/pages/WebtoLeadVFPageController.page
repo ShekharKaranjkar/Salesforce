@@ -1,0 +1,32 @@
+<apex:page controller="WebtoLeadVFPageController" lightningStylesheets="true">
+    <apex:slds />  
+    <style>
+        .fieldsize{
+          width: 209px;
+        }
+      <!--  .body .confirmM2, body .confirmM3, body .confirmM4, .slds-vf-scope .confirmM2, .slds-vf-scope .confirmM3, .slds-vf-scope .confirmM4{
+            width: 19%;
+            left: 31%;
+        } --->
+        .labelCol {
+        	width:22% !important;
+        }
+    </style>
+    <apex:pageMessages />
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockSection columns="1" >
+                		<apex:inputField styleClass="slds-input" style="width: 209px;" value="{!leadObj.FirstName}" />
+                        <apex:inputField styleClass="slds-input" style="width: 209px;" value="{!leadObj.LastName}"  />
+                    	<apex:inputField styleClass="slds-input" style="width: 209px;" value="{!leadObj.Email}" /> 
+                        <apex:inputField styleClass="slds-input" style="width: 209px;" value="{!leadObj.Company}" />
+                        <apex:inputField styleClass="slds-input" style="width: 209px;" value="{!leadObj.Phone}" />                    	
+                        <apex:inputField styleClass="slds-input" style="width: 209px;" value="{!leadObj.Website}"  />                        
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="Bottom" >
+                <apex:commandButton action="{!clear}" value="Clear" immediate="true" />
+                <apex:commandButton action="{!save}" value="Submit" /> 
+            </apex:pageBlockButtons>
+        </apex:pageBlock>      
+    </apex:form>
+</apex:page>

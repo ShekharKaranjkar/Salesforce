@@ -1,0 +1,7 @@
+<aura:event type="APPLICATION" description="Event template" >
+    <aura:attribute name="vehicleByEvent" type="sObject"/>
+    <aura:attribute name="IsServiceProvider" type="boolean"/>
+    <aura:attribute name="IsServiceProvider1" type="boolean"/>
+      <aura:attribute name="IsServiceProvider2" type="boolean"/>
+    <aura:attribute name="isSignedUser" type="boolean"/>
+</aura:event>

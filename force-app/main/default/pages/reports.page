@@ -1,0 +1,10 @@
+<apex:page controller="ReportController"> 
+    <html>
+    <head>
+    </head>
+    <body>
+            <apex:iframe src="https://lithium--dev.my.salesforce.com/00O5D000000VFDmUAO?isdtp=vw"/>
+  
+    </body>
+    </html>
+</apex:page>

@@ -1,0 +1,14 @@
+<aura:component  controller="DailyCovidVehicleController">
+	 <!-- 'parentId' Aura Attribute for store the Id for Parent Record where we are attach our file --> 
+    <aura:attribute name="parentId" type="Id" default="a1m0w000000AJxkAAG" />
+<aura:registerEvent name="DailyCovidVehicleEvent" type="c:DailyCovidVehicleEvent"/>
+
+    <aura:attribute name="fileName" type="String" default="No File Selected.." />
+    <aura:attribute name="fieldvalue" type="String"/>
+
+    <lightning:input aura:id="fuploader" onchange="{!c.handleFilesChange}" type="file" name="file"  multiple="false"/>
+    <div class="slds-text-body_small slds-text-color_error">{!v.fileName} </div>
+    <br/>
+
+
+</aura:component>

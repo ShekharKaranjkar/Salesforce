@@ -1,0 +1,351 @@
+<aura:component implements = "force:hasRecordId,force:lightningQuickActionWithoutHeader" 
+                controller = "productSelectionController" access = "global">
+    
+    
+    <aura:handler name="DeleteRowEvt" event="c:DeleteRowEvt" action="{!c.removeDeletedRow}"/>
+    <aura:handler name="AddNewRowEvt" event="c:AddNewRowEvt" action="{!c.addNewRow}"/>
+     <aura:handler name="DeleteRowEvt1D" event="c:DeleteRowEvt1D" action="{!c.removeDeletedRow1D}"/>
+    <aura:handler name="AddNewRowEvt1D" event="c:AddNewRowEvt1D" action="{!c.addNewRow1D}"/>
+    <aura:handler name="DeleteRowEvtflat" event="c:DeleteRowEvtflat" action="{!c.removeDeletedRowflat}"/>
+    <aura:handler name="AddNewRowEvtflat" event="c:AddNewRowEvtflat" action="{!c.addNewRowflat}"/>
+    <aura:handler name = "init" value = "{!this}" action = "{!c.doInit}"/>
+    <aura:handler name="listofOne" event="c:oneDList" action="{!c.handleComponentEvent}"/>     
+    <aura:handler event="c:appEventSlab" action="{!c.handleApplicationEvent}"/>
+    <aura:handler event="c:appEventFlat" action="{!c.handleApplicationEventFlat}"/>
+    
+   <aura:attribute name = "onedObjList" type = "List" access="public"/>
+    <aura:attribute name = "flatObjList" type = "list" access="public"/>
+    <aura:attribute name = "slabObjList" type = "list" access="public"/>
+    <aura:attribute name = "opportunintyLineItemListslab" type = "List" access="public"/>
+    <aura:attribute name = "tabelSelectedProduct" type = "list" access="public"/>
+    <aura:attribute name = "tabelSelectedProduct1D" type = "list" access="public"/>
+    <aura:attribute name = "selectedProductList" type = "list"/>
+    <aura:attribute name = "productListAfterCancelBtn1dModel" type = "list"/>
+    <aura:attribute name = "productListAfterCancelBtnTripModel" type = "list"/>   
+    <aura:attribute name = "productselected1DList" type = "list"/>
+    <aura:attribute name = "productselectedTripList" type = "list"/>
+    
+        <aura:attribute name = "firstWrapper" type = "list"/>
+    <aura:attribute name = "opportunintyLineItemList" type = "list"/>
+    <aura:attribute name = "flatSlabTripList" type = "list"/>
+    <aura:attribute name = "DeleteoneDList" type = "list"/>
+    <aura:attribute name = "DeleteflatList" type = "list"/>
+    <aura:attribute name = "DeleteslabList" type = "list"/>
+    <aura:attribute name = "searchKeyword1D" type = "String"/>
+    <aura:attribute name = "searchKeywordTrip" type = "String" default=" "/>
+    <aura:attribute name = "inputPriceCarMonth" type = "String" default=""/>
+    <aura:attribute name = "MRRValueTrip" type = "integer" default=""/>
+    <aura:attribute name = "MRRValue1D" type = "integer" default=""/>
+    <aura:attribute name = "location" type = "integer" default="--- None ---"/>
+    <aura:attribute name = "sublocation" type = "integer" default="--- None ---"/>
+    <aura:attribute name = "selectedCountOfSave" type = "integer" default = "0" />
+     <aura:attribute name = "selectedCountOf1D2d" type = "integer" default = "0"/>
+    <aura:attribute name = "selectedCountOfTrip" type = "integer" default = "0"/>
+    <aura:attribute name = "showHide" type = "boolean" default = "true"/>  
+    <aura:attribute name = "Spinner" type = "boolean" default = "false"/>
+    <aura:attribute name = "showTable" type = "boolean" default = "false" />
+     <aura:attribute name = "showHideError" type = "boolean" default = "true"/> 
+    <aura:attribute name="listControllingValues" type="list" default="[]" description="to store controller field values"/>
+    <aura:attribute name="listDependingValues" type="list" default="['--- None ---']" description="to store dependent field values"/>
+    <aura:attribute name="depnedentFieldMap" type="map" description="map to store dependent values with controlling value"/>
+    <aura:attribute name="bDisabledDependentFld" type="boolean" default="true"/> 
+    <aura:attribute name="objDetail" type="Product2" default="{'sobjectType' : 'Product2'}"/>
+    <aura:attribute name="controllingFieldAPI" type="string" default="Location__c" description="store field API name of Controller field"/>
+    <aura:attribute name="dependingFieldAPI" type="string" default="SubLocation__c" description="store field API name of dependent field"/>
+
+    <aura:html tag="style">
+        .slds-modal__container {
+        width : 100% !important;
+        max-width : 100% !important;
+        height : 100% !important;
+        
+        max-height:100% !important;
+        }
+    </aura:html>
+
+        <aura:if isTrue = "{!v.Spinner}">
+            <div aura:id = "spinnerId" class = "slds-spinner_container">
+                <div class = "slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role = "alert">
+                    <span class = "slds-assistive-text">Loading</span>
+                    <div class = "slds-spinner__dot-a"></div>
+                    <div class = "slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </aura:if>
+    
+
+         <aura:if isTrue = "{!v.showHide}">
+        <div>
+            <lightning:tabset>
+                <lightning:tab  label = "1D/2D" onactive="{!c.change}" aura:id = "oneDtab"> 
+                    <div class = "slds-form-element slds-p-around_small">
+                        <label class = "slds-form-element__label" for = "text-input-id-1">Search </label>
+                        <div class = "slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
+                            <Lightning:input type = "text"  value="{!v.searchKeyword1D}" aura:id="oneD" onchange="{!c.filterProducts}" placeholder = "Product/Product Family" />
+                            
+                        </div>
+                        <div>
+                            <span> {!v.selectedCountOf1D2d} items Selected</span>
+                        </div>
+                    </div>
+                    <div class = "slds-p-around_small slds-grid slds-wrap">
+                        <table class = "slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered ">
+                            <thead>
+                                <tr class = "slds-line-height_reset">
+                                    <th class = "slds-size_1-of-6 slds-p-left_xx-large" scope = "col">
+                                        <div class = "slds-truncate" title = "Checkbox"></div>
+                                    </th>
+                                    <th class = "slds-size_1-of-6" scope = "col">
+                                        <div class = "slds-truncate " title = "Name">Product</div>
+                                    </th>
+                                    <th class = "slds-size_1-of-6" scope = "col">
+                                        <div class = "slds-truncate" title = "Product Code">Product Code</div>
+                                    </th>
+  
+                       
+                                    <th class = "slds-size_1-of-6" scope = "col">
+                                        <div class = "slds-truncate" title = "Product Family">Product Family</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <aura:iteration items = "{!v.productListAfterCancelBtn1dModel}" var = "item" indexVar = "index">                              
+                                    <tr id  = "{!index}" style="height:100%" >  
+                                        <td>                                                      
+                                            <lightning:input type = "checkbox" name="{!index}"   aura:id = "boxPack" class = "slds-p-vertical_small slds-p-left_xx-large" value = "{!item}" checked = "{!item.checkboxSelected1d}"  onchange = "{!c.checkboxSelect}" />      
+                                        </td>
+                                        <td >                                         
+                                            <div class = "slds-truncate" >{!item.pbe.Name}</div>
+                                        </td>
+                                        <td >
+                                            <div class = "slds-truncate" >{!item.pbe.ProductCode}</div>
+                                        </td>
+                          
+
+                                        <td >
+                                            <div class = "slds-truncate" >{!item.pbe.Product2.Family}</div>
+                                        </td>                                    
+                                    </tr>                      
+                                </aura:iteration>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <aura:iteration items = "{!v.tabelSelectedProduct1D}" var = "item"  >
+                        <c:tableCompOneD2D aura:id="tabelComp" tabelSelectedInstance="{!item}" />
+                    </aura:iteration>
+                    
+                    <div class = "slds-p-around_small">
+                        <span>
+                            <button class = "slds-button slds-button_neutral" onclick = "{!c.goesToOpp}">Cancel</button>
+                        </span>
+                        <span class = "slds-p-around_small">
+                            <button class = "slds-button slds-button_brand" aura:id = "oneDnext" onclick = "{!c.selectedProductsCheckbox}">Next</button>
+                        </span>
+                    </div>           
+                </lightning:tab>
+                
+                <lightning:tab label = "Trip Model" onactive="{!c.change}" aura:id = "triptab">
+                    <div class = "slds-form-element slds-p-around_small">
+                        <label class = "slds-form-element__label" for = "text-input-id-1">Search</label>
+                        <div class = "slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
+                            <Lightning:input type = "text"  value="{!v.searchKeywordTrip}" aura:id="trip"  onchange="{!c.filterProducts}" placeholder = "Product/Product Family" />
+
+                        </div>
+                        <div>
+                            <span> {!v.selectedCountOfTrip} items Selected</span>
+                        </div>
+                    </div>
+                    <div class = "slds-p-around_small">
+                        <table class = "slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered">
+                            <thead>
+                                <tr class = "slds-line-height_reset">
+                                    <th class = "" scope = "col">
+                                        <div class = "slds-truncate" title = "Checkbox"></div>
+                                    </th>
+                                    <th class = "" scope = "col">
+                                        <div class = "slds-truncate" title = "Name">Product</div>
+                                    </th>
+                                    <th class = "" scope = "col">
+                                        <div class = "slds-truncate" title = "Product Code">Product Code</div>
+                                    </th>
+                               
+                                    <th class = "" scope = "col">
+                                        <div class = "slds-truncate" title = "Product Family">Product Family</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <aura:iteration items = "{!v.productListAfterCancelBtnTripModel}" var = "item" indexVar = "index">                              
+                                    <tr id  = "{!index}" >  
+                                        <td>                                                      
+                                            <lightning:input type = "checkbox" name="{!index}"  aura:id = "tripModel" class = "slds-p-vertical_small" value = "{!item}" checked = "{!item.checkboxSelectedTrip}"  onchange = "{!c.checkboxSelect}" />      
+                                        </td>
+                                        <td >                                         
+                                            <div class = "slds-truncate" >{!item.pbe.Name}</div>
+                                        </td>
+                                        <td >
+                                            <div class = "slds-truncate" >{!item.pbe.ProductCode}</div>
+                                        </td>
+
+                                        <td >
+                                            <div class = "slds-truncate" >{!item.pbe.Product2.Family}</div>
+                                        </td>                                    
+                                    </tr>                      
+                                </aura:iteration>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <aura:iteration items = "{!v.tabelSelectedProduct}" var = "item"  >
+                        <c:tableComp aura:id="tabelComp" tabelSelectedInstance="{!item}" />
+                    </aura:iteration>
+                    
+                    <div class = "slds-p-around_small">
+                        <span>
+                            <button class = "slds-button slds-button_neutral"  onclick = "{!c.goesToOpp}">Cancel</button>
+                        </span>
+                        <span class = "slds-p-around_small">
+                            <button class = "slds-button slds-button_brand" aura:id = "Tripnext"   onclick = "{!c.selectedProductsCheckbox}">Next</button>
+                        </span>
+                    </div>
+                </lightning:tab>
+            </lightning:tabset>           
+        </div>    
+             
+        <aura:set attribute = "else">
+            
+            <aura:if isTrue="{!not(v.selectedCountOf1D2d == 0)}">
+                
+                <div class="slds-box">
+                    <div class = "slds-m-bottom_none  change">
+                        <p  class="slds-p-left_small" style="font-size:20px;"> 1D/2D Model Selected Products</p>
+                        <div class = "slds-form-element slds-p-around-small  slds-wrap slds-m-bottom_none">
+                            <table class = "slds-table slds-table_cell-buffer slds-table_header-hidden ">
+                                <thead class = "slds-border_bottom slds-border_top">
+                                    <tr class = "slds-line-height_reset">
+                                        <th class = "slds-size_1-of-12" scope = "col">
+                                            <div class = "slds-truncate" title = "Slab">Product Name</div>
+                                        </th>
+                                        <th class = "slds-size_1-of-12" scope = "col">
+                                            <div class = "slds-truncate" title = "Slab">Model Type</div>
+                                        </th>
+                                        <th class = "slds-size_1-of-12" scope = "col">
+                                            <div class = "slds-truncate" title = "Slab">Price/Vehicle/Month</div>
+                                        </th>
+                                        <th class = "slds-size_1-of-12" scope = "col">
+                                            <div class = "slds-truncate" title = "Product Code">Current Pursuit</div>
+                                        </th>
+                                        <th class = "slds-size_1-of-12" scope = "col">
+                                            <div class = "slds-truncate" title = "day"> Productivity</div>
+                                        </th>
+                                        <th class = "slds-size_2-of-12" scope = "col">
+                                            <Span class = "slds-truncate" title = "Price">New Vehicle to be ordered</Span>
+                                        </th>
+                                        <th class = "slds-size_1-of-12" scope = "col">
+                                            <Span class = "slds-truncate" title = "Product Family">MRR</Span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    <aura:iteration items = "{!v.tabelSelectedProduct1D}" var = "item">
+                                        <c:porductSelectionInlineEditoneD singleRec = "{!item}" />
+                                    </aura:iteration>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="slds-box slds-theme_shade  slds-m-bottom_none" >
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_1-of-12">
+                                    <span class=" slds-p-left_medium  slds-p-around-small " style="font-size:20px;">Total</span>
+                                </div>
+                                <div class="slds-col slds-size_1-of-12">
+                                   
+                                    <span  style="font-size:20px;"> <ui:outputCurrency value="{!v.MRRValue1D}"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aura:if> 
+            
+            <div class="slds-p-around_large">
+            </div>
+            
+            <aura:if isTrue="{!not(v.selectedCountOfTrip == 0)}">
+                <div class="slds-box">
+                    <p  class="slds-p-left_small" style="font-size:20px;"> Trip Model Selected Products</p>
+                    <div class = "slds-form-element slds-p-around-small slds-grid slds-wrap">
+                        <table class = "slds-table slds-table_cell-buffer slds-table_header-hidden">
+                            <thead class = "slds-border_bottom slds-border_top">
+                                <tr class = "slds-line-height_reset">
+                                    <th class = "slds-size_1-of-12" scope = "col">
+                                        <div class = "slds-truncate" title = "Slab">Product Name</div>
+                                    </th>
+                                    
+                                    <th class = "slds-size_1-of-12" scope = "col">
+                                        <div class = "slds-truncate" title = "Slab">Model Type</div>
+                                    </th>
+                                    <th class = "slds-size_1-of-12" scope = "col">
+                                        <div class = "slds-truncate" title = "Slab">Slab</div>
+                                    </th>
+                                    
+                                    <th class = "slds-size_1-of-12" scope = "col">
+                                        <div class = "slds-truncate" title = "Slab">Total Trips/Day</div>
+                                    </th>
+                                    <th class = "slds-size_1-of-12" scope = "col">
+                                        <div class = "slds-truncate" title = "Name">Price/Trip</div>
+                                    </th>
+                                    
+                                    <th class = "slds-size_2-of-12" scope = "col">
+                                        <Span class = "slds-truncate" title = "Price">New Vehicle to be ordered</Span>
+                                    </th>
+                                    <th class = "slds-size_1-of-12" scope = "col">
+                                        <Span class = "slds-truncate" title = "Product Family">MRR</Span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <aura:iteration items = "{!v.tabelSelectedProduct}" var = "item">
+                                    <c:porductSelectionInlineEdit singleRec = "{!item}" />
+                                </aura:iteration>
+                                
+                            </tbody>
+                        </table>
+                    </div>                    
+                    <div class="slds-box slds-theme_shade">
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_1-of-12">
+                                <span class=" slds-p-left_medium slds-p-around-small" style="font-size:20px;">Total</span>
+                            </div>
+                            <div class="slds-col slds-size_1-of-12">
+                                
+                                <span style="font-size:20px;"><ui:outputCurrency value="{!v.MRRValueTrip}"/></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </aura:if> 
+            
+            <div class = "slds-p-around_small">
+                <span class = "slds-p-around_small">
+                    
+                    <lightning:button label = "Cancel" onclick = "{!c.goesBack}"/>
+                </span>
+                
+                <span class = "slds-p-around_small">
+                    <button class = "slds-button slds-button_brand"  onclick = "{!c.Save}">Save</button>
+                </span>
+                
+            </div>
+        </aura:set>
+    </aura:if>    
+</aura:component>

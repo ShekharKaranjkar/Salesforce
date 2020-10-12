@@ -1,0 +1,90 @@
+<aura:component controller ="ServiceCenterController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+                access="global" >
+    
+    <aura:handler name="init" action="{!c.dointAction}" value="{!this}" />
+    
+    <aura:attribute name="servicecenters" type="List[]" />
+    <aura:attribute name="selectedList" type="List[]" />
+    <aura:attribute name="IssueObj" type="Issues__c" default ="{'Id':'',
+                                                               'Service_Center__c':''}"/>
+    <aura:attribute name="showmessage" type="boolean" default="false"/>
+    <aura:attribute name="ShowErrormessage" type="boolean" default="false"/>
+    <aura:attribute name="isexecuting" type="boolean" default="true"/>
+    <aura:if  isTrue="{!v.showmessage}">
+        <div class="overflow">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-3"> 
+                    <table class="slds-table slds-table_bordered">
+                        <thead>
+                            <tr class="slds-text-title_caps">
+                                <!--<th style="width:3.25rem;" class="">
+                                    <div class="slds-form-element">
+                                        <div class="slds-form-element__control">
+                                            <label class="slds-checkbox">
+                                               <ui:inputCheckbox aura:id="box3" change="{!c.selectAll}"/>
+                                                <span class=""></span>
+                                                <span class="slds-form-element__label text"></span>
+                                            </label>
+                                        </div>
+                                    </div> 
+                                </th>-->
+                                
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Service Center Name"><b>Service Center</b></div>
+                                </th>
+                                
+                                <!--    <th scope="col" >
+                                <div class="slds-truncate" title="Distance From Current Location">Distance From Current Location</div>
+                            </th> -->
+                                <th scope="col" >
+                                    <div class="slds-truncate" title="Location Longitude">Distance For Service  <br/> Center</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Action">Action</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.servicecenters}" var="servicesenter">
+                                <tr id="{!servicesenter.Id}">
+                                    
+                                   <!-- <td scope="row" class="" style="width:3.25rem;">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <label class="slds-checkbox">
+                                                    <ui:inputCheckbox text="{!servicesenter.Id}" aura:id="boxPack" value="" change="{!c.checkboxSelect}"/>
+                                                    <span class=""></span>
+                                                    <span class="slds-form-element__label text"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </td>-->
+                                    <td scope="row">
+                                        <div class="slds-truncate" title="{!servicesenter.Name}"><a>{!servicesenter.Name}</a></div>
+                                    </td>
+                                    
+                                    <td scope="row">
+                                        <div class="slds-truncate" title="{!servicesenter.distance}">{!servicesenter.distance} Km</div>
+                                    </td> 
+                                    <!-- <div class="slds-truncate" title="">{!a.Name}</div> -->
+                                    <td scope="row">
+                                        <lightning:button onclick="{!c.assigntoservicecenter }" class="slds-button slds-button--brand" name="Assign" label="Assign" />
+                                    </td>
+                                    
+                                </tr>  
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+            </div> 
+        </div>
+    </aura:if>
+    <aura:if  isTrue="{!v.ShowErrormessage}"> 
+        <div class="slds-box">
+           <center>
+             <img src="{!$Resource.GreenTick}" width="42" height="42"/>
+               <B>  Service center is assigned.</B> </center>
+             
+        </div>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,849 @@
+<apex:page Controller="Driver_Vehicle_Assigned_Form_Ctrl" lightningStylesheets="true" docType="html-5.0"  showHeader="false" sidebar="false" applyBodyTag="false" applyHtmlTag="false" cache="true" expires="50" language="{!userLanguage}"> 
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"/>
+        <apex:slds />
+        <style>
+            .slds-scope .slds-notify_toast{
+            min-width: 0rem;
+            
+            }
+            .slds-scope .slds-slider__range {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 70%;
+            background: transparent;
+            border-radius: .125rem;
+            }
+        </style>
+        <script>
+        var domain = "{!$Label.Driver_Menu_Domain}";
+        if(!window.location.href.includes(domain))
+            domain = '/apex';
+        var userAgent = navigator.userAgent;
+        var theme = '{!$User.UITheme}';
+        //alert(theme)
+        var foundtheme;
+        if (theme === 'Theme4d' || theme === 'Theme4u'){
+            foundtheme = 'Lightning';
+        } 
+        else if(theme ==='Theme4t'){
+            if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                foundtheme = 'Mobile App';
+            else
+                foundtheme = 'Mobile Browser';
+        }             
+            else {
+                foundtheme = 'Non Lightning';
+            }
+        var fullrecord ;
+        function findicon(field){
+            debugger;
+            //var ffffcg = document.getElementById(field).getAttribute('xlink:href');
+            // var icon = $('[id*='+field+']').attr('xlink:href');
+            var icon = document.getElementById(field).getAttribute('xlink:href');
+            var fieldvalue;
+            // alert(icon);
+            if(icon == '/_slds/icons/utility-sprite/svg/symbols.svg#'){
+                icon = '/_slds/icons/utility-sprite/svg/symbols.svg#check';fieldvalue='Yes';}
+            else if(icon == '/_slds/icons/utility-sprite/svg/symbols.svg#check'){
+                icon = '/_slds/icons/utility-sprite/svg/symbols.svg#close';fieldvalue='No';}
+                else if(icon == '/_slds/icons/utility-sprite/svg/symbols.svg#close')
+                    icon = '/_slds/icons/utility-sprite/svg/symbols.svg#check';
+            document.getElementById(field).setAttribute('xlink:href',icon);
+            // $('[id*='+field+']').attr('xlink:href',icon);
+            $('[id*=VehicleAssignment_'+field+']').val(fieldvalue);
+            //$('[id*=VehicleAssignment_'+field+']').prop('checked',fieldvalue);
+            // alert($('[id*=VehicleAssignment_'+field+']').val());
+            //document.getElementById('VehicleAssignment_'+field).value = fieldvalue;
+            return false;
+        }
+        function showrangeVal(newVal){
+            document.getElementById("rangeinput").innerHTML=newVal;
+            $('[id*=chargingelement_1]').val(newVal);
+        }
+        
+        function showrangeValcheckout(newVal){
+            //   alert('newVal==='+newVal);
+            document.getElementById("rangeinputcheckout").innerHTML=newVal;
+            $('[id*=chargingelement_2]').val(newVal);
+            var t=    '{!VehicleAssignment.Check_Out_Odometer_Reading__c}';
+            //    alert('t==========='+t);
+        }
+        function gotodrivermenu(){
+            // alert('t===========');
+            debugger;
+            var theme = '{!$User.UITheme}';
+            // alert('{!$User.UIThemeDisplayed}');
+            if (theme === 'Theme4d' || theme === 'Theme4u'){
+                sforce.one.navigateToURL(domain+'/DriverMenu');
+            } 
+            else if(theme ==='Theme4t'){
+                if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                    sforce.one.navigateToURL(domain+'/DriverMenu');
+                else
+                    window.location=domain+'/DriverMenu';
+            } 
+                else {
+                    //alert();
+                    //window.history.back();
+                    window.location=domain+'/DriverMenu';
+                    //window.location.href = 'http://www.google.com';
+                    //location.replace ='/apex/DriverMenu';
+                }
+        }
+        function oncompletepopup(){
+            var noerrors = '{!noerrors}';
+            if(noerrors == 'No'){
+                /* if(foundtheme == 'Lightning' || foundtheme == 'Mobile App')
+                    sforce.one.showToast({
+                        "title": "Success!",
+                        "message": '{!$Label.HO_TO_Checklist_Updated_Successfully}',
+                        "type": "Success"
+                    });
+                else
+                    alert('{!$Label.HO_TO_Checklist_Updated_Successfully}');*/
+                showtoast('Success_Toast');
+            }else{
+                showtoast('UnableError_Toast');
+            }
+        }
+        function filespill(result,name){
+            //debugger;
+            $('[id*=spinner1]').hide();
+            $("#filenames1").append("<span class=\"slds-pill slds-pill_link\" id=\""+result+"\"><a href=\"javascript:deletefiles('"+result+"');\" class=\"slds-pill__action\" title=\"Full pill label verbiage mirrored here\"><span class=\"slds-pill__label\">"+name+"</span></a><button class=\"slds-button slds-button_icon slds-button_icon slds-pill__remove\" title=\"Remove\" onclick=\"return deletefiles('"+result+"')\"><svg class=\"slds-button__icon\" aria-hidden=\"true\" ><use xlink:href=\"{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}\"></use></svg><span class=\"slds-assistive-text\">Remove</span></button></span>");
+            var fileids = $('[id$=fileidhidden]').val();
+            if(fileids.length > 1){
+                fileids = fileids +','+ result;}
+            else {
+                fileids = result;}  
+            $('[id$=fileidhidden]').val(fileids);
+            //$('[id$=propertyhidden]').val(result);
+        }
+        function deletefiles(recordid){
+            //alert(recordid);
+            $('[id$='+recordid+']').hide();
+            var str = $('[id$=fileidhidden]').val();
+            str = str.replace(recordid, "");
+            $('[id$=fileidhidden]').val(str);
+            delcontentfiles(recordid);
+            return false;
+        }
+        function updateHOTOList(){
+            // alert();
+            var vehicleassignrecord = '{!VehicleAssignment}';
+            
+            
+            var fileids = $('[id$=fileidhidden]').val();
+            
+            updateassigedrecord(fileids);
+        }
+        var checkin1 ;
+        var checkout1;
+        function updateCheckIn_CheckOutTime(checkin,checkout){
+            debugger;
+            updatechekincheckout(checkin,checkout);
+            checkin1 = checkin,checkout1=checkout;
+        }
+        
+        function updateCheckIn_CheckOutTimeNewPage(checkin,checkout){
+            debugger;
+            $('[id$=Check_Out_Time_output]').val(new Date().toLocaleString());
+            $('[id$=Main_Div]').hide();
+            $('[id$=DivAfterCheckOut]').show();
+            $('[id$=Check_Out_Time]').show();
+            $('[id$=Check_Out_Button]').hide();
+            
+            $('[id$=Check_Out_Time_output]').show();
+            var odometrReading= $('[id$=tz]').val();
+            var chrging= $('[id$=chargingelement_2]').val();
+            console.log('================================================odometrReading'+odometrReading);
+            console.log('================================================chrging'+chrging);
+            //   var temp=   {!VehicleAssignment.Check_Out_Odometer_Reading__c};
+            //   alert('chrging================'+chrging.length);
+            
+            // alert('odometrReading============='+odometrReading.length);
+            //          alert('chrging'+chrging);
+            
+            // alert('odometrReading'+odometrReading);
+            //     alert('odometrReading!= null '+odometrReading!= null );
+            
+            //    alert('odometrReading!= undefined'+odometrReading!= undefined);
+            if(odometrReading!= null && odometrReading!= undefined && chrging!= null && chrging!= undefined && odometrReading && chrging && odometrReading.length>0 && chrging.length>0  ){
+                checkin1 = checkin,checkout1=checkout;
+                updatechekincheckout(checkin,checkout);
+                
+            }else{
+                if( odometrReading.length==0   ){
+                    //  alert('odometrReading========2==========='+odometrReading );
+                     showtoast('Toast_OdometerReading');
+                }
+                if(  chrging.length==0 ){
+                    //   alert('chrging======2 ========='+chrging );
+                     showtoast('Toast_charging');
+                }
+            }
+            
+        }
+        function showhideCheckIn_CheckOutbuttons(checkin,checkout){
+            if(checkin == true)
+                $('[id$=Check_In_Button]').show();
+            else
+                $('[id$=Check_In_Button]').hide();
+            if(checkout == true)
+                $('[id$=Check_Out_Button]').show();
+            else
+                $('[id$=Check_Out_Button]').hide();
+        }
+        function showbody(){
+            //     window.location='https://lithium--uat--c.visualforce.com/apex/DriverMenu?core.apexpages.request.devconsole=1';
+            debugger;
+            var t='{!flag}';
+            
+            //  alert('187'+t);
+            var noerrors = '{!noerrors}';
+            var buttonname = '{!buttonname}';
+            if(noerrors != 'checkincheckouttimeerror'){
+                if(checkin1 == 'true'){
+                    $('[id$=Main_Div]').show();
+                    $('[id$=Back_Button]').hide();
+                    $('[id$=Check_In_Button]').hide();
+                    $('[id$=Check_In_Time]').show();
+                    $('[id$=Check_In_Time_output]').val(new Date().toLocaleString());
+                    showtoast('checkin_Success');
+                    setTimeout(function(){ hidetoast('checkin_Success'); }, 2000);
+                    
+                }
+                else if(checkout1 == 'true'){
+                    
+                    $('[id$=Check_Out_Button]').hide();
+                    $('[id$=Check_Out_Time]').show();
+                    $('[id$=Check_Out_Time_output]').val(new Date().toLocaleString());
+                    $('[id$=Back_Button]').hide();
+                    $('[id$=Main_Div]').hide();
+                    showtoast('CheckOut__Success');
+                    setTimeout(function(){ hidetoast('CheckOut__Success'); }, 2000);
+                    // alert('209');
+                        gotodrivermenu();
+                    
+                }
+            }
+            //   alert('return');
+            return false;
+            
+        }
+        function showtoast(toastid){
+            $('[id$='+toastid+']').show();
+        }
+        function hidetoast(toastid){
+            $('[id$='+toastid+']').hide();
+        }
+        </script>
+        <script type='text/javascript'>
+        var fileLenght=0; 
+        var FileUploading = 0;           
+        var FileUploaded = 0;           
+        var ids = new Array();
+        function uploaddocuments(){
+            debugger;
+            $('[id*=spinner1]').show();
+            var v=document.getElementById('Details_File');               
+            console.log(v.files.length);              
+            fileLenght = v.files.length;              
+            for (var i = 0; i < v.files.length; i++) {             
+                uploadSelectedFile(v.files[i], function(err, res){          
+                    FileUploading += 1;                  
+                    if (FileUploading === FileUploaded){ 
+                        //alert('upload completed');     
+                        //blank input file value                   
+                        document.getElementById('Details_File').value = "";          
+                    }                
+                })               
+            } 
+        }
+        var uploadSelectedFile = function(file, callback) {  
+            //alert(where);
+            filetoBase64(file, function(err, content){  
+                // alert('Content');
+                debugger;
+                var conVer_object = {                  
+                    VersionData : content,                     
+                    PathOnClient : file.name,                     
+                    Title : file.name ,
+                    FirstPublishLocationId  : '{!VehicleAssignment.Id}',
+                    NetworkId : '{!networkid}'
+                };                  
+                $.ajax({ 
+                    
+                    url: '{!$Label.Community_user_file_upload_redirect_url}',                    
+                    data: JSON.stringify(conVer_object ),                
+                    type: 'POST',                 
+                    processData: false,                    
+                    contentType: false,                    
+                    headers: {'Authorization': 'Bearer {!$Api.Session_ID}', 'Content-Type': 'application/json'},                
+                    xhr: function(){                   
+                        var xhr = new window.XMLHttpRequest();                       //Upload progress                      
+                        xhr.upload.addEventListener("progress", function(evt){                     
+                            if (evt.lengthComputable) {  
+                                $('[id*=spinner1]').hide();
+                                $('#progress_bar_container').css('display', 'block');                    
+                                var percentComplete = evt.loaded / evt.total;                      
+                                console.log('percentComplete '+percentComplete );                     
+                                var percentCompletex= percentComplete*100;                          
+                                $('#percentText').html("Uploading. Please wait... "+Math.round(percentCompletex)+"%");      
+                                $('.progress').css('width', percentCompletex+ "%");                         
+                                if(percentCompletex == 100){                           
+                                    $('#progress_bar_container').css('display', 'none');                       
+                                }                      }                     }, false);                     
+                        return xhr;                    },                  
+                    success: function(response) { 
+                        //alert('Success');
+                        FileUploaded += 1;                     
+                        console.log(response.id); 
+                        filespill(response.id,file.name)
+                        // the id of the attachment                     
+                        ids.push(response.id);                      
+                        console.log('Ids: ' +ids);                      
+                        $('#records').html('File has been uploeded. Uploaded File ids: ' +ids);                      
+                        if(fileLenght == FileUploaded ){                      
+                            //calculateLocation(ids.toString());        
+                        }                   
+                        callback(null, true)                  
+                    },
+                    error : function(response) {
+                        alert("Failed" + '{!$Label.Error_found_please_contact_system_admin}');
+                        console.log('log::'+JSON.stringify(response));
+                        console.log('response:'+response.message)
+                    },
+                });                
+            });              
+        }  
+        var filetoBase64 = function(file, callback){ 
+            debugger;
+            var reader = new FileReader();                 
+            reader.onload = function() {                 
+                var myFileContents = reader.result;                  
+                var base64Mark = 'base64,';                  
+                var dataStart = myFileContents.indexOf(base64Mark) + base64Mark.length;       
+                myFileContents = myFileContents.substring(dataStart);               
+                callback(null, myFileContents);  
+                //alert('alert');
+            }              
+            reader.readAsDataURL(file);              
+        }
+        </script>
+        <div class="slds-scope">
+            <div class="demo-only" style="height:4rem; display:none;" id="Success_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+                        <span class="slds-assistive-text">success</span>
+                        <span class="slds-icon_container slds-icon-utility-success slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.HO_TO_Checklist_Updated_Successfully}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Success_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only" style="height:4rem; display:none;" id="Error_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>QuestionaryCalculation
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Unable_to_creating_issue_please_contact_admin}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Error_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only" style="height:4rem; display:none;" id="UnableError_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Error_found_please_contact_system_admin}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('UnableError_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+                        <div class="demo-only" style="height:4rem; display:none;" id="Toast_OdometerReading">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Enter_Odometer_Value}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Toast_OdometerReading');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            
+            
+                                    <div class="demo-only" style="height:4rem; display:none;" id="Toast_charging">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small "> {!$Label.Enter_Charging_Value}  </h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Toast_charging');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div class="demo-only" style="height:4rem; display:none;" id="NoAcceriesError_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.No_Accessory_List_Found}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('NoAcceriesError_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only" style="height:4rem; display:none;" id="checkin_Success">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+                        <span class="slds-assistive-text">success</span>
+                        <span class="slds-icon_container slds-icon-utility-success slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.You_have_checked_in_vehicle}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('checkin_Success');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only" style="height:4rem; display:none;" id="CheckOut__Success">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+                        <span class="slds-assistive-text">success</span>
+                        <span class="slds-icon_container slds-icon-utility-success slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Check_out_the_vehicle}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('CheckOut__Success');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <apex:form >
+                <div class="slds-grid slds-wrap ">
+                    <div class="slds-col slds-size_12-of-12 ">
+                        <apex:pageMessages id="error_mesg"/>
+                        <div class="slds-page-header" style="width: auto;">
+                            <div class="slds-page-header__row">
+                                <div class="slds-page-header__col-title">
+                                    <div class="slds-media">
+                                        <div class="slds-media__figure">
+                                            <span class="slds-icon_container slds-icon-action-google_news" >
+                                                <svg aria-hidden="true" class="slds-icon slds-icon_large" style="fill:orange">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                                         xlink:href="/apexpages/slds/latest/assets/icons/action-sprite/svg/symbols.svg#google_news">
+                                                    </use>
+                                                </svg>
+                                                <span class="slds-assistive-text">custom</span>
+                                            </span>
+                                        </div>
+                                        <div class="slds-media__body">
+                                            <div class="slds-page-header__name">
+                                                <div class="slds-page-header__name-title">
+                                                    <h1>
+                                                        <span class="slds-page-header__title slds-truncate" title="{!$Label.HO_TO_Checklist}">{!$Label.HO_TO_Checklist}</span>
+                                                    </h1>
+                                                </div>
+                                            </div>
+                                            <p class="slds-page-header__name-meta"><apex:outputText value="{!VehicleAssignment.Vehicle__r.Name}"/></p>
+                                            
+                                        </div>
+                                    </div>
+                                    <p class="slds-page-header__name-meta" id="Check_In_Time" style="display:none;">{!$Label.Check_in_time} : <output name="Check_In_Time_output" id="Check_In_Time_output"></output></p>
+                                    <!-- <p class="slds-page-header__name-meta" id="Check_Out_Time" style="display:none;">{!$Label.Check_out_time} :<output name="Check_Out_Time_ouput" id="Check_Out_Time_output"></output></p>-->
+                                    <button class="slds-button slds-button_neutral" id="Check_In_Button" onclick="updateCheckIn_CheckOutTime('true','false');return false;">{!$Label.Check_In}</button>
+                                    <!--  <button class="slds-button slds-button_neutral" id="Check_Out_Button" onclick="updateCheckIn_CheckOutTimeNewPage('false','true');return false;">{!$Label.Check_out}</button>-->
+                                </div>
+                            </div>
+                        </div>
+                        <BR/>
+                        <BR/>
+                        <div id="DivAfterCheckOut" style="display:none;" class="slds-box">
+                            <!--<apex:pageMessages id=""></apex:pageMessages>-->
+                            <div class="slds-form-element">
+                                <div style="font-size: 12px;">
+                                    <b >{!$Label.Odometer_Reading} </b>
+                                </div>
+                                <br/>
+                                <div>
+                                    <apex:inputField type="number" value="{!VehicleAssignment.Check_Out_Odometer_Reading__c}" id="tz"/>
+                                    
+                                </div>
+                                
+                            </div>
+                            
+                            <br/>
+                            <div style="font-size: 12px;">
+                                <b >{!$Label.Charging}</b>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="slider-id-019">
+                                    <span class="slds-slider-label__range">0-100</span>
+                                </label>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-slider">
+                                        <div class="slds-slider slds-size_medium">
+                                            <input type="range" id="slider-id-019" class="slds-slider__range" value="0" onchange="showrangeValcheckout(this.value)"/>
+                                            <span class="slds-slider__value" aria-hidden="true" id="rangeinputcheckout">{!if(VehicleAssignment.Check_Out_Charging__c !=Null,VehicleAssignment.Check_Out_Charging__c,100)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <apex:inputField value="{!VehicleAssignment.Check_Out_Charging__c}" id="chargingelement_2" style="display:none;"/>
+                            </div>
+                            
+                            <br/>
+                            <div>
+                                <apex:commandButton onclick="updateCheckIn_CheckOutTimeNewPage('false','true');return false;" value="{!$Label.Check_out}" styleClass="slds-button slds-button_brand" oncomplete="gotodrivermenu(); return false;"  rerender="error_mesg"/>&nbsp;
+                            </div>
+                        </div>
+                        <div id="Main_Div" style="display:none;" class="slds-box">
+                            <div class="slds-form-element">
+                                <div style="font-size: 12px;">
+                                    <b >{!$Label.Odometer_Reading} </b>
+                                </div>
+                                <apex:inputField type="number" value="{!VehicleAssignment.Odometer_reading__c}" id="form-element-01"/>
+                            </div>
+                            <br/>
+                            <div style="font-size: 12px;">
+                                <b >{!$Label.Charging}</b>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="slider-id-01">
+                                    <span class="slds-slider-label__range">0-100</span>
+                                </label>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-slider">
+                                        <div class="slds-slider slds-size_medium">
+                                            <input type="range" id="slider-id-01" class="slds-slider__range" value="0" onchange="showrangeVal(this.value)"/>
+                                            <span class="slds-slider__value" aria-hidden="true" id="rangeinput">{!if(VehicleAssignment.Charging__c !=Null,VehicleAssignment.Charging__c,100)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <apex:inputField value="{!VehicleAssignment.Charging__c}" id="chargingelement_1" style="display:none;"/>
+                            </div>
+                            
+                            
+                            <br/>
+                            <table width="100%">
+                                <tr><td >
+                                    </td>
+                                    <apex:outputPanel >
+                                        <td >
+                                            <div class="slds-form-element">
+                                                <span class="slds-form-element__label" id="Details_File_Label">{!$Label.Upload_Image_and_Audio}</span>
+                                                <div class="slds-form-element__control">
+                                                    <div class="slds-file-selector slds-file-selector_files ">
+                                                        <div class="slds-file-selector__dropzone">
+                                                            <input type="file" class="slds-file-selector__input slds-assistive-text" id="Details_File" aria-labelledby="Details_File_Label Details_File_Label2" onchange="uploaddocuments();return false;"/>
+                                                            <label class="slds-file-selector__body" for="Details_File" id="Details_File_Label2">
+                                                                <span class="slds-file-selector__button slds-button slds-button_neutral">
+                                                                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                                                        <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#upload')}"></use>
+                                                                    </svg>{!$Label.Upload_Files}</span>
+                                                                <span class="slds-file-selector__text slds-medium-show">{!$Label.or_drop_Files}</span>
+                                                            </label>
+                                                            <div class="spinner-border text-primary" role="status" id="spinner1" style="display:none;">
+                                                                <span class="sr-only">Loading...</span>
+                                                            </div>
+                                                            <div  id="filenames1"/>
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                    <div id="progress_bar_container" style="display:none; padding:10px; width: 50%;">                
+                                                        <span id="percentText"></span>                  
+                                                        <div class="slds-progress-bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" role="progressbar"> 
+                                                            <span class="slds-progress-bar__value progress" style=" width: 0%;">                    
+                                                                <span class="slds-assistive-text">Progress: 25%</span>                     
+                                                            </span>                  
+                                                        </div>                 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </apex:outputPanel>
+                                </tr>                       
+                            </table> 
+                            <br/>
+                            <br/>
+                            
+                            
+                            
+                            <div style="font-size: 15px;">
+                                <b >{!$Label.Accessories} </b>
+                            </div>
+                            <br/>
+                            <apex:repeat value="{!$ObjectType.Vehicle_Assignment__c.fieldsets.Accessory_Mismatch}" var="fieldValue">
+                                
+                                <div style="font-size: 12px; display:none;" class="slds-grid slds-grid--pull-padded" id="{!fieldValue+'_div'}" >
+                                    <div class="slds-col--padded slds-size--2-of-3"><b >{!fieldValue.Label} </b> </div>
+                                    <div class="slds-col--padded ">
+                                        
+                                        <button class="slds-button slds-button_icon slds-button_icon-border-filled not-star-wars" aria-pressed="false" title="Like" onclick="return findicon('{!fieldValue}');">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#')}" id="{!fieldValue}"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Like</span>
+                                        </button>
+                                    </div>
+                                    <br/>
+                                    <br/>
+                                </div>
+                                
+                            </apex:repeat>
+                            
+                            <apex:commandButton onclick="updateHOTOList();" value="{!$Label.Save}" styleClass="slds-button slds-button_brand" oncomplete="gotodrivermenu(); return false;" rerender="error_mesg"/>&nbsp;
+                            <apex:commandButton onclick="gotodrivermenu();return false;" value="{!$Label.Cancel}" styleClass="slds-button slds-button_neutral"/>
+                        </div>
+                        <button class="slds-button slds-button_neutral" id="Back_Button" onclick="gotodrivermenu();return false;">{!$Label.Back}</button>
+                        
+                        
+                    </div></div>
+                <div style="display:none;">
+                    <apex:inputField value="{!VehicleAssignment.Torch__c}" id="VehicleAssignment_Torch__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Spare_Wheel__c}" id="VehicleAssignment_Spare_Wheel__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Physical_Condition_scratches_dents__c}" id="VehicleAssignment_Physical_Condition_scratches_dents__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Branding__c}" id="VehicleAssignment_Branding__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Sleep_Alert__c}" id="VehicleAssignment_Sleep_Alert__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Camera__c}" id="VehicleAssignment_Camera__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Telematics__c}" id="VehicleAssignment_Telematics__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Mobile_Charger__c}" id="VehicleAssignment_Mobile_Charger__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Fire_extinguisher__c}" id="VehicleAssignment_Fire_extinguisher__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Umbrella__c}" id="VehicleAssignment_Umbrella__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Mats__c}" id="VehicleAssignment_Mats__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Perfume__c}" id="VehicleAssignment_Perfume__c"/>
+                    <apex:inputField value="{!VehicleAssignment.First_Aid_kit__c}" id="VehicleAssignment_First_Aid_kit__c"/>
+                    
+                    <apex:inputField value="{!VehicleAssignment.AIS_140_GPS__c}" id="VehicleAssignment_AIS_140_GPS__c"/>
+                    <apex:inputField value="{!VehicleAssignment.AIS_140_Certificate__c}" id="VehicleAssignment_AIS_140_Certificate__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Cleanliness__c}" id="VehicleAssignment_Cleanliness__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Door_Lock_Windows__c}" id="VehicleAssignment_Door_Lock_Windows__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Mirrors__c}" id="VehicleAssignment_Mirrors__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Head_Lights__c}" id="VehicleAssignment_Head_Lights__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Hazard_Lights_Parking_lights__c}" id="VehicleAssignment_Hazard_Lights_Parking_lights__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Charging_Cable__c}" id="VehicleAssignment_Charging_Cable__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Charging_Socket__c}" id="VehicleAssignment_Charging_Socket__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Wipers_Washers_Wiper_Blades__c}" id="VehicleAssignment_Wipers_Washers_Wiper_Blades__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Tyres__c}" id="VehicleAssignment_Tyres__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Triangle__c}" id="VehicleAssignment_Triangle__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Internal_Lights__c}" id="VehicleAssignment_Internal_Lights__c"/>
+                    
+                    <apex:inputField value="{!VehicleAssignment.Brake_Lights__c}" id="VehicleAssignment_Brake_Lights__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Spare_Tyre__c}" id="VehicleAssignment_Spare_Tyre__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Steering__c}" id="VehicleAssignment_Steering__c"/>
+                    <apex:inputField value="{!VehicleAssignment.BrakesHandBrakes__c}" id="VehicleAssignment_BrakesHandBrakes__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Horn__c }" id="VehicleAssignment_Horn__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Head_Restraints__c}" id="VehicleAssignment_Head_Restraints__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Seats__c}" id="VehicleAssignment_Seats__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Safety_Belts__c}" id="VehicleAssignment_Safety_Belts__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Jack__c}" id="VehicleAssignment_Jack__c"/>
+                    <apex:inputField value="{!VehicleAssignment.Jack_Rod__c}" id="VehicleAssignment_Jack_Rod__c"/>
+                    
+                </div>
+                <input type="hidden" value="" id="fileidhidden"/>
+                <apex:actionFunction name="delcontentfiles" action="{!delcontentfiles}" oncomplete="allclear();return false;"  status="status" reRender="none">
+                    <apex:param value="" name="firstParam"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="updateassigedrecord" action="{!updaterecord}" oncomplete="gotodrivermenu();return false;"  status="status" reRender="none">
+                    <apex:param value="" name="fileids"/>
+                </apex:actionFunction>
+                <apex:actionFunction name="updatechekincheckout" action="{!updatechekincheckout}" oncomplete="showbody();return false;"  status="status" reRender="error_mesg">
+                    <apex:param value="" name="fileids1"/>
+                    <apex:param value="" name="fileids2"/>
+                </apex:actionFunction>
+            </apex:form></div>
+        <script>
+        debugger;
+        
+        //var sobject = '{!vehicleassignmentrecord}';
+        var sobject = JSON.parse('{!vehicleassignmentrecord}');
+        var fieldList = JSON.parse('{!fieldsJSON}');
+        var checklistrec = '{!checklistrecord}';
+        if(checklistrec != '' && checklistrec != undefined){
+            var checklist = JSON.parse('{!checklistrecord}');
+            var checklistfileds = JSON.parse('{!checkfiledfieldsJSON}');
+            // console.log('checklist::{!vehicleassignmentrecord}');
+            //console.log('sobject::{!checklistrecord}');
+            // console.log('sofileds::{!fieldsJSON}');
+            // var obj;
+            //setTimeout(function(){
+            debugger;
+            for(var i=0;i<checklistfileds.length;i++){
+                var field = checklistfileds[i];
+                //console.log('sobject :: '+checklist[field]);
+                //console.log('field NAme '+field);
+                if(checklist[field] == 'Yes'){
+                    if(sobject[field] == 'No'){
+                        document.getElementById(field).setAttribute('xlink:href','/_slds/icons/utility-sprite/svg/symbols.svg#close');
+                    }else{
+                        // $('[id*='+field+']').attr('xlink:href','/_slds/icons/utility-sprite/svg/symbols.svg#check');
+                        document.getElementById(field).setAttribute('xlink:href','/_slds/icons/utility-sprite/svg/symbols.svg#check');
+                        var kerid = 'VehicleAssignment_'+field;
+                        console.log(kerid);
+                        //document.getElementById(kerid).value='Yes';
+                        $('[id*=VehicleAssignment_'+field+']').val('Yes');
+                        //var valuef = $('[id*=VehicleAssignment_'+field+']').val();
+                        //console.log(valuef);
+                        
+                    }
+                    $('[id*='+field+'_div]').show();
+                    /* if(obj != undefined)
+                obj += field + ' : Yes ,';
+                else
+                    obj = field + ' : Yes ,';*/
+                    
+                }
+                else{
+                    // $('[id*='+field+']').attr('xlink:href','/_slds/icons/utility-sprite/svg/symbols.svg#');
+                    document.getElementById(field).setAttribute('xlink:href','/_slds/icons/utility-sprite/svg/symbols.svg#close');
+                    //document.getElementById('VehicleAssignment_'+field).value='No';
+                    $('[id*=VehicleAssignment_'+field+']').val('No');
+                    //var valuef = $('[id*=VehicleAssignment_'+field+']').val();
+                    // console.log('else:'+valuef);
+                    $('[id*='+field+'_div]').hide();
+                }
+            }
+            
+        }else
+            showtoast('NoAcceriesError_Toast'); 
+        //  }, 1000);
+        debugger;
+        // obj = obj.substring(0, obj.length - 1);
+        //var  fullrecord1 = '{'+obj+'}';
+        //fullrecord =  JSON.stringify(fullrecord1);
+        debugger;
+        var checkintime = sobject['Check_In_Time__c'];
+        var ceckouttime = sobject['Check_Out_Time__c'];
+        if(checkintime != null && checkintime != undefined && checkintime.length>0){
+            $('[id$=Check_In_Button]').hide();
+            $('[id$=Check_In_Time]').show();
+            $('[id$=Check_In_Time_output]').val(new Date(checkintime).toLocaleString());
+            $('[id$=Main_Div]').hide();
+            $('[id$=Back_Button]').hide();
+            
+            $('[id$=DivAfterCheckOut]').show();
+        }
+        if(ceckouttime != null && ceckouttime != undefined && ceckouttime.length>0){
+            $('[id$=Check_Out_Button]').hide();
+            $('[id$=Check_Out_Time]').show();
+            $('[id$=Check_Out_Time_output]').val(new Date(ceckouttime).toLocaleString());
+            $('[id$=Main_Div]').hide();
+            $('[id$=Back_Button]').show();
+            $('[id$=DivAfterCheckOut]').hide();
+        }
+        if(sobject['Charging__c'] != undefined){
+            document.getElementById("rangeinput").innerHTML=sobject['Charging__c'];
+            $('[id$=slider-id-01]').val(sobject['Charging__c']);}
+        // alert($('[id$=slider-id-01]').val());
+        //if(checklistfileds == undefined && checklistfileds.length == 0)
+        //alert('No Accessory List Found');
+        </script>
+    </html>
+</apex:page>

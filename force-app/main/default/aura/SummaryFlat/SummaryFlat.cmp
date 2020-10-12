@@ -1,0 +1,51 @@
+<aura:component >
+    
+    <aura:attribute name="singleRec" type="list"/>
+    
+    
+    
+    <aura:if  isTrue="{!or(  not(empty( v.singleRec.Trips_per_Day__c )),not(empty( v.singleRec.Price_Trip__c)))}">
+        <tr>
+            <td>
+                
+                <div class="slds-truncate">{!v.singleRec.productName}</div>
+            </td>
+            <td>
+                <div class="slds-truncate">Trip</div>
+            </td>
+            <td>
+                <div class="slds-truncate">Flat-Based</div>
+            </td>
+            
+            <td>
+                <div class="slds-truncate">{!v.singleRec.Trips_per_Day__c}</div>
+            </td>
+            <td>
+            <div class="slds-truncate"><ui:outputCurrency  value="{!v.singleRec.Price_Trip__c}"/></div>
+             
+            </td>
+            
+            <td >
+                <div class = "slds-form-element slds-p-around_small">
+                    
+                    <div class = "slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+                        
+                        
+                        <Lightning:input type = "text" onchange="{!c.check}"    value="{!v.singleRec.Cars_to_be_ordered_for_Current_Pursuit__c}" aura:id="oneD" />
+                        <Lightning:buttonIcon  class = "slds-p-around_small slds-icon slds-input__icon slds-input__icon_right  slds-icon-text-default" iconName = "utility:edit" size = "x-small" />
+                        
+                    </div>
+                    
+                </div>
+            </td>   
+            
+            <td>
+                <ui:outputCurrency  value="{!(v.singleRec.Trips_per_Day__c * v.singleRec.Price_Trip__c) }"/>
+                
+            </td>            
+        </tr>
+    </aura:if>
+    
+    
+    
+</aura:component>

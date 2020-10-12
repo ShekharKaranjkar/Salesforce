@@ -1,0 +1,107 @@
+<aura:component controller="AttendanceApprovalController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" /> 
+    <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <aura:attribute name="Attandance" type="List[]" />
+    <aura:attribute name="ListOfAttendance" type="Attendance__c[]" />
+    <aura:html tag="style">
+        td, th {
+        padding: 5px;
+        }
+    </aura:html>
+   <div class=" slds-p-around_medium">
+                <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+            <div class="slds-media">
+                <div class="slds-media__figure">
+                    <lightning:icon iconName="action:description" alternativeText="Description" title="Description"/>
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Attendance Approval">{!$Label.c.Attendance_History}</h1>
+                </div>
+            </div>
+        </div>
+     <!--   <div  class="slds-grid " style="overflow-x:auto" >
+            <div class="slds-col">
+                <table sytle="line-height: 1.2; width:100%;" >
+                    <thead>
+                        <tr class="slds-text-title_caps">
+                            
+                            <th  >
+                                <div class="slds-truncate" title="Service Center Name"><b>Attendance<br/>Number</b></div>
+                            </th>
+                            <th >
+                                <div class="slds-truncate" title="Service Center Name"><b>Lithium ID</b></div>
+                            </th>
+                            <th >
+                                <div class="slds-truncate" title="Service Center Name"><b>Name</b></div>
+                            </th>
+                            
+                            
+                            <th >
+                                <div class="slds-truncate" title="Location Longitude">In Time</div>
+                            </th>
+                            <th >
+                                <div class="slds-truncate" title="Location Longitude">Status</div>
+                            </th>
+                            <th >
+                                <div class="slds-truncate" title="Action">Approval</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody >
+                        <aura:iteration items="{!v.ListOfAttendance}" var="Attandance">
+                            <br/> <br/>
+                            <c:ChileAttendanceApproval attendance="{!Attandance}" />
+                        </aura:iteration>
+                        
+                    </tbody>
+                </table>
+                
+                
+            </div>
+        </div>
+        
+        
+        
+    </div>-->
+       <div  class="slds-grid " style="overflow-x:auto" >
+    <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered">
+        <thead>
+            <tr class="slds-line-height_reset">
+              <!--  <th class="" scope="col">
+                    <div class="slds-truncate" title="ATTENNUMBER">ATTEN NO</div>
+                </th> -->
+                  <th class="" scope="col">
+                    <div class="slds-truncate" title="STATUS">SELFIE</div>
+                </th>
+                 <th class="" scope="col">
+                    <div class="slds-truncate" title="STATUS">PROFILE</div>
+                </th>
+                <th class="" scope="col">
+                    <div class="slds-truncate" title="LITHIUM ID">LITH ID</div>
+                </th>
+                <th class="" scope="col">
+                    <div class="slds-truncate" title="NAME">NAME</div>
+                </th>
+                <th class="" scope="col">
+                    <div class="slds-truncate" title="IN TIME">IN TIME</div>
+                </th>
+              
+                <th class="" scope="col">
+                    <div class="slds-truncate" title="APPROVAL">APPROVAL</div>
+                </th>
+               
+            </tr>
+        </thead>
+        <tbody>
+           
+                  <aura:iteration items="{!v.ListOfAttendance}" var="Attandance">
+                            
+                            <c:ChileAttendanceApproval attendance="{!Attandance}" />
+                        </aura:iteration>
+
+        </tbody>
+    </table>
+    </div>
+    </div>
+</aura:component>

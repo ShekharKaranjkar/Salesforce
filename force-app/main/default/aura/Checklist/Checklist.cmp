@@ -1,0 +1,856 @@
+<aura:component controller="ChecklistDetails" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,lightning:actionOverride" access="global" > 
+    <aura:attribute name="LookUpRecords3" type="sObject[]" default="[]"/>
+    <aura:attribute name="driverobj" type="sObject[]" />
+    <aura:attribute name="icon" type="String" default="utility:click" />
+    <aura:handler name="oSelecteduserlookupIdEvent" event="c:SelecteduserlookupEvent" action="{!c.handleComponentEvent}"/>
+    <aura:attribute name="overAllTemperature" type="String"/>
+    <aura:attribute name="Vehiclerec" type="Vehicle__c"/>
+    <aura:attribute name="LookUpRecords" type="sObject[]" default="[]"/>
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="parentrecid" type="string" />
+    <aura:attribute name="Current_Location__Latitude__s" type="integer"/>
+    <aura:attribute name="Current_Location__Longitude__s" type="integer"/>
+    <aura:attribute name="driverList" type="Checklist__c" default="{
+                                                                   'AC_Check__c':'',
+                                                                   'Mud_Flaps__c':'',
+                                                                   'Seat_Cover__c':'',
+                                                                   'Headlight_and_Indicator_checks__c':'',
+                                                                   'Break_check__c':'',
+                                                                   'Slow_charging_cable__c':'',
+                                                                   'Physical_Condition_scratches_dents__c':'',
+                                                                   'Stickering__c':'',  
+                                                                   'Spoiler__c':'',
+                                                                   'Fast_Charge_and_Slow_Charge_working__c':'',
+                                                                   'Mirror_check__c':'',
+                                                                   'Power_window_functioning__c':'',
+                                                                   'Jack_Jack_rod_wheel_spanner__c':'',
+                                                                   'From__c':'','To__c':'',
+                                                                   'Driver__c':'',
+                                                                   'WhatId':'',
+                                                                   'Vehicle__c':''
+                                                                   }" access="global"/> 
+    <aura:attribute name="fieldList" type="Checklist__c" default="{
+                                                                  'AC_Check__c':'','Mud_Flaps__c':'','Seat_Cover__c':'','Headlight_and_Indicator_checks__c':'',
+                                                                  'Break_check__c':'','Slow_charging_cable__c':'','Physical_Condition_scratches_dents__c':'',
+                                                                  'Stickering__c':'','Spoiler__c':'','Fast_Charge_and_Slow_Charge_working__c':'',
+                                                                  'Mirror_check__c':'','Power_window_functioning__c':'','Jack_Jack_rod_wheel_spanner__c':'',
+                                                                  }" access="global"/> 
+    <aura:attribute name="MudFlaps" type="List" default="[
+                                                         {'label': '', 'value': 'Satisfactory'}
+                                                         
+                                                         ]"/>
+    <aura:attribute name="MudFlaps1" type="List" default="[
+                                                          {'label': '', 'value': 'Substandard'}
+                                                          
+                                                          ]"/>
+    <aura:attribute name="MudFlaps2" type="List" default="[
+                                                          {'label': '', 'value': 'Not Applicable'}
+                                                          
+                                                          ]"/>
+    <aura:attribute name="SeatCover" type="List" default="[
+                                                          {'label': '', 'value': 'Satisfactory'}
+                                                          
+                                                          ]"/>
+    <aura:attribute name="SeatCover1" type="List" default="[
+                                                           {'label': '', 'value': 'Substandard'}
+                                                           
+                                                           ]"/>
+    <aura:attribute name="SeatCover2" type="List" default="[
+                                                           {'label': '', 'value': 'Not Applicable'}
+                                                           
+                                                           ]"/>
+    <aura:attribute name="ACCheck" type="List" default="[
+                                                        {'label': '', 'value': 'Satisfactory'}
+                                                        
+                                                        ]"/>
+    <aura:attribute name="ACCheck1" type="List" default="[
+                                                         {'label': '', 'value': 'Substandard'}
+                                                         
+                                                         ]"/>
+    <aura:attribute name="ACCheck2" type="List" default="[
+                                                         {'label': '', 'value': 'Not Applicable'}
+                                                         
+                                                         ]"/>
+    <aura:attribute name="HeadlightandIndicator" type="List" default="[
+                                                                      {'label': '', 'value': 'Satisfactory'}
+                                                                      
+                                                                      ]"/>
+    <aura:attribute name="HeadlightandIndicator1" type="List" default="[
+                                                                       {'label': '', 'value': 'Substandard'}
+                                                                       
+                                                                       ]"/>
+    <aura:attribute name="HeadlightandIndicator2" type="List" default="[
+                                                                       {'label': '', 'value': 'Not Applicable'}
+                                                                       
+                                                                       ]"/>
+    <aura:attribute name="Breakcheck" type="List" default="[
+                                                           {'label': '', 'value': 'Satisfactory'}
+                                                           
+                                                           ]"/>
+    <aura:attribute name="Breakcheck1" type="List" default="[
+                                                            {'label': '', 'value': 'Substandard'}
+                                                            
+                                                            ]"/>
+    <aura:attribute name="Breakcheck2" type="List" default="[
+                                                            {'label': '', 'value': 'Not Applicable'}
+                                                            
+                                                            ]"/>
+    <aura:attribute name="Slowchargingcable" type="List" default="[
+                                                                  {'label': '', 'value': 'Satisfactory'}
+                                                                  
+                                                                  ]"/>
+    <aura:attribute name="Slowchargingcable1" type="List" default="[
+                                                                   {'label': '', 'value': 'Substandard'}
+                                                                   
+                                                                   ]"/>
+    <aura:attribute name="Slowchargingcable2" type="List" default="[
+                                                                   {'label': '', 'value': 'Not Applicable'}
+                                                                   
+                                                                   ]"/>
+    <aura:attribute name="PhysicalCondition" type="List" default="[
+                                                                  {'label': '', 'value': 'Satisfactory'}
+                                                                  
+                                                                  ]"/>
+    <aura:attribute name="PhysicalCondition1" type="List" default="[
+                                                                   {'label': '', 'value': 'Substandard'}
+                                                                   
+                                                                   ]"/>
+    <aura:attribute name="PhysicalCondition2" type="List" default="[
+                                                                   {'label': '', 'value': 'Not Applicable'}
+                                                                   
+                                                                   ]"/>
+    <aura:attribute name="Stickering" type="List" default="[
+                                                           {'label': '', 'value': 'Satisfactory'}
+                                                           
+                                                           ]"/>
+    <aura:attribute name="Stickering1" type="List" default="[
+                                                            {'label': '', 'value': 'Substandard'}
+                                                            
+                                                            ]"/>
+    <aura:attribute name="Stickering2" type="List" default="[
+                                                            {'label': '', 'value': 'Not Applicable'}
+                                                            
+                                                            ]"/>
+    <aura:attribute name="Spoiler" type="List" default="[
+                                                        {'label': '', 'value': 'Satisfactory'}
+                                                        
+                                                        ]"/>
+    <aura:attribute name="Spoiler1" type="List" default="[
+                                                         {'label': '', 'value': 'Substandard'}
+                                                         
+                                                         ]"/>
+    <aura:attribute name="Spoiler2" type="List" default="[
+                                                         {'label': '', 'value': 'Not Applicable'}
+                                                         
+                                                         ]"/>
+    <aura:attribute name="FastCharge" type="List" default="[
+                                                           {'label': '', 'value': 'Satisfactory'}
+                                                           
+                                                           ]"/>
+    <aura:attribute name="FastCharge1" type="List" default="[
+                                                            {'label': '', 'value': 'Substandard'}
+                                                            
+                                                            ]"/>
+    <aura:attribute name="FastCharge2" type="List" default="[
+                                                            {'label': '', 'value': 'Not Applicable'}
+                                                            
+                                                            ]"/>
+    <aura:attribute name="Mirrorcheck" type="List" default="[
+                                                            {'label': '', 'value': 'Satisfactory'}
+                                                            
+                                                            ]"/>
+    <aura:attribute name="Mirrorcheck1" type="List" default="[
+                                                             {'label': '', 'value': 'Substandard'}
+                                                             
+                                                             ]"/>
+    <aura:attribute name="Mirrorcheck2" type="List" default="[
+                                                             {'label': '', 'value': 'Not Applicable'}
+                                                             
+                                                             ]"/>
+    <aura:attribute name="Powerwindow" type="List" default="[
+                                                            {'label': '', 'value': 'Satisfactory'}
+                                                            
+                                                            ]"/>
+    <aura:attribute name="Powerwindow1" type="List" default="[
+                                                             {'label': '', 'value': 'Substandard'}
+                                                             
+                                                             ]"/>
+    <aura:attribute name="Powerwindow2" type="List" default="[
+                                                             {'label': '', 'value': 'Not Applicable'}
+                                                             
+                                                             ]"/>
+    <aura:attribute name="Jack" type="List" default="[
+                                                     {'label': '', 'value': 'Satisfactory'}
+                                                     
+                                                     ]"/>
+    <aura:attribute name="Jack1" type="List" default="[
+                                                      {'label': '', 'value': 'Substandard'}
+                                                      
+                                                      ]"/>
+    <aura:attribute name="Jack2" type="List" default="[
+                                                      {'label': '', 'value': 'Not Applicable'}
+                                                      
+                                                      ]"/>
+    <aura:attribute name="radioValue1" type="String" /> 
+    <aura:attribute name="radioValue2" type="String" />
+    <aura:attribute name="radioValue3" type="String" />
+    <aura:attribute name="radioValue4" type="String" />
+    <aura:attribute name="radioValue5" type="String" />
+    <aura:attribute name="radioValue6" type="String" />
+    <aura:attribute name="radioValue7" type="String" />
+    <aura:attribute name="radioValue8" type="String" />
+    <aura:attribute name="radioValue9" type="String" />
+    <aura:attribute name="radioValue10" type="String" />
+    <aura:attribute name="radioValue11" type="String" />
+    <aura:attribute name="radioValue12" type="String" />
+    <aura:attribute name="radioValue13" type="String" />
+    <aura:attribute name="selectedLookUpRecords" type="Vehicle__c" />
+    <aura:attribute name="userobj" type="sObject" default=""/>
+    <aura:handler name="oSelectedServicelookupIdEvent1" event="c:SelectedMultiplelookupEvent" action="{!c.handlemultipleComponentEvent}"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:html tag="style">
+        .slds-modal__header {
+        padding: 0.5rem !important;
+        
+        
+        }
+        .slds-p-around--medium {
+        padding: 2rem !important;
+        }
+        .slds-modal__content{
+        height:unset !important;
+        max-height:unset !important;
+        
+        padding: 0.5rem !important;
+        
+        }
+        .slds-modal__footer{
+        
+        }
+        
+        
+    </aura:html>  
+    
+    <div class="modal-header slds-modal__header slds-size_1-of-1">
+        <b>
+            <h4 class="title slds-text-heading--medium">New Checklist:PDI</h4>
+            
+        </b>
+    </div>
+    <div class="slds-modal__content slds-size_1-of-1 slds-is-relative" aura:id="modalbody" id="modalbody">
+        <form class="slds-form--stacked">
+            <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                
+                <div class="slds-size_1-of-1">
+                    <div class=" slds-box_x-small">
+                        <!-- <b>
+     <div class="slds-truncate"  title="vehicleName">Vehicle</div> 
+        </b> -->                   
+                        <!-- <lightning:pill class="slds-m-around_xx-small" label="{!v.Vehiclerec.Name}" name="{!v.Vehiclerec.Id}" >
+                            <aura:set attribute="media">
+                        <lightning:icon iconName="custom:custom69" size="x-small" alternativeText="icon"/>
+                        </aura:set></lightning:pill>-->
+                        <c:driverLookupResult objectAPIName="Vehicle__c" 
+                                              lstSelectedRecords="{!v.selectedLookUpRecords}"
+                                              placeholder="Enter Search Vehicles.."
+                                              label="Vehicle" IsServiceProvider="false" showvehiclepill="true" userobj="{!v.Vehiclerec}" IconName="custom:custom69"/>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <!-- <div class="slds-list_horizontal">
+                <lightning:input type="datetime" name="input5" label="From" value="{!v.driverList.From__c}"/> 
+                <div class="slds-p-right_xx-large"></div>
+                <lightning:input type="datetime" name="input2" label="To" value="{!v.driverList.To__c}"/>
+            </div>-->
+            <div class="slds-size_1-of-3">
+                <div class=" slds-box_x-small">
+                    <b>
+                        <div class="slds-truncate"  title="Owner">Owner</div> 
+                    </b>
+                    {!v.userobj.Name}
+                    <!--<c:userlookupmultiselect objectAPIName="User"
+                      IconName="standard:user"
+           lstSelectedRecords="{!v.LookUpRecords3}" userobj = "{!v.userobj}" showpill="true"/>-->
+                    
+                </div>
+            </div>
+            <br/>
+            <h3 class="slds-section-title--divider">PDI </h3>
+            <br></br>
+            <div class="slds-scrollable">
+                <table class="slds-table  slds-table_cell-buffer" > 
+                    <thead>
+                        <tr>
+                            <th scope="col" class="slds-size_1-of-4">
+                                <div class="slds-truncate"  title="Exterio">Items</div>
+                            </th>
+                            <th scope="col" class="slds-size_1-of-4">
+                                <div class="slds-truncate"  title="Satisfactory">Satisfactory</div>
+                            </th>
+                            <th scope="col" class="slds-size_1-of-4">
+                                <div class="slds-truncate"  title="Substandard">Substandard</div>
+                            </th>
+                            <th scope="col" class="slds-size_1-of-4">
+                                <div class="slds-truncate"  title="Not Applicable">Not Applicable</div>
+                            </th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>   
+                        <tr>
+                            <td>
+                                Mud Flaps                       
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits"    
+                                                      options="{! v.MudFlaps }"
+                                                      value="{! v.radioValue1 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits1" 
+                                                      
+                                                      options="{! v.MudFlaps1 }"
+                                                      value="{! v.radioValue1 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange }"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits2" 
+                                                      
+                                                      options="{! v.MudFlaps2 }"
+                                                      value="{! v.radioValue1}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange }"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <br/>
+                        </tr>
+                    </tbody>
+                    <tbody>   
+                        <tr>
+                            <td>
+                                Seat Cover                       
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits"    
+                                                      options="{! v.SeatCover }"
+                                                      value="{! v.radioValue2 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange1}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits1" 
+                                                      
+                                                      options="{! v.SeatCover1 }"
+                                                      value="{! v.radioValue2 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange1 }"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits2" 
+                                                      
+                                                      options="{! v.SeatCover2 }"
+                                                      value="{! v.radioValue2}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange1}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <br/>
+                        </tr>
+                    </tbody>
+                    <tbody>   
+                        <tr>
+                            <td>
+                                AC Check                       
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits"    
+                                                      options="{! v.ACCheck }"
+                                                      value="{! v.radioValue3 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange2}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits1" 
+                                                      
+                                                      options="{! v.ACCheck1 }"
+                                                      value="{! v.radioValue3 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange2 }"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits2" 
+                                                      
+                                                      options="{! v.ACCheck2 }"
+                                                      value="{! v.radioValue3}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange2 }"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <br/>
+                        </tr>
+                    </tbody>
+                    <tbody>   
+                        <tr>
+                            <td>
+                                Headlight and Indicator checks                      
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits"    
+                                                      options="{! v.HeadlightandIndicator }"
+                                                      value="{! v.radioValue4}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange3}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits1" 
+                                                      
+                                                      options="{! v.HeadlightandIndicator1 }"
+                                                      value="{! v.radioValue4}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange3}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits2" 
+                                                      
+                                                      options="{! v.HeadlightandIndicator2 }"
+                                                      value="{! v.radioValue4}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange3}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <br/>
+                        </tr>
+                    </tbody>
+                    <tbody>   
+                        <tr>
+                            <td>
+                                Break check                      
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits"    
+                                                      options="{! v.Breakcheck }"
+                                                      value="{! v.radioValue5}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange4}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits1" 
+                                                      
+                                                      options="{! v.Breakcheck1}"
+                                                      value="{! v.radioValue5}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange4}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits2" 
+                                                      
+                                                      options="{! v.Breakcheck2 }"
+                                                      value="{! v.radioValue5}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange4}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <br/>
+                        </tr>
+                    </tbody>
+                    <tbody>   
+                        <tr>
+                            <td>
+                                Slow charging cable                      
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits"    
+                                                      options="{! v.Slowchargingcable }"
+                                                      value="{! v.radioValue6}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange5}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits1" 
+                                                      
+                                                      options="{! v.Slowchargingcable1 }"
+                                                      value="{! v.radioValue6 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange5 }"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits2" 
+                                                      
+                                                      options="{! v.Slowchargingcable2 }"
+                                                      value="{! v.radioValue6}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange5}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <br/>
+                        </tr>
+                    </tbody>
+                    <tbody>   
+                        <tr>
+                            <td>
+                                Physical Condition - scratches,<br/> dents                     
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits"    
+                                                      options="{! v.PhysicalCondition }"
+                                                      value="{! v.radioValue7}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange6}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits1" 
+                                                      
+                                                      options="{! v.PhysicalCondition1 }"
+                                                      value="{! v.radioValue7}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange6}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits2" 
+                                                      
+                                                      options="{! v.PhysicalCondition2 }"
+                                                      value="{! v.radioValue7}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange6}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <br/>
+                        </tr>
+                    </tbody>
+                    <tbody>   
+                        <tr>
+                            <td>
+                                Stickering                      
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits"    
+                                                      options="{! v.Stickering }"
+                                                      value="{! v.radioValue8}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange7}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits1" 
+                                                      
+                                                      options="{! v.Stickering1 }"
+                                                      value="{! v.radioValue8}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange7}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits2" 
+                                                      
+                                                      options="{! v.Stickering2 }"
+                                                      value="{! v.radioValue8}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange7}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <br/>
+                        </tr>
+                    </tbody>
+                    <tbody>   
+                        <tr>
+                            <td>
+                                Spoiler                       
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits"    
+                                                      options="{! v.Spoiler }"
+                                                      value="{! v.radioValue9 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange8}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits1" 
+                                                      
+                                                      options="{! v.Spoiler1 }"
+                                                      value="{! v.radioValue9 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange8 }"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits2" 
+                                                      
+                                                      options="{! v.Spoiler2 }"
+                                                      value="{! v.radioValue9}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange8}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <br/>
+                        </tr>
+                    </tbody>
+                    <tbody>   
+                        <tr>
+                            <td>
+                                Fast Charge and Slow Charge<br/> working                       
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits"    
+                                                      options="{! v.FastCharge }"
+                                                      value="{! v.radioValue10 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange9}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits1" 
+                                                      
+                                                      options="{! v.FastCharge1 }"
+                                                      value="{! v.radioValue10 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange9 }"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits2" 
+                                                      
+                                                      options="{! v.FastCharge2 }"
+                                                      value="{! v.radioValue10}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange9 }"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <br/>
+                        </tr>
+                    </tbody>
+                    <tbody>   
+                        <tr>
+                            <td>
+                                Mirror check                      
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits"    
+                                                      options="{! v.Mirrorcheck }"
+                                                      value="{! v.radioValue11 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange10}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits1" 
+                                                      
+                                                      options="{! v.Mirrorcheck1 }"
+                                                      value="{! v.radioValue11 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange10}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits2" 
+                                                      
+                                                      options="{! v.Mirrorcheck2 }"
+                                                      value="{! v.radioValue11}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange10 }"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <br/>
+                        </tr>
+                    </tbody>
+                    <tbody>   
+                        <tr>
+                            <td>
+                                Power window functioning                       
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits"    
+                                                      options="{! v.Powerwindow }"
+                                                      value="{! v.radioValue12 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange11}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits1" 
+                                                      
+                                                      options="{! v.Powerwindow1 }"
+                                                      value="{! v.radioValue12}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange11}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits2" 
+                                                      
+                                                      options="{! v.Powerwindow2 }"
+                                                      value="{! v.radioValue12}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange11 }"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <br/>
+                        </tr>
+                    </tbody>
+                    <tbody>   
+                        <tr>
+                            <td>
+                                Jack, Jack rod, wheel spanner                     
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits"    
+                                                      options="{! v.Jack }"
+                                                      value="{! v.radioValue13}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange12}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits1" 
+                                                      
+                                                      options="{! v.Jack1 }"
+                                                      value="{! v.radioValue13}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange12}"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits2" 
+                                                      
+                                                      options="{! v.Jack2 }"
+                                                      value="{! v.radioValue13}"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange12 }"
+                                                      class="customRadioCls"
+                                                      />
+                                
+                            </td>
+                            <br/>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="exampleHolder slds-align_absolute-center" size="large">
+                <lightning:spinner aura:id="loadingSpinner" class="slds-hide"/></div>
+            
+        </form>
+    </div>
+    
+    <footer class="slds-modal__footer">
+        <div class="slds-p-right_x-large">
+            <lightning:button variant="brand" 
+                              label="Save"
+                              title="Save"
+                              onclick="{!c.submitmethod}"/>
+            
+            <lightning:button variant="brand" 
+                              label="Cancel"
+                              title="Cancel"
+                              onclick="{!c.doCancel}"/>
+        </div>
+    </footer>
+</aura:component>

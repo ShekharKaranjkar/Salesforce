@@ -1,0 +1,29 @@
+.THIS.indicator:focus { 
+border-radius: 50%;
+border: 1px solid #ddd;
+}
+.THIS.in svg{ 
+ fill:#4BC076; 
+}
+
+.THIS.test svg{ 
+ fill:green; 
+}
+
+.THIS.indicatorred { 
+border-radius: 50% !important;
+border: 15px solid #ef1111 !important;
+}
+.THIS.redOnYellow svg {
+    fill : red;
+}
+.THIS.redOnYellow {
+   background-color:yellow !important;
+}
+
+.THIS.black svg{
+    fill: black;
+}
+.THIS.black {
+    background-color:red !important;
+}

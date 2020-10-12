@@ -1,0 +1,19 @@
+.THIS {
+  background-color: white;
+  height: 100%;
+}
+.THIS lightning-icon.some-indicator > lightning-primitive-icon > svg > use{
+    fill: green;
+}
+.THIS.green svg{
+    fill: green;
+}
+
+.THIS.spinner-img{
+    position: relative;
+    display: inline-block;
+    margin-left: 15px;
+    width: 55px;
+    vertical-align: middle;
+    white-space: nowrap;
+}

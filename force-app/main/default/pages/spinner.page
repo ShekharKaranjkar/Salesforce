@@ -1,0 +1,4 @@
+<apex:page >
+    
+    <c:spinner spinner_name="wave"  spinner_color="red" />
+</apex:page>

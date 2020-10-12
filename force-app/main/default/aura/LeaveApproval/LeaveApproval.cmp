@@ -1,0 +1,58 @@
+<aura:component controller="LeaveApprovalController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" /> 
+    <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <aura:attribute name="Attandance" type="List[]" />
+    <aura:attribute name="ListOfAttendance" type="Attendance__c[]" />
+    <aura:attribute name = "leaveList" type="list" />
+ 
+    <div class=" slds-p-around_medium">
+        <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+            <div class="slds-media">
+                <div class="slds-media__figure">
+                    <lightning:icon iconName="action:description" alternativeText="Description" title="Description"/>
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Leave Approval">EOS Approval</h1>
+                </div>
+            </div>
+        </div>
+        
+        <div  class="slds-grid " style="overflow-x:auto" >
+            <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                       
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="LITHIUM ID">LITH ID</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="NAME">Name</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="NAME">From Date</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="NAME">To Date</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="HISTORY">History</div>
+                        </th>
+                        
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="APPROVAL">Approval</div>
+                        </th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                     <aura:iteration items="{!v.leaveList}" var="Leave">
+                            
+                            <c:LeaveHistoryChild leavRec="{!Leave}" />
+                        </aura:iteration>
+                  
+                </tbody>
+            </table>
+        </div>
+    </div>
+</aura:component>

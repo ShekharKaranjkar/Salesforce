@@ -1,0 +1,229 @@
+<aura:component controller="OperationsEngagementController">
+    <aura:attribute name="mydata" type="Object"/>
+    <aura:attribute name="mycolumns" type="List"/>
+    <aura:attribute name="details" type="Object" access ="public"/>
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:html tag="style">
+        .slds-scope .slds-p-top_large, .slds-scope .slds-p-top--large {
+        padding-top: 0.5rem;
+        }
+       
+        
+    </aura:html>
+    <div class="slds-box">
+        <div class="slds-clearfix slds-m-bottom_small slds-page-header slds-table--header-fixed">
+            <div class="slds-media">
+                 <lightning:icon class="some-indicator slds-p-top_large " variant="info"
+                                iconName="action:back" alternativeText="check" onclick="{!c.backmethod}" size="small" aura:id="fILE_NAMES" style="margin-top: -6px; !important"/>
+               &nbsp; &nbsp; &nbsp;
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Attendance Approval" style="font-size: revert;">Help Desk</h1>
+                </div>
+                <!--<div class="slds-media__figure">
+                    <lightning:icon iconName="action:call" alternativeText="Description" title="Description"/>
+                </div>-->
+            </div>
+        </div>
+        <div style="text-align:center;">
+            <img scr="{!$Resource.Lithiumimg}"/> 
+        </div>
+        <!--<div  class="slds-grid " style="overflow-x:auto" >-->
+        <h2 style="text-align: center;font-size: large;background: #3abeb1;color: white;">Operations</h2>
+        <br/>
+            <div class="slds-scrollable" style="height:18rem;width:auto">
+            <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_cell-buffer slds-table--cell-buffer slds-table_striped slds-table--header-fixed" role="grid">
+                
+                <thead>
+                    <tr class="slds-line-height_reset">
+                         <!--<th class="" scope="col">
+                            <div class="slds-truncate" title="Details">Details</div>
+                        </th>-->
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="City">City</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Shift" style="margin-left: 23px;">Shift</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Contact Name">Contact Name</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Contact Number">Contact Number</div>
+                        </th>
+                       <!-- <th class="" scope="col">
+                            <div class="slds-truncate" title="Contact Name">Contact Name</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Contact Number">Contact Number</div>
+                        </th>-->
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.mycolumns}" var="cusValues">
+                        <tr class="slds-hint-parent">
+                        <!-- <td scope="row">
+                                <div class="slds-truncate">
+                                    <button name="custom" class="slds-button">
+                                     
+                                            <lightning:icon iconName="action:preview" onclick="{!c.openmodule }" size="x-small" alternativeText="Approved" variant="{!cusValues}" />
+                                        
+                                    </button>
+                                </div>
+                            </td> -->
+                            <th data-label="City" scope="row">
+                                <div class="slds-truncate" title="Cloudhub">
+                                    <div class="slds-truncate" title="{!cusValues.City__c}">{!cusValues.City__c}</div>
+                                </div>
+                            </th>
+                            <td data-label="Shift">
+                                <div class="slds-truncate" title="{!cusValues.Shift__c}">{!cusValues.Shift__c}</div>
+                            </td>
+                            <td data-label="Contact Name">
+                                <div class="slds-truncate" title="{!cusValues.Contact_NameO__c}">{!cusValues.Contact_NameO__c}</div>
+                            </td>
+                            <td data-label="Contact Number">
+                                <div class="slds-truncate" title="{!cusValues.Contact_Number__c}"> {!cusValues.Contact_Number__c}</div>
+                            </td>
+                           <!-- <td data-label="Contact Name">
+                                <div class="slds-truncate" title="{!cusValues.Contact_NameE__c}">{!cusValues.Contact_NameE__c}</div>
+                            </td>
+                            <td data-label="Contact Number">
+                                <div class="slds-truncate" title="{!cusValues.Contact_NumberO__c}">{!cusValues.Contact_NumberO__c}</div>
+                            </td>-->
+                            
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+       
+    
+        <br/>
+        <br/>
+        <br/>
+       <!-- <div class="slds-align_absolute-center">
+            <lightning:button label="{!$Label.c.Back}" onclick="{!c.backmethod}" variant="destructive"/> 
+        </div> -->
+        
+        
+        
+         <h2 style="text-align: center;font-size: large;background: #3abeb1;color: white;">Engagement</h2>
+        <br/>
+        <div class="slds-scrollable" style="height:18rem;width:auto">
+            <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table--cell-buffer slds-table_striped" role="grid">
+                <thead>
+                    
+                    <tr class="slds-line-height_reset">
+                         <!--<th class="" scope="col">
+                            <div class="slds-truncate" title="Details">Details</div>
+                        </th>-->
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="City">City</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Shift" style="margin-left: 23px;">Shift</div>
+                        </th>
+                       <!-- <th class="" scope="col">
+                            <div class="slds-truncate" title="Contact Name">Contact Name</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Contact Number">Contact Number</div>
+                        </th>-->
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Contact Name">Contact Name</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Contact Number">Contact Number</div>
+                        </th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.mycolumns}" var="cusValues">
+                        <tr class="slds-hint-parent">
+                        <!-- <td scope="row">
+                                <div class="slds-truncate">
+                                    <button name="custom" class="slds-button">
+                                     
+                                            <lightning:icon iconName="action:preview" onclick="{!c.openmodule }" size="x-small" alternativeText="Approved" variant="{!cusValues}" />
+                                        
+                                    </button>
+                                </div>
+                            </td> -->
+                            <th data-label="City" scope="row">
+                                <div class="slds-truncate" title="Cloudhub">
+                                    <div class="slds-truncate" title="{!cusValues.City__c}">{!cusValues.City__c}</div>
+                                </div>
+                            </th>
+                            <td data-label="Shift">
+                                <div class="slds-truncate" title="{!cusValues.Shift__c}">{!cusValues.Shift__c}</div>
+                            </td>
+                           <!-- <td data-label="Contact Name">
+                                <div class="slds-truncate" title="{!cusValues.Contact_NameO__c}">{!cusValues.Contact_NameO__c}</div>
+                            </td>
+                            <td data-label="Contact Number">
+                                <div class="slds-truncate" title="{!cusValues.Contact_Number__c}"> {!cusValues.Contact_Number__c}</div>
+                            </td>-->
+                            <td data-label="Contact Name">
+                                <div class="slds-truncate" title="{!cusValues.Contact_NameE__c}">{!cusValues.Contact_NameE__c}</div>
+                            </td>
+                            <td data-label="Contact Number">
+                                <div class="slds-truncate" title="{!cusValues.Contact_NumberO__c}">{!cusValues.Contact_NumberO__c} </div>
+                            </td>
+                            
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+       
+    
+        
+        
+          <aura:if isTrue="{!v.isOpen}">
+         <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+               
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModel }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">About Contact Details</h2>
+                </header>
+               
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    
+                    <dl class="slds-list_horizontal slds-wrap">
+                        <dt class="slds-item_label slds-truncate" title="Name">City:</dt>
+                        <dd class="slds-item_detail slds-truncate">{!v.detailslist.City__c} </dd>
+                        <dt class="slds-item_label slds-truncate" title="Phone">Shift:</dt>
+                       <dd class="slds-item_detail slds-truncate">{!v.detailslist.Shift__c}</dd>
+                        <dt class="slds-item_label slds-truncate" title="Type">Conatact Name :</dt>
+                        <dd class="slds-item_detail slds-truncate"></dd>
+                      
+                         <dt class="slds-item_label slds-truncate" title="Type">Conatct Number :</dt>
+                        <dd class="slds-item_detail slds-truncate">  </dd>
+                    </dl>
+                    
+                </div>
+               
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="brand" 
+                                      label="Close"
+                                      title="Close"
+                                      onclick="{! c.closeModel }"/>
+                    
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+      
+        
+    </aura:if>
+    </div>
+    
+</aura:component>

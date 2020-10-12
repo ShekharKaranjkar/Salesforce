@@ -1,0 +1,8 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId" access="global" >
+    <!--Include StreamingApiHandler child component and pass channel name to subscribe
+     ex: "/topic/AccountSpy" is my pushtopic channel name
+	 once the event is fired, it will handled in handleMessage controller method -->
+	<aura:attribute name="recordId" type="String" />
+    <c:StreamingApiHandler channelName="/topic/TaskCompletedTopic" onStreamEvent="{!c.handleMessage}" />
+    
+</aura:component>

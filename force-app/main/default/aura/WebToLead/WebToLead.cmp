@@ -1,0 +1,41 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+<div class="slds-align_absolute-center" >
+    <div>
+   
+            <label class="slds-form-element__label" for="inputNameSample2">First Name</label>
+            <div class="slds-form-element__control">
+              <input id="inputNameSample2" class="slds-input" type="text" />
+            </div>
+          </div>
+          <div class="slds-form-element">
+            <label class="slds-form-element__label" for="inputNameSample3">Last Name</label>
+            <div class="slds-form-element__control">
+              <input id="inputNameSample3" class="slds-input" type="text"  />
+            </div>
+             
+                   <div class="slds-form-element">
+            <label class="slds-form-element__label" for="inputNameSample3">Email</label>
+            <div class="slds-form-element__control">
+              <input id="inputNameSample3" class="slds-input" type="text"  />
+            </div>
+                       <div class="slds-form-element">
+            <label class="slds-form-element__label" for="inputNameSample3">Company</label>
+            <div class="slds-form-element__control">
+              <input id="inputNameSample3" class="slds-input" type="text"  />
+            </div>
+          </div>
+                       <div class="slds-form-element">
+            <label class="slds-form-element__label" for="inputNameSample3">Website</label>
+            <div class="slds-form-element__control">
+              <input id="inputNameSample3" class="slds-input" type="URL"  />
+            </div>
+          </div>
+                       
+          </div>
+          </div>
+          
+   <lightning:button label="Cancel" onclick="{!c.handleCancel}" class="slds-m-top--medium" />
+    <lightning:button label="Submit" onclick="{!c.handleSave}"
+                      variant="brand" class="slds-m-top--medium"/>
+        </div>
+          </aura:component>

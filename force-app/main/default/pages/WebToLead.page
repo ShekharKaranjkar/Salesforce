@@ -1,0 +1,56 @@
+<apex:page standardController="Lead" showHeader="false" sidebar="false" lightningStylesheets="true">
+        <style>
+            body{
+                margin-left:40%;
+            }
+        </style>
+        <apex:slds />
+        <body style="margin-left: 45%;">
+        <div class="slds-form-element" style="inline-size: 250px;">
+            <label class="slds-form-element__label" for="inputNameSample2">First Name</label>
+            <div class="slds-form-element__control">
+                <input id="inputNameSample2" class="slds-input" type="text"  />
+            </div>
+        </div>
+        
+        <div class="slds-form-element" style="inline-size: 250px;">
+            <label class="slds-form-element__label" for="form-element-03">
+                <abbr class="slds-required" title="required">* </abbr>Last Name</label>
+            
+            <div class="slds-form-element__control">
+                <input id="form-element-03" class="slds-input" type="text" required="" />
+            </div>
+        </div>
+        
+        <div class="slds-form-element" style="inline-size: 250px;">
+            <label class="slds-form-element__label" for="inputNameSample2">Mobile</label>
+            <div class="slds-form-element__control">
+                <input id="inputNameSample2" class="slds-input" type="text"  />
+            </div>
+        </div>
+        
+        <div class="slds-form-element" style="inline-size: 250px;">
+            <label class="slds-form-element__label" for="inputNameSample3">Email</label>
+            <div class="slds-form-element__control">
+                <input id="inputNameSample3" class="slds-input" type="text"  />
+            </div>
+        </div>
+        
+        <div class="slds-form-element" style="inline-size: 250px;">
+            <label class="slds-form-element__label" for="inputNameSample3">Company</label>
+            <div class="slds-form-element__control">
+                <input id="inputNameSample3" class="slds-input" type="text"  />
+            </div>
+        </div>
+        
+        <div class="slds-form-element" style="inline-size: 250px;">
+            <label class="slds-form-element__label" for="inputNameSample3">Website</label>
+            <div class="slds-form-element__control">
+                <input id="inputNameSample3" class="slds-input" type="URL"  />
+            </div>
+        </div>
+        <br/>
+   <!-- <button class="slds-button slds-button--neutral slds-grow" style="inline-size: 100px;" title="Cancle" action="{!Cancle}"></button>
+        <button class="slds-button slds-button--neutral slds-grow" style="inline-size: 100px;" title="Cancle" action="{!save}">Submit</button> -->
+   </body>
+</apex:page>

@@ -1,0 +1,306 @@
+<apex:page standardController="Vehicle_Assignment__c" lightningStylesheets="true" extensions="driverphotos"> 
+    <apex:slds />
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"/>
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <script>
+        function findicon(field){
+            var icon = $('[id*='+field+']').attr('xlink:href');
+            var fieldvalue;
+            // alert(icon);
+            if(icon == '/_slds/icons/utility-sprite/svg/symbols.svg#'){
+               icon = '/_slds/icons/utility-sprite/svg/symbols.svg#check';fieldvalue=true;}
+            else if(icon == '/_slds/icons/utility-sprite/svg/symbols.svg#check'){
+                icon = '/_slds/icons/utility-sprite/svg/symbols.svg#close';fieldvalue=false;}
+                else if(icon == '/_slds/icons/utility-sprite/svg/symbols.svg#close')
+                    icon = '/_slds/icons/utility-sprite/svg/symbols.svg#';
+            $('[id*='+field+']').attr('xlink:href',icon);
+            $('[id*=Vehicle_Assignment__c_'+field+']').prop('checked',fieldvalue);
+            // alert($('[id*=Vehicle_Assignment__c_'+field+']').val());
+            //document.getElementById('Vehicle_Assignment__c_'+field).value = fieldvalue;
+            return false;
+        }
+        </script>
+        <apex:form >
+            <apex:pageBlock title="" mode="edit">
+                <div class="slds-page-header">
+                    <div class="slds-page-header__row">
+                        <div class="slds-page-header__col-title">
+                            <div class="slds-media">
+                                <div class="slds-media__figure">
+                                    <span class="slds-icon_container slds-icon-standard-opportunity" title="opportunity">
+                                        <svg class="slds-icon slds-page-header__icon" aria-hidden="true">
+                                            <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#google_news"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">opportunity</span>
+                                    </span>
+                                </div>
+                                <div class="slds-media__body">
+                                    <div class="slds-page-header__name">
+                                        <div class="slds-page-header__name-title">
+                                            <h1>
+                                                <span class="slds-page-header__title slds-truncate" title="Rohde Corp - 80,000 Widgets">HO/TO Checklist</span>
+                                            </h1>
+                                        </div>
+                                    </div>
+                                    <p class="slds-page-header__name-meta"><apex:outputField value="{!Vehicle_Assignment__c.Vehicle__c}"/></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <BR/>
+                <BR/>
+                <div class="slds-form-element">
+                    <div style="font-size: 12px;">
+                        <b >Odometer Reading </b>
+                    </div>
+                    <apex:inputField value="{!Vehicle_Assignment__c.Odometer_reading__c}" id="form-element-01"/>
+                </div>
+                <br/>
+                <div style="font-size: 12px;">
+                    <b >Charging(%)</b>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="slider-id-01">
+                        <span class="slds-slider-label__range">0-100</span>
+                    </label>
+                    <div class="slds-form-element__control">
+                        <div class="slds-slider">
+                            <div class="slds-slider slds-size_medium">
+                                <input type="range" id="slider-id-01" class="slds-slider__range" value="100" />
+                                <span class="slds-slider__value" aria-hidden="true">100</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- <apex:inputField value="{!Vehicle_Assignment__c.Charging__c}" id="stacked-input-id-11"/> -->
+                <div style="font-size: 12px;">
+                    <br/>
+                    <b >Photos</b>
+                </div>
+                <apex:inputTextarea label="Photos" value="{!Vehicle_Assignment__c.Photos__c}"/>
+                <br/>
+                <table width="100%">
+                    <tr><td >
+                        </td>
+                        <apex:outputPanel >
+                            <td >
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-file-selector slds-file-selector_files">
+                                            <div class="slds-file-selector__dropzone">
+                                                <apex:inputFile styleClass="slds-file-selector__input slds-assistive-text" accept=".jpg,jepg,.png,.pdf" id="fileUploadInput011" fileName="" 
+                                                                value="" />  
+                                                <apex:outputLabel styleClass="slds-file-selector__body" for="fileUploadInput011">
+                                                    <span class="slds-file-selector__button slds-button slds-button_neutral">
+                                                        <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true"  width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#upload')}"></use>
+                                                        </svg>Upload Files</span>
+                                                    <span class="slds-file-selector__text slds-medium-show"></span>
+                                                </apex:outputLabel> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </apex:outputPanel>
+                    </tr>                       
+                </table> 
+                <br/>
+                <br/>
+                <div style="font-size: 15px;">
+                    <b >Accessories :) </b>
+                </div>
+                <br/>
+                <div style="font-size: 12px;" class="slds-grid slds-grid--pull-padded">
+                    <div class="slds-col--padded slds-large-size--1-of-3"><b >Torch </b> </div>
+                    <div class="slds-col--padded ">
+                        
+                        <button class="slds-button slds-button_icon slds-button_icon-border-filled not-star-wars" aria-pressed="false" title="Like" onclick="return findicon('Torch__c');">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#')}" id="Torch__c"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Like</span>
+                        </button>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <div style="font-size: 12px;" class="slds-grid slds-grid--pull-padded">
+                    <div class="slds-col--padded slds-size--1-of-3">    <b >Spare Wheel </b>  </div>
+                    <div class="slds-col--padded ">
+                        <button class="slds-button slds-button_icon slds-button_icon-border-filled not-star-wars" aria-pressed="false" title="Like" onclick="return findicon('Spare_Wheel__c');">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#')}" id="Spare_Wheel__c"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Like</span>
+                        </button>
+                    </div>                                                  
+                </div>
+                <br/>
+                <br/>
+                <div style="font-size: 12px;" class="slds-grid slds-grid--pull-padded">
+                    <div class="slds-col--padded slds-size--1-of-3">  <b >Physical Condition - scratches, dents  </b> </div>
+                    <div class="slds-col--padded ">
+                        
+                        <button class="slds-button slds-button_icon slds-button_icon-border-filled not-star-wars" aria-pressed="false" title="Like" onclick="return findicon('Physical_Condition_scratches_dents__c');">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#')}" id="Physical_Condition_scratches_dents__c"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Like</span>
+                        </button>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <div style="font-size: 12px;" class="slds-grid slds-grid--pull-padded">
+                    <div class="slds-col--padded slds-size--1-of-3">  <b >Branding </b> </div>
+                    <div class="slds-col--padded ">
+                        <button class="slds-button slds-button_icon slds-button_icon-border-filled not-star-wars" aria-pressed="false" title="Like" onclick="return findicon('Branding__c');">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#')}" id="Branding__c"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Like</span>
+                        </button>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <div style="font-size: 12px;" class="slds-grid slds-grid--pull-padded">
+                    <div class="slds-col--padded slds-size--1-of-3">     <b >Sleep Alert </b> </div>
+                    <div class="slds-col--padded ">
+                        <button class="slds-button slds-button_icon slds-button_icon-border-filled not-star-wars" aria-pressed="false" title="Like" onclick="return findicon('Sleep_Alert__c');">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#')}" id="Sleep_Alert__c"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Like</span>
+                        </button>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <div style="font-size: 12px;" class="slds-grid slds-grid--pull-padded">
+                    <div class="slds-col--padded slds-size--1-of-3"> <b >Camera </b> </div>
+                    <div class="slds-col--padded ">
+                        <button class="slds-button slds-button_icon slds-button_icon-border-filled not-star-wars" aria-pressed="false" title="Like" onclick="return findicon('Camera__c');">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#')}" id="Camera__c"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Like</span>
+                        </button>
+                    </div>
+                </div>
+                <br/>
+                <br/>  
+                <div style="font-size: 12px;" class="slds-grid slds-grid--pull-padded">
+                    <div class="slds-col--padded slds-size--1-of-3">  <b >Telematics </b></div>
+                    <div class="slds-col--padded ">
+                        <button class="slds-button slds-button_icon slds-button_icon-border-filled not-star-wars" aria-pressed="false" title="Like" onclick="return findicon('Telematics__c');">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#')}" id="Telematics__c"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Like</span>
+                        </button>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <div style="font-size: 12px;" class="slds-grid slds-grid--pull-padded">
+                    <div class="slds-col--padded slds-size--1-of-3">  <b >Mobile Charger </b> </div>
+                    <div class="slds-col--padded ">
+                        <button class="slds-button slds-button_icon slds-button_icon-border-filled not-star-wars" aria-pressed="false" title="Like" onclick="return findicon('Mobile_Charger__c');">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#')}" id="Mobile_Charger__c"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Like</span>
+                        </button>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <div style="font-size: 12px;" class="slds-grid slds-grid--pull-padded">
+                    <div class="slds-col--padded slds-size--1-of-3">   <b >Fire extinguisher  </b> </div>
+                    <div class="slds-col--padded ">
+                        <button class="slds-button slds-button_icon slds-button_icon-border-filled not-star-wars" aria-pressed="false" title="Like" onclick="return findicon('Fire_extinguisher__c');">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#')}" id="Fire_extinguisher__c"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Like</span>
+                        </button>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <div style="font-size: 12px;" class="slds-grid slds-grid--pull-padded">
+                    <div class="slds-col--padded slds-size--1-of-3">  <b >Umbrella </b> </div>
+                    <div class="slds-col--padded ">
+                        <button class="slds-button slds-button_icon slds-button_icon-border-filled not-star-wars" aria-pressed="false" title="Like" onclick="return findicon('Umbrella__c');">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#')}" id="Umbrella__c"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Like</span>
+                        </button>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <div style="font-size: 12px;" class="slds-grid slds-grid--pull-padded">
+                    <div class="slds-col--padded slds-size--1-of-3">  <b >Mats </b> </div>
+                    <div class="slds-col--padded ">
+                        <button class="slds-button slds-button_icon slds-button_icon-border-filled not-star-wars" aria-pressed="false" title="Like" onclick="return findicon('Mats__c');">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#')}" id="Mats__c"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Like</span>
+                        </button>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <div style="font-size: 12px;" class="slds-grid slds-grid--pull-padded">
+                    <div class="slds-col--padded slds-size--1-of-3"><b >Perfume </b> </div>
+                    <div class="slds-col--padded ">
+                        <button class="slds-button slds-button_icon slds-button_icon-border-filled not-star-wars" aria-pressed="false" title="Like" onclick="return findicon('Perfume__c');">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#')}" id="Perfume__c"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Like</span>
+                        </button>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <div style="font-size: 12px;" class="slds-grid slds-grid--pull-padded">
+                    <div class="slds-col--padded slds-size--1-of-3"><b >First-Aid kit </b> </div>
+                    <div class="slds-col--padded ">
+                        <button class="slds-button slds-button_icon slds-button_icon-border-filled not-star-wars" aria-pressed="false" title="Like" onclick="return findicon('First_Aid_kit__c');">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#')}" id="First_Aid_kit__c"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Like</span>
+                        </button>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <apex:commandButton action="{!save}" value="Save"/>
+            </apex:pageBlock>
+            <div style="display:none;">
+                <apex:inputField value="{!Vehicle_Assignment__c.Torch__c}" id="Vehicle_Assignment__c_Torch__c"/>
+                <apex:inputField value="{!Vehicle_Assignment__c.Spare_Wheel__c}" id="Vehicle_Assignment__c_Spare_Wheel__c"/>
+                <apex:inputField value="{!Vehicle_Assignment__c.Physical_Condition_scratches_dents__c}" id="Vehicle_Assignment__c_Physical_Condition_scratches_dents__c"/>
+                <apex:inputField value="{!Vehicle_Assignment__c.Branding__c}" id="Vehicle_Assignment__c_Branding__c"/>
+                <apex:inputField value="{!Vehicle_Assignment__c.Sleep_Alert__c}" id="Vehicle_Assignment__c_Sleep_Alert__c"/>
+                <apex:inputField value="{!Vehicle_Assignment__c.Camera__c}" id="Vehicle_Assignment__c_Camera__c"/>
+                <apex:inputField value="{!Vehicle_Assignment__c.Telematics__c}" id="Vehicle_Assignment__c_Telematics__c"/>
+                <apex:inputField value="{!Vehicle_Assignment__c.Mobile_Charger__c}" id="Vehicle_Assignment__c_Mobile_Charger__c"/>
+                <apex:inputField value="{!Vehicle_Assignment__c.Fire_extinguisher__c}" id="Vehicle_Assignment__c_Fire_extinguisher__c"/>
+                <apex:inputField value="{!Vehicle_Assignment__c.Umbrella__c}" id="Vehicle_Assignment__c_Umbrella__c"/>
+                <apex:inputField value="{!Vehicle_Assignment__c.Mats__c}" id="Vehicle_Assignment__c_Mats__c"/>
+                <apex:inputField value="{!Vehicle_Assignment__c.Perfume__c}" id="Vehicle_Assignment__c_Perfume__c"/>
+                <apex:inputField value="{!Vehicle_Assignment__c.First_Aid_kit__c}" id="Vehicle_Assignment__c_First_Aid_kit__c"/>
+            </div>
+      </apex:form>
+         </html>
+</apex:page>

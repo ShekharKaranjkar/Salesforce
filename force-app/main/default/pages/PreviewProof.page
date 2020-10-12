@@ -1,0 +1,210 @@
+<apex:page lightningStylesheets="true">
+    <apex:slds />
+    <div class="panel slds-modal slds-fade-in-open" aria-labelledby="title_2404:0" aria-describedby="content_2404:0" tabindex="-1" role="dialog" aria-modal="true" data-aura-rendered-by="2420:0">
+	<div class="modal-container slds-modal__container" data-aura-rendered-by="2421:0">
+		<div class="modal-header slds-modal__header empty slds-modal__header--empty" data-aura-rendered-by="2422:0">
+			<!--render facet: 2423:0-->
+			<!--render facet: 2424:0-->
+			<!--render facet: 2425:0-->
+			<!--render facet: 2426:0-->
+		</div>
+		<div class="modal-body scrollable slds-modal__content" id="content_2404:0" data-aura-rendered-by="2427:0" data-scoped-scroll="true">
+			<div class="forceContentBasePreviewPlayer forceContentModalPreviewPlayer" role="dialog" tabindex="-1" data-aura-rendered-by="1995:0" data-aura-class="forceContentBasePreviewPlayer forceContentModalPreviewPlayer">
+				<div role="document" data-aura-rendered-by="1996:0">
+					<div class="toolbar top forceContentBasePreviewToolbar forceContentPreviewPlayerTopToolbar" data-aura-rendered-by="2035:0" data-aura-class="forceContentBasePreviewToolbar forceContentPreviewPlayerTopToolbar">
+						<!--render facet: 2001:0-->
+						<div class="slds-grid slds-grid--align-spread preview-top-toolbar" data-aura-rendered-by="2002:0">
+							<div class="file-preview-title" data-aura-rendered-by="2003:0">
+								<span data-aura-rendered-by="2447:0">
+                                    <lightning-icon class="slds-icon-doctype-image slds-p-right--medium slds-icon_container" data-data-rendering-service-uid="554" data-aura-rendered-by="2449:0"><lightning-primitive-icon lightning-primitiveicon_primitiveicon-host=""><svg lightning-primitiveIcon_primitiveIcon="" focusable="false" data-key="image" aria-hidden="true" class="slds-icon"><use lightning-primitiveIcon_primitiveIcon="" ></use></svg></lightning-primitive-icon><span class="slds-assistive-text">Image file</span>
+								</lightning-icon>
+								</span><span class="slds-truncate uiOutputText" data-aura-rendered-by="2452:0" data-aura-class="uiOutputText">driving.jpg</span>
+							</div>
+							<div class="file-preview-buttons slds-align--absolute-center" data-aura-rendered-by="2005:0">
+								<!-- workaround for W-2413659, remove once that bug is fixed -->
+								<!-- workaround for W-2413659, remove once that bug is fixed -->
+								<!-- workaround for W-2413659, remove once that bug is fixed -->
+								<!--render facet: 2066:0-->
+								<div data-aura-rendered-by="2051:0" class="forceContentPreviewerAction forceContentPreviewerActionsBar forceActionsContainer" data-aura-class="forceContentPreviewerAction forceContentPreviewerActionsBar forceActionsContainer">
+									<div class="slds-truncate" data-aura-rendered-by="2052:0">
+										<!--render facet: 2053:0-->
+										<div class="" data-aura-rendered-by="2054:0">
+											<button class="slds-button slds-button--icon-inverse previewerAction uiButton" aria-live="off" type="button" title="Download" data-aura-rendered-by="2058:0" data-aura-class="uiButton">
+                                                <img class="Download uiButton__icon--left icon bLeft" alt="" src="https://lithium--dev.my.salesforce.com/img/icon/t4v35/action/download_120.png" data-aura-rendered-by="2060:0"/><span class=" label bBody" dir="ltr" data-aura-rendered-by="2062:0">Download</span>
+												<!--render facet: 2056:0-->
+											</button>
+										</div>
+									</div>
+								</div>
+								<!-- workaround for W-2413659, remove once that bug is fixed -->
+								<!--render facet: 2087:0-->
+								<div data-aura-rendered-by="2072:0" class="forceContentPreviewerAction forceContentPreviewerActionsBar forceActionsContainer" data-aura-class="forceContentPreviewerAction forceContentPreviewerActionsBar forceActionsContainer">
+									<div class="slds-truncate" data-aura-rendered-by="2073:0">
+										<!--render facet: 2074:0-->
+										<div class="" data-aura-rendered-by="2075:0">
+											<button class="slds-button slds-button--icon-inverse previewerAction uiButton" aria-live="off" type="button" title="Share" data-aura-rendered-by="2079:0" data-aura-class="uiButton">
+                                                <img class="Share uiButton__icon--left icon bLeft" alt="" src="https://lithium--dev.my.salesforce.com/img/icon/t4v35/action/share_120.png" data-aura-rendered-by="2081:0"/><span class=" label bBody" dir="ltr" data-aura-rendered-by="2083:0">Share</span>
+												<!--render facet: 2077:0-->
+											</button>
+										</div>
+									</div>
+								</div>
+								<!-- workaround for W-2413659, remove once that bug is fixed -->
+								<!--render facet: 2108:0-->
+								<div data-aura-rendered-by="2093:0" class="forceContentPreviewerAction forceContentPreviewerActionsBar forceActionsContainer" data-aura-class="forceContentPreviewerAction forceContentPreviewerActionsBar forceActionsContainer">
+									<div class="slds-truncate" data-aura-rendered-by="2094:0">
+										<!--render facet: 2095:0-->
+										<div class="" data-aura-rendered-by="2096:0">
+											<button class="slds-button slds-button--icon-inverse previewerAction uiButton" aria-live="off" type="button" title="Public Link" data-aura-rendered-by="2100:0" data-aura-class="uiButton">
+                                                <img class="Public Link uiButton__icon--left icon bLeft" alt="" src="https://lithium--dev.my.salesforce.com/img/icon/t4v35/action/share_link_120.png" data-aura-rendered-by="2102:0"/><span class=" label bBody" dir="ltr" data-aura-rendered-by="2104:0">Public Link</span>
+												<!--render facet: 2098:0-->
+											</button>
+										</div>
+									</div>
+								</div>
+								<div class="slds-p-top_xx-small slds-p-left_small forceContentPreviewerActionsBar forceActionsContainer" data-aura-rendered-by="2199:0" data-aura-class="forceContentPreviewerActionsBar forceActionsContainer">
+									<div class="slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open uiMenu" data-aura-rendered-by="2254:0" data-aura-class="uiMenu">
+										<div id="2201:0" data-aura-rendered-by="2213:0" class="uiPopupTrigger" data-aura-class="uiPopupTrigger" data-interactive-uid="10">
+											<div data-aura-rendered-by="2215:0">
+												<div data-aura-rendered-by="2208:0">
+													<a class="menuButton slds-button_icon-border-inverse slds-button slds-button_icon-inverse slds-button_icon-border-filled         slds-button_icon-x-small slds-p-right_xxx-small" aria-disabled="false" aria-describedby="" aria-haspopup="true" tabindex="0" role="button" title="Show More" data-aura-rendered-by="2209:0" href="javascript:void(0);">
+														<lightning-icon class="slds-button__icon slds-icon-utility-down slds-icon_container forceIcon" data-data-rendering-service-uid="541" data-aura-rendered-by="2204:0" data-aura-class="forceIcon">
+															<lightning-primitive-icon lightning-primitiveicon_primitiveicon-host="">
+																<svg lightning-primitiveIcon_primitiveIcon="" focusable="false" data-key="down" aria-hidden="true" class="slds-icon slds-icon_xx-small">
+																	<use lightning-primitiveIcon_primitiveIcon="" ></use>
+																</svg>
+															</lightning-primitive-icon>
+														</lightning-icon><span class="assistiveText" data-aura-rendered-by="2205:0">Show More</span>
+													</a>
+												</div>
+											</div>
+										</div>
+										<div class="popupTargetContainer uiPopupTarget uiMenuList uiMenuList--left uiMenuList--default" data-aura-rendered-by="2249:0" data-aura-class="uiPopupTarget uiMenuList uiMenuList--left uiMenuList--default" aria-labelledby="2201:0">
+											<div role="menu" data-aura-rendered-by="2243:0">
+												<!--render facet: 2244:0-->
+												<ul class="scrollable" role="presentation" data-aura-rendered-by="2245:0" data-scoped-scroll="true">
+													<!--render facet: 2246:0-->
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--render facet: 2007:0-->
+							</div>
+							<div class="file-preview-close slds-align-right" data-aura-rendered-by="2008:0"><span class="preview-close-text slds-truncate uiOutputText" data-aura-rendered-by="2011:0" data-aura-class="uiOutputText">driving.jpg</span>
+								<!--render facet: 2030:0-->
+								<div data-aura-rendered-by="2017:0" class="forceContentPreviewerAction" data-aura-class="forceContentPreviewerAction">
+									<div class="slds-truncate" data-aura-rendered-by="2018:0">
+										<!--render facet: 2019:0-->
+										<div class="" data-aura-rendered-by="2020:0">
+											<button class="slds-button slds-button--icon-inverse staticActionButton uiButton" aria-live="off" type="button" title="Close" data-aura-rendered-by="2024:0" data-aura-class="uiButton">
+                                                <img class="Close icon bLeft" alt="" src="/auraFW/resources/aura/s.gif" data-aura-rendered-by="2039:0"/><span class="assistiveText" data-aura-rendered-by="2037:0">Close</span>
+												<lightning-icon class="slds-button__icon slds-icon-utility-close slds-icon_container forceIcon" data-data-rendering-service-uid="542" data-aura-rendered-by="2015:0" data-aura-class="forceIcon">
+													<lightning-primitive-icon lightning-primitiveicon_primitiveicon-host="">
+														<svg lightning-primitiveIcon_primitiveIcon="" focusable="false" data-key="close" aria-hidden="true" class="slds-icon slds-icon_xx-small">
+															<use lightning-primitiveIcon_primitiveIcon="" ></use>
+														</svg>
+													</lightning-primitive-icon>
+												</lightning-icon>
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="toolbar center previousFile hidden forceContentBasePreviewToolbar" data-aura-rendered-by="2270:0" data-aura-class="forceContentBasePreviewToolbar">
+						<button class="slds-button slds-button--neutral uiButton--neutral uiButton" aria-live="off" type="button" data-aura-rendered-by="2262:0" data-aura-class="uiButton--neutral uiButton">
+							<!--render facet: 2263:0--><span class="assistiveText" data-aura-rendered-by="2266:0">Previous file</span>
+							<lightning-icon class="slds-button__icon slds-icon-utility-chevronleft slds-icon_container forceIcon" data-data-rendering-service-uid="543" data-aura-rendered-by="2260:0" data-aura-class="forceIcon">
+								<lightning-primitive-icon lightning-primitiveicon_primitiveicon-host="">
+									<svg lightning-primitiveIcon_primitiveIcon="" focusable="false" data-key="chevronleft" aria-hidden="true" class="slds-icon slds-icon_xx-small">
+										<use lightning-primitiveIcon_primitiveIcon="" ></use>
+									</svg>
+								</lightning-primitive-icon>
+							</lightning-icon>
+						</button>
+					</div>
+					<div class="toolbar center nextFile hidden forceContentBasePreviewToolbar" data-aura-rendered-by="2286:0" data-aura-class="forceContentBasePreviewToolbar">
+						<button class="slds-button slds-button--neutral uiButton--neutral uiButton" aria-live="off" type="button" data-aura-rendered-by="2278:0" data-aura-class="uiButton--neutral uiButton">
+							<!--render facet: 2279:0--><span class="assistiveText" data-aura-rendered-by="2282:0">Next file</span>
+							<lightning-icon class="slds-button__icon slds-icon-utility-chevronright slds-icon_container forceIcon" data-data-rendering-service-uid="544" data-aura-rendered-by="2276:0" data-aura-class="forceIcon">
+								<lightning-primitive-icon lightning-primitiveicon_primitiveicon-host="">
+									<svg lightning-primitiveIcon_primitiveIcon="" focusable="false" data-key="chevronright" aria-hidden="true" class="slds-icon slds-icon_xx-small">
+										<use lightning-primitiveIcon_primitiveIcon="" ></use>
+									</svg>
+								</lightning-primitive-icon>
+							</lightning-icon>
+						</button>
+					</div>
+					<div class="toolbar bottom hidden forceContentBasePreviewToolbar" data-aura-rendered-by="2360:0" data-aura-class="forceContentBasePreviewToolbar">
+						<div class="paging" data-aura-rendered-by="2290:0">
+							<button class="slds-button slds-button--neutral uiButton--neutral uiButton" aria-live="off" type="button" data-aura-rendered-by="2296:0" data-aura-class="uiButton--neutral uiButton">
+								<!--render facet: 2297:0--><span class="assistiveText" data-aura-rendered-by="2300:0">Previous Page</span>
+								<lightning-icon class="slds-button__icon slds-icon-utility-up slds-icon_container forceIcon" data-data-rendering-service-uid="545" data-aura-rendered-by="2294:0" data-aura-class="forceIcon">
+									<lightning-primitive-icon lightning-primitiveicon_primitiveicon-host="">
+										<svg lightning-primitiveIcon_primitiveIcon="" focusable="false" data-key="up" aria-hidden="true" class="slds-icon slds-icon_xx-small">
+											<use lightning-primitiveIcon_primitiveIcon=""></use>
+										</svg>
+									</lightning-primitive-icon>
+								</lightning-icon>
+							</button>
+							<label class="uiLabel" for="" data-aura-rendered-by="2323:0" data-aura-class="uiLabel"><span class="" data-aura-rendered-by="2324:0"></span>Page
+                                <input class="input  uiInputSmartNumber uiInput uiInputNumber uiInput--default uiInput--input" min="1" id="2307:0" max="1" step="1" type="text" aria-describedby="" placeholder="" data-aura-rendered-by="2313:0" data-aura-class="uiInputSmartNumber uiInput uiInputNumber uiInput--default uiInput--input" data-interactive-lib-uid="8"/>
+								<!--render facet: 2316:0--><span class="ofY" data-aura-rendered-by="2317:0">of 1</span>
+								<!--render facet: 2327:0-->
+							</label>
+							<button class="slds-button slds-button--neutral uiButton--neutral uiButton" aria-live="off" type="button" data-aura-rendered-by="2333:0" data-aura-class="uiButton--neutral uiButton">
+								<!--render facet: 2334:0--><span class="assistiveText" data-aura-rendered-by="2337:0">Next Page</span>
+								<lightning-icon class="slds-button__icon slds-icon-utility-down slds-icon_container forceIcon" data-data-rendering-service-uid="546" data-aura-rendered-by="2331:0" data-aura-class="forceIcon">
+									<lightning-primitive-icon lightning-primitiveicon_primitiveicon-host="">
+										<svg lightning-primitiveIcon_primitiveIcon="" focusable="false" data-key="down" aria-hidden="true" class="slds-icon slds-icon_xx-small">
+											<use lightning-primitiveIcon_primitiveIcon="" ></use>
+										</svg>
+									</lightning-primitive-icon>
+								</lightning-icon>
+							</button>
+							<button class="slds-button slds-button--neutral uiButton--neutral uiButton" aria-live="off" type="button" data-aura-rendered-by="2351:0" data-aura-class="uiButton--neutral uiButton">
+								<!--render facet: 2352:0--><span class="assistiveText" data-aura-rendered-by="2355:0">Full Screen</span>
+								<lightning-icon class="slds-button__icon slds-icon-utility-expand slds-icon_container forceIcon" data-data-rendering-service-uid="547" data-aura-rendered-by="2345:0" data-aura-class="forceIcon">
+									<lightning-primitive-icon lightning-primitiveicon_primitiveicon-host="">
+										<svg lightning-primitiveIcon_primitiveIcon="" focusable="false" data-key="expand" aria-hidden="true" class="slds-icon slds-icon_xx-small">
+											<use lightning-primitiveIcon_primitiveIcon="" ></use>
+										</svg>
+									</lightning-primitive-icon>
+								</lightning-icon>
+							</button>
+						</div>
+					</div>
+					<div class="AVAILABLE preview" data-aura-rendered-by="2362:0">
+						<!--render facet: 3:1599;a-->
+						<div class="thumbnail forceContentThumbnailPreview" data-aura-rendered-by="5:1599;a" data-aura-class="forceContentThumbnailPreview">
+							<div class="loaded page tall">
+                                <img src="https://lithium--dev--c.documentforce.com/sfc/servlet.shepherd/version/renditionDownload?rendition=ORIGINAL_Jpg&amp;versionId=0685D000000ccFl&amp;operationContext=CHATTER&amp;contentId=05T5D000001fUOd" alt="driving.jpg" class="pageImg"/>
+							</div>
+						</div>
+						<div class="hidden forceContentPreviewStatus" id="previewStatus" data-aura-rendered-by="2366:0" data-aura-class="forceContentPreviewStatus">
+							<p class=" previewStatusHeader" data-aura-rendered-by="2367:0"><span data-aura-rendered-by="2370:0" class="uiOutputText" data-aura-class="uiOutputText">Loading preview...</span>
+							</p>
+							<!--unrender facet: 2371:0-->
+							<p class="previewStatusSubHeader slds-p-horizontal_x-large" data-aura-rendered-by="2376:0"><span data-aura-rendered-by="2379:0" class="uiOutputText" data-aura-class="uiOutputText"></span>
+							</p>
+							<!--render facet: 2374:0-->
+						</div>
+					</div>
+				</div>
+				<div class="hideEl forceToast" role="alert" data-aura-rendered-by="2383:0" data-aura-class="forceToast">
+					<div class="toastAction" data-aura-rendered-by="2384:0"><span class="assistiveText" data-aura-rendered-by="2385:0">Toast notifications</span>
+						<!--render facet: 2387:0-->
+						<div class="toastBody" data-aura-rendered-by="2389:0"><span class="toastTitle uiOutputText" data-aura-rendered-by="2392:0" data-aura-class="uiOutputText"></span><span class="toastMsg uiOutputText forceActionsText" data-aura-rendered-by="2397:0" data-aura-class="forceActionsText"><!--render facet: 2398:0--></span>
+						</div>
+					</div>
+					<!--render facet: 2399:0-->
+				</div>
+			</div>
+			<!--render facet: 2402:0-->
+		</div>
+		<!--render facet: 2429:0-->
+	</div>
+</div>
+</apex:page>

@@ -1,0 +1,842 @@
+<apex:page docType="html-5.0"  showHeader="false" sidebar="false" applyBodyTag="false" applyHtmlTag="false" cache="true" expires="50" controller="DriverMenuCtrl" language="{!userLanguage}">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+        <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"/>
+        <apex:includeScript value="https://code.jquery.com/jquery-1.11.3.js"/>
+    <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+        <script src="../../soap/ajax/47.0/connection.js"
+          type="text/javascript"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZ8uKxhI8yZBfJPqL7J3ZLqA_FjhVkLaw&libraries=places"
+    async="" defer=""></script>
+        <apex:slds />
+        <style>
+        .slds-scope .slds-notify_toast{
+             min-width: 0rem;
+        }
+        </style>
+        <script>
+        /* navigator.geolocation.getCurrentPosition(
+
+    // Success callback
+    function(position) {
+
+        /*
+        position is an object containing various information about
+        the acquired device location:
+
+        position = {
+            coords: {
+                latitude - Geographical latitude in decimal degrees.
+                longitude - Geographical longitude in decimal degrees. 
+                altitude - Height in meters relative to sea level.
+                accuracy - Possible error margin for the coordinates in meters. 
+                altitudeAccuracy - Possible error margin for the altitude in meters. 
+                heading - The direction of the device in degrees relative to north. 
+                speed - The velocity of the device in meters per second.
+            }
+            timestamp - The time at which the location was retrieved.
+        }
+        */
+
+        //},
+
+    // Optional error callback
+        /*function(error){
+
+        /* 
+        In the error object is stored the reason for the failed attempt:
+
+        error = {
+            code - Error code representing the type of error 
+                    1 - PERMISSION_DENIED
+                    2 - POSITION_UNAVAILABLE
+                    3 - TIMEOUT
+
+            message - Details about the error in human-readable format.
+        }
+        */
+
+        /* }
+);*/
+        var issuepriority = '{!$CurrentPage.parameters.priority}';
+        var issuecategory = '{!$CurrentPage.parameters.category}';
+        //alert(issuecategory);
+        var domain = "{!$Label.Driver_Menu_Domain}";
+        if(!window.location.href.includes(domain))
+            domain = '';
+        var userAgent = navigator.userAgent;
+                var theme = '{!$User.UITheme}';
+        var foundtheme;
+             if (theme === 'Theme4d' || theme === 'Theme4u'){
+                foundtheme = 'Lightning';
+            } 
+            else if(theme ==='Theme4t'){
+            if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                foundtheme = 'Mobile App';
+                else
+               foundtheme = 'Mobile Browser';
+                     }             
+            else {
+                foundtheme = 'Non Lightning';
+            }
+        function createrecord(){
+            debugger;
+            var issuewith = '{!issuewith}';
+            var inputfileids = $('[id$=fileidhidden]').val();
+            var latitude =  document.getElementById('f').value;
+            var longitude = document.getElementById('long').value;
+            if(latitude.length == 0 || latitude == undefined || longitude.length == 0 || longitude == undefined){
+            showtoast('Location_Not_Found_Toast');
+                        setTimeout(function(){ hidetoast('Location_Not_Found_Toast'); }, 1000);
+            }else{
+            var objectname = 'ServiceRequest';
+            var serviceprovider = '{!VehicleAssignment.Service_Provider__c}';
+            var vehicle = '{!VehicleAssignment.Vehicle__c}';
+            var vehicleassignid = '{!VehicleAssignment.Id}';
+            var request = {'issuewith': issuewith,'inputfileids':inputfileids,'latitude':latitude,'longitude':longitude,'requesttype':'Vehicle Replacement','vehicleassignid':vehicleassignid,
+                           'objectname':objectname,'serviceprovider':serviceprovider,'vehicle':vehicle,'RecordtypeName':'BreakDown','issuecategory':issuecategory,'issuepriority':issuepriority};
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.DriverMenuCtrl.createisseus}',
+                request,
+                function(result, event) {
+                    console.log(result);
+                    if(event.type === 'exception') {
+                        showtoast('Error_Toast');
+                        console.log("exception");
+                        console.log(event);
+                    } else if(event.status) {
+                       showtoast('Success_Toast');
+                        setTimeout(function(){ gotodrivermenu(); }, 1000);
+                    } else {
+                        console.log(event.message);
+                        showtoast('Error_Toast');
+                    }
+                },
+                {buffer: true, escape: true, timeout: 120000}
+            );
+                }
+        }
+         function filespill(result,name){
+            //debugger;
+            $('[id*=spinner1]').hide();
+            $("#filenames1").append("<span class=\"slds-pill slds-pill_link\" id=\""+result+"\"><a href=\"javascript:deletefiles('"+result+"');\" class=\"slds-pill__action\" title=\"Full pill label verbiage mirrored here\"><span class=\"slds-pill__label\">"+name+"</span></a><button class=\"slds-button slds-button_icon slds-button_icon slds-pill__remove\" title=\"Remove\" onclick=\"return deletefiles('"+result+"')\"><svg class=\"slds-button__icon\" aria-hidden=\"true\" ><use xlink:href=\"{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}\"></use></svg><span class=\"slds-assistive-text\">Remove</span></button></span>");
+            var fileids = $('[id$=fileidhidden]').val();
+            if(fileids.length > 1){
+                fileids = fileids +','+ result;}
+            else {
+                fileids = result;}  
+            $('[id$=fileidhidden]').val(fileids);
+            //$('[id$=propertyhidden]').val(result);
+        }
+        function deletefiles(recordid){
+            //alert(recordid);
+            $('[id$='+recordid+']').hide();
+            var str = $('[id$=fileidhidden]').val();
+            str = str.replace(recordid, "");
+            $('[id$=fileidhidden]').val(str);
+            delcontentfiles(recordid);
+            return false;
+        }
+        function gotodrivermenu(){
+            var theme = '{!$User.UITheme}';
+            // alert('{!$User.UIThemeDisplayed}');
+            if (theme === 'Theme4d' || theme === 'Theme4u'){
+                sforce.one.navigateToURL(domain+'/apex/DriverMenu?panelname=Driver_Breakdown_On_Spot_Repair');
+            } 
+            else if(theme ==='Theme4t'){
+            if(userAgent.includes("SalesforceMoblieSDK") || userAgent.includes("Salesforce1"))
+                sforce.one.navigateToURL(domain+'/apex/DriverMenu?panelname=Driver_Breakdown_On_Spot_Repair');
+                else
+               window.location=domain+'/apex/DriverMenu?panelname=Driver_Breakdown_On_Spot_Repair';
+                     } 
+            else {
+                window.location=domain+'/apex/DriverMenu?panelname=Driver_Breakdown_On_Spot_Repair';
+            }
+        }
+        function showtoast(toastid){
+            $('[id$='+toastid+']').show();
+        }
+        function hidetoast(toastid){
+            $('[id$='+toastid+']').hide();
+        }
+        </script>
+                     
+        <script type='text/javascript'>
+            var fileLenght=0; 
+            var FileUploading = 0;           
+            var FileUploaded = 0;           
+            var ids = new Array();
+            function uploaddocuments(){
+                 debugger;
+                $('[id*=spinner1]').show();
+                var v=document.getElementById('Breakdown_File');               
+                console.log(v.files.length);              
+                fileLenght = v.files.length;              
+                for (var i = 0; i < v.files.length; i++) {             
+                    uploadSelectedFile(v.files[i], function(err, res){          
+                        FileUploading += 1;                  
+                        if (FileUploading === FileUploaded){ 
+                            //alert('upload completed');     
+                            //blank input file value                   
+                            document.getElementById('Breakdown_File').value = "";          
+                        }                
+                    })               
+                } 
+            }
+            var uploadSelectedFile = function(file, callback) {  
+                //alert(where);
+                filetoBase64(file, function(err, content){  
+                    // alert('Content');
+                    var conVer_object = {                  
+                        VersionData : content,                     
+                        PathOnClient : file.name,                     
+                        Title : file.name ,
+                        FirstPublishLocationId  : '{!VehicleAssignment.Id}',
+                        NetworkId : '{!networkid}'
+                    };                  
+                    $.ajax({ 
+                        
+                        url: '{!$Label.Community_user_file_upload_redirect_url}',                    
+                        data: JSON.stringify(conVer_object ),                
+                        type: 'POST',                 
+                        processData: false,                    
+                        contentType: false,                    
+                        headers: {'Authorization': 'Bearer {!$Api.Session_ID}', 'Content-Type': 'application/json'},                
+                        xhr: function(){                   
+                            var xhr = new window.XMLHttpRequest();                       //Upload progress                      
+                            xhr.upload.addEventListener("progress", function(evt){                     
+                                if (evt.lengthComputable) {  
+                                    $('[id*=spinner1]').hide();
+                                    $('#progress_bar_container').css('display', 'block');                    
+                                    var percentComplete = evt.loaded / evt.total;                      
+                                    console.log('percentComplete '+percentComplete );                     
+                                    var percentCompletex= percentComplete*100;                          
+                                    $('#percentText').html("Uploading. Please wait... "+Math.round(percentCompletex)+"%");      
+                                    $('.progress').css('width', percentCompletex+ "%");                         
+                                    if(percentCompletex == 100){                           
+                                        $('#progress_bar_container').css('display', 'none');                       
+                                    }                      }                     }, false);                     
+                            return xhr;                    },                  
+                        success: function(response) { 
+                            // alert('Success');
+                            FileUploaded += 1;                     
+                            console.log(response.id); 
+                            filespill(response.id,file.name)
+                            // the id of the attachment                     
+                            ids.push(response.id);                      
+                            console.log('Ids: ' +ids);                      
+                            $('#records').html('File has been uploeded. Uploaded File ids: ' +ids);                      
+                            if(fileLenght == FileUploaded ){                      
+                                //calculateLocation(ids.toString());        
+                            }                   
+                            callback(null, true)                  
+                        },
+                        error : function(response) {
+                            showtoast('UnableError_Toast');
+                            $('[id*=spinner1]').hide();
+                            // alert("Failed" + '{!$Label.Error_found_please_contact_system_admin}');
+                            console.log('response:'+response.message)
+                        },
+                    });                
+                });              
+            }  
+            var filetoBase64 = function(file, callback){ 
+                debugger;
+                var reader = new FileReader();                 
+                reader.onload = function() {                 
+                    var myFileContents = reader.result;                  
+                    var base64Mark = 'base64,';                  
+                    var dataStart = myFileContents.indexOf(base64Mark) + base64Mark.length;       
+                    myFileContents = myFileContents.substring(dataStart);               
+                    callback(null, myFileContents);  
+                    //alert('alert');
+                }              
+                reader.readAsDataURL(file);              
+            }
+            </script>
+        <div class="slds-scope">
+            <div class="demo-only" style="height:4rem; display:none;" id="Success_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+                        <span class="slds-assistive-text">success</span>
+                        <span class="slds-icon_container slds-icon-utility-success slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Issue_Created_successfully}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Success_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only" style="height:4rem; display:none;" id="Error_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Unable_to_creating_issue_please_contact_admin}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Error_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only" style="height:4rem; display:none;" id="UnableError_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Error_found_please_contact_system_admin}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('UnableError_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only" style="height:4rem; display:none;" id="Location_Not_Found_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Location_Not_Found}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Location_Not_Found_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only" style="height:4rem; display:none;" id="Unable_to_record_the_Audio_Toast">
+                <div class="slds-notify_container slds-is-fixed">
+                    <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                        <span class="slds-assistive-text">error</span>
+                        <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                            </svg>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!$Label.Unable_to_record_the_Audio}</h2>
+                        </div>
+                        <div class="slds-notify__close">
+                            <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="hidetoast('Location_Not_Found_Toast');return false;">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <apex:outputPanel style="display:block;" id="Driver_Breakdown_Replacement_Form" >
+                <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container" >
+                                <svg aria-hidden="true" class="slds-icon slds-icon_large" style="fill: #3abeb1;">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#edit_form')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">edit_form</span>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Driver-Breakdown-Replacement-Form" style="color: #54698d;font-size: 1.5rem;">{!$Label.Driver_Breakdown_Replacement_Form}</h1>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <apex:form id="breakdown_form">
+                    <div class="slds-form slds-box">
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                            <span class="slds-form-element__label">{!$Label.Service}</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">{!$Label.Replacement_Car}</div>
+                            </div>
+                        </div><br/>
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                            <span class="slds-form-element__label">{!$Label.Vehicle}</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">{!VehicleNumber}</div>
+                            </div>
+                        </div><br/>
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                            <span class="slds-form-element__label">{!$Label.Driver}</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">{!DriverName}</div>
+                            </div>
+                        </div>
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent">
+                            <span class="slds-form-element__label">{!$Label.Location}</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">Bengaluru</div>
+                                <!--<apex:map width="400px" height="200px" mapType="roadmap" zoomLevel="14" center="{latitude:{!latitudeval},longitude:{!longitudeval}}">
+                                    <apex:mapMarker title="Location" position="{latitude:{!latitudeval},longitude:{!longitudeval}}"/>
+                                </apex:map>-->
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="slds-form-element">
+                            <span class="slds-form-element__label" id="Breakdown_File_Label">{!$Label.Upload_Image_and_Audio}</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-file-selector slds-file-selector_files ">
+                                    <div class="slds-file-selector__dropzone">
+                                        <input type="file" class="slds-file-selector__input slds-assistive-text" id="Breakdown_File" aria-labelledby="Breakdown_File_Label Breakdown_File_Label2" onchange="uploaddocuments();return false;"/>
+                                        <label class="slds-file-selector__body" for="Breakdown_File" id="Breakdown_File_Label2">
+                                            <span class="slds-file-selector__button slds-button slds-button_neutral">
+                                                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#upload')}"></use>
+                                                </svg>{!$Label.Upload_Files}</span>
+                                            <span class="slds-file-selector__text slds-medium-show">{!$Label.or_drop_Files}</span>
+                                        </label>
+                                        <div class="spinner-border text-primary" role="status" id="spinner1" style="display:none;">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                        <div  id="filenames1"/>
+                                    </div>
+                                     <br/>
+                                <div id="progress_bar_container" style="display:none; padding:10px; width: 50%;">                
+                                    <span id="percentText"></span>                  
+                                    <div class="slds-progress-bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" role="progressbar"> 
+                                        <span class="slds-progress-bar__value progress" style=" width: 0%;">                    
+                                            <span class="slds-assistive-text">Progress: 25%</span>                     
+                                        </span>                  
+                                    </div>                 
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                         <br/>
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent" id="Repair_Audio_Div">
+                            <span class="slds-form-element__label">{!$Label.Record_Audio}</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">
+                                    <svg aria-hidden="true" class="slds-icon slds-icon_small" id="recordButton" style="fill: black;">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                             xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#unmuted">
+                                        </use>
+                                    </svg>
+                                    <svg aria-hidden="true" class="slds-icon slds-icon_small" id="pauseButton" style="fill: black;display:none;">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                             xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#pause">
+                                        </use>
+                                    </svg>
+                                    <svg aria-hidden="true" class="slds-icon slds-icon_small" id="stopButton" style="fill: black;display:none;">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                             xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#stop">
+                                        </use>
+                                    </svg><br/>
+                                    <span id="audiostage"></span>
+                                    <button class="slds-button slds-button_success" disabled="true" id="timierSetup" style="display:none;"><output name="xyx" id="outputtime">00:00</output></button>
+                                    <span id="uploadid"><audio id="audiorecord"></audio></span>
+                                    <br/>
+                                <div id="progress_bar_container1" style="display:none; padding:10px; width: 50%;">                
+                                    <span id="percentText1"></span>                  
+                                    <div class="slds-progress-bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" role="progressbar"> 
+                                        <span class="slds-progress-bar__value progress" style=" width: 0%;">                    
+                                            <span class="slds-assistive-text">Progress: 25%</span>                     
+                                        </span>                  
+                                    </div>                 
+                                </div>
+                                </div>
+                            </div>
+                        </div><br/>
+                        <c:GoogleMaps1 />
+                        <br/>
+                        <div class="slds-align_absolute-center">
+                            <button class="slds-button slds-button_success" onclick="createrecord();return false;">{!$Label.Save}</button><span style="width: 40px;"></span>
+                            <button class="slds-button slds-button_destructive" onclick="gotodrivermenu();return false;">{!$Label.Cancel}</button>
+                        </div></div>
+                    <input type="hidden" value="" id="fileidhidden"/>
+                </apex:form>
+            </apex:outputPanel>
+             <script type='text/javascript'>
+    //webkitURL is deprecated but nevertheless
+    URL = window.URL || window.webkitURL;
+            //debugger;
+    var gumStream;                      //stream from getUserMedia()
+    var rec;                            //Recorder.js object
+    var input;                          //MediaStreamAudioSourceNode we'll be recording
+    
+    // shim for AudioContext when it's not avb. 
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
+    var audioContext //audio context to help us record
+    
+    var recordButton = document.getElementById("recordButton");
+    var stopButton = document.getElementById("stopButton");
+    var pauseButton = document.getElementById("pauseButton");
+    var timer;
+    var z = 0;var m=0;
+    //add events to those 2 buttons
+    recordButton.addEventListener("click", startRecording);
+    stopButton.addEventListener("click", stopRecording);
+    pauseButton.addEventListener("click", pauseRecording);
+    
+        // var parentId = '{!$CurrentPage.parameters.id}';
+
+    
+    function startRecording() {
+        // alert();
+        console.log("recordButton clicked");
+        document.getElementById('uploadid').innerHTML="";
+        $('[id$=stopButton]').show();
+        $('[id$=pauseButton]').show();
+        $('[id$=recordButton]').hide();
+        
+        /*
+            Simple constraints object, for more advanced audio features see
+            https://addpipe.com/blog/audio-constraints-getusermedia/
+        */
+        
+        var constraints = { audio: true, video:false };
+        
+        /*
+            Disable the record button until we get a success or fail from getUserMedia() 
+        
+        
+        recordButton.disabled = true;
+        stopButton.disabled = false;
+        pauseButton.disabled = false;
+        
+        /*
+            Were using the standard promise based getUserMedia() 
+            https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+        */
+        
+        navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+            console.log("getUserMedia() success, stream created, initializing Recorder.js ...");
+        
+            /*
+                create an audio context after getUserMedia is called
+                sampleRate might change after getUserMedia is called, like it does on macOS when recording through AirPods
+                the sampleRate defaults to the one set in your OS for your playback device
+        
+            */
+            audioContext = new AudioContext();
+            console.log('audioContext ',audioContext);
+            //update the format 
+            //document.getElementById("formats").innerHTML="Format: 1 channel pcm @ "+audioContext.sampleRate/1000+"kHz";
+        
+            /*  assign to gumStream for later use  */
+            console.log('stream ', stream);
+            
+            gumStream = stream;
+            console.log('gumStream ', gumStream);
+            
+            /* use the stream */
+            input = audioContext.createMediaStreamSource(stream);
+            console.log('input ', input);
+            /* 
+                Create the Recorder object and configure to record mono sound (1 channel)
+                Recording 2 channels  will double the file size
+            */
+            rec = new Recorder(input,{numChannels:1});
+            console.log('start ',rec);
+            //start the recording process
+            timerstartFunction();
+            rec.record();
+        
+            console.log("Recording started");
+            $('[id$=timierSetup]').show();
+            //alert('timierSetup');
+        
+        }).catch(function(err) {
+            //enable the record button if getUserMedia() fails
+            /*recordButton.disabled = false;
+            stopButton.disabled = true;
+            pauseButton.disabled = true;*/
+            console.log('err ',err);
+            showtoast('Unable_to_record_the_Audio_Toast');
+                 setTimeout(function(){ hidetoast('Unable_to_record_the_Audio_Toast'); }, 1000);
+        });
+    }
+    
+    function pauseRecording(){
+        console.log("pauseButton clicked rec.recording=",rec.recording );
+        if (rec.recording){
+            //pause
+            rec.stop();
+            document.getElementById("audiostage").innerHTML="Resume";
+            clearInterval(timer);
+        }else{
+            //resume
+            rec.record();
+            document.getElementById("audiostage").innerHTML="Pause";
+            timerstartFunction();
+        }
+    }
+    
+    function stopRecording() {
+        clearInterval(timer);
+        z = 0;m=0;
+        console.log("stopButton clicked");
+        document.getElementById("audiostage").innerHTML="";
+        document.getElementById('uploadid').innerHTML="";
+        $('[id$=stopButton]').hide();
+        $('[id$=pauseButton]').hide();
+        $('[id$=recordButton]').show();
+        //disable the stop button, enable the record too allow for new recordings
+        /*stopButton.disabled = true;
+        recordButton.disabled = false;
+        pauseButton.disabled = true;
+        
+        //reset button just in case the recording is stopped while paused
+        pauseButton.innerHTML="Pause";*/
+        
+        //tell the recorder to stop the recording
+        console.log('rec ' ,rec);
+        rec.stop();
+        
+        //stop microphone access
+        gumStream.getAudioTracks()[0].stop();
+        
+        //create the wav blob and pass it on to createDownloadLink
+        rec.exportWAV(createDownloadLink);
+    }
+        
+    function createDownloadLink(blob) {
+        
+        var url = URL.createObjectURL(blob);
+        var au = document.createElement('audio');
+        var li = document.getElementById('uploadid');
+        
+        //name of .wav file to use during upload and download (without extendion)
+        var filename = new Date().toISOString();
+        
+        //add controls to the <audio> element
+        au.controls = true;
+        au.src = url;
+        au.id = 'audioclip';
+        //add the new audio element to li
+        li.appendChild(au);
+        
+        //add the filename to the li
+        // li.appendChild(document.createTextNode(filename+".mp3"));
+        
+        //add the save to disk link to li
+        //li.appendChild(link);
+        
+        //upload link
+        $('[id$=timierSetup]').hide(); 
+        var upload = document.createElement('a');
+        upload.href="javascript:void();";
+        upload.id="uploadOption";
+        upload.innerHTML = "Upload";
+        upload.addEventListener("click", function(event){
+            //fd.append("audio_data",blob, filename);
+            const reader = new FileReader();
+            reader.onload = function () {
+              var b64 = reader.result.replace(/^data:.+;base64,/, '');
+              console.log(b64);
+              //var html = atob(b64);
+              
+                /*Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.DriverMenuCtrl.uploadfiles}',
+                    b64,filename,'{!networkid}','{!VehicleAssignment.Id}',
+                    function(result, event) {
+                        console.log('result ' ,event.status);
+                        if(event.status) {
+                            //getVersionIds();
+                            //if(result ) {
+                                filessubmissionatproperty(result);
+                                console.log('result >> ', result);               
+                            //}
+                        }
+                    }
+                );*/
+                var conVer_object = {                  
+                        VersionData : b64,                     
+                        PathOnClient : filename+'.wav',                     
+                        Title : filename ,
+                        FirstPublishLocationId  : '{!VehicleAssignment.Id}',
+                        NetworkId : '{!networkid}'
+                    };                  
+                    $.ajax({ 
+                        
+                        url: '{!$Label.Community_user_file_upload_redirect_url}',                    
+                        data: JSON.stringify(conVer_object ),                
+                        type: 'POST',                 
+                        processData: false,                    
+                        contentType: false,                    
+                        headers: {'Authorization': 'Bearer {!$Api.Session_ID}', 'Content-Type': 'application/json'},                
+                        xhr: function(){                   
+                            var xhr = new window.XMLHttpRequest();                       //Upload progress                      
+                            xhr.upload.addEventListener("progress", function(evt){                     
+                                if (evt.lengthComputable) {  
+                                    $('[id*=spinner1]').hide();
+                                    $('#progress_bar_container1').css('display', 'block');                    
+                                    var percentComplete = evt.loaded / evt.total;                      
+                                    console.log('percentComplete '+percentComplete );                     
+                                    var percentCompletex= percentComplete*100;                          
+                                    $('#percentText1').html("Uploading. Please wait... "+Math.round(percentCompletex)+"%");      
+                                    $('.progress').css('width', percentCompletex+ "%");                         
+                                    if(percentCompletex == 100){                           
+                                        $('#progress_bar_container1').css('display', 'none');                       
+                                    }                      }                     }, false);                     
+                            return xhr;                    },                  
+                        success: function(response) { 
+                            //alert(response.id);
+                            filessubmissionatproperty(response.id);
+                            // the id of the attachment                     
+                            callback(null, true)                  
+                        },
+                        error : function(response) {
+                            showtoast('UnableError_Toast');
+                            $('[id*=spinner1]').hide();
+                            // alert("Failed" + '{!$Label.Error_found_please_contact_system_admin}');
+                            console.log('response:'+response.message)
+                        },
+                    }); 
+              
+            };
+            
+            reader.readAsDataURL(blob);
+        });
+        li.appendChild(document.createTextNode (" "));//add a space in between
+        li.appendChild(upload);//add the upload link to li
+        
+        //add the li element to the ol
+        //recordingsList.appendChild(li);
+    }
+    
+    function loadAudio(audioFile){
+        
+        var url = URL.createObjectURL(audioFile.versionData);
+        var au = document.getElementById('audiorecord');
+        var li = document.getElementById('uploadid');
+        
+        var btn = document.createElement('button');
+        console.log('btn ' ,audioFile);
+        btn.id = audioFile.ContentDocumentId ;
+        btn.innerText = 'Delete';
+        btn.addEventListener("click", deleteAudio);
+        //btn.onclick ="deleteAudio(" + audioFile.ContentDocumentId + ")";
+        
+         //name of .wav file to use during upload and download (without extendion)
+        var filename = audioFile.fileName;
+        
+        //add controls to the <audio> element
+        au.controls = true;
+        au.src = url;
+        
+        //add the new audio element to li
+        //li.appendChild(au);
+        console.log('After Upload');
+        //add the filename to the li
+        li.appendChild(document.createTextNode(filename));
+        li.appendChild(document.createTextNode (" "));
+        //add button 
+        li.appendChild(btn);
+        
+        //add the li element to the ol
+        //recordingsList.appendChild(li);
+        
+        
+        
+    }
+    function deleteAudio(btnElement){
+        //console.log('del Id ',btnElement.toElement.id);
+        //if(btnElement.toElement.id){
+            delcontentfiles(btnElement);
+        //return false;
+        //}
+    }
+       function timerstartFunction() {
+           
+           // Update the count down every 1 second
+           
+           timer = setInterval(function() {
+               if(z > 59){
+                   z = 0;
+                   m +=1;
+               }
+               var right;
+               if(m == 0)
+                   right = '00:';
+               else
+                   right = '0'+m+':';
+               if(z > 9)
+                   document.getElementById("outputtime").value = right+z;
+               else
+                   document.getElementById("outputtime").value = right+'0'+z;
+               z += 1;
+           }, 1000);
+       }
+       var verid ;
+       function filessubmissionatproperty(result){
+           debugger;
+           verid =result; 
+           var fileids = $('[id$=fileidhidden]').val();
+            if(fileids.length > 1){
+                fileids = fileids +','+ result;}
+            else {
+                fileids = result;}  
+            $('[id$=fileidhidden]').val(fileids);
+             var upload = document.createElement('a');
+        upload.href="#";
+        upload.id="deleteOption";
+        upload.innerHTML = "Delete";
+        upload.addEventListener("click", function(event){
+            
+        deleteAudio(verid);
+        });
+                                $('[id$=uploadOption]').hide();
+             document.getElementById('uploadid').appendChild(upload);                   
+       }
+       function allclear(){
+       document.getElementById('uploadid').innerHTML="";
+       }
+    </script>
+
+
+            <!--<c:GoogleMaps1/>-->
+        </div>
+    </html>
+</apex:page>

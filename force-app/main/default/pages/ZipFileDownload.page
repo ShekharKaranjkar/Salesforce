@@ -1,0 +1,142 @@
+<apex:page controller="ZipFileDownloadController">
+    
+    <form>
+        <apex:includeScript value="https://code.jquery.com/jquery-1.11.3.js"/>
+        <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js"/>
+        <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"/>
+        
+        <script>
+        console.log('load');
+        window.onload = function () {
+            console.log('load');
+            saveZip();
+        }
+        
+        // Generate the zip file and send it back to Salesforce for attaching
+        function saveZip() {
+            
+            var files ;
+            var parentId = '{!$CurrentPage.parameters.id}';
+            
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.ZipFileDownloadController.getFiles}',
+                parentId,
+                function(result, event) {
+                    console.log(event.status);
+                    if(event.status) {
+                    
+                        //if(result ) {
+                        console.log('result >> ', result);
+                    	if(result)
+                        	zipGenerate(result);
+                        else
+                        	window.close();
+                    //}
+                    }
+                }
+            );
+        }
+        
+        
+        function zipGenerate(files){
+            var zip = new JSZip();
+            var filename = '';
+            var contentData;
+            //var reader = new FileReader();
+            var cnt = 0;
+            $.each(files, function(i, j){
+                
+                var reader = new FileReader();
+                //console.log(j.contentType);
+                reader.readAsArrayBuffer(checkForMIMEType(j));
+                //console.log('j>>',j);
+                reader.onload = function () {
+                    console.log('reader',i);
+                    var fextension = '';
+                    if (j.contentType == 'PDF') {
+                        fextension= '.pdf';
+                    } else if (j.contentType == 'WORD_X') {
+                        fextension= '.docx';
+                    }else if(j.contentType == 'PNG'){
+                        fextension= '.png';
+                    }else if(j.contentType == 'TEXT'){
+                        fextension= '.txt';
+                    }else if(j.contentType == 'JPG'){
+                        fextension= '.jpg';
+                    }
+                    zip.file(j.fileName, reader.result);
+                    
+                    if(i == files.length - 1){
+                        zip.generateAsync({type: 'blob'})
+                        .then(function (content) {
+                            //contentData += content;
+                            
+                            saveAs(content, files[0].zipName +'.zip');
+                            console.log('saveas');
+                            var v = window;
+                            setTimeout(function(){v.close()},100);
+                        });
+                    }
+                };
+                
+            });
+            
+            
+            
+            
+            
+            
+        }
+        function checkForMIMEType(response) {
+            var blob;
+            blob = converBase64toBlob(response.versionData, '');
+            //console.log(response.versionData);
+            /*if (response.contentType == 'PDF') {
+                blob = converBase64toBlob(response.versionData, 'application/pdf');
+            } else if (response.contentType == 'WORD_X') {
+                console.log('Step');
+                blob = converBase64toBlob(response.versionData, 'application/msword'); 
+            }else if(response.contentType == 'PNG'){
+                console.log('Step');
+                blob = converBase64toBlob(response.versionData, 'image/png'); 
+            }else if(response.contentType == 'JPG'){
+                console.log('Step JPG');
+                blob = converBase64toBlob(response.versionData, 'image/jpg'); 
+            }else if(response.contentType == 'TEXT'){
+                console.log('Step TEXT');
+                blob = converBase64toBlob(response.versionData, 'plain/text'); 
+            }*/
+            console.log('checkForMIMEType');
+            return blob;
+            //var blobURL = (window.URL ? URL : webkitURL).createObjectURL(blob);
+            
+        }
+        function converBase64toBlob(content, contentType) {
+            
+            console.log('converBase64toBlob',content);
+            contentType = contentType || '';
+            var sliceSize = 512;
+            //var btoaContent = window.btoa(content);
+            var byteCharacters = window.atob(content); //method which converts base64 to binary
+            var byteArrays = [
+            ];
+            for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                var slice = byteCharacters.slice(offset, offset + sliceSize);
+                var byteNumbers = new Array(slice.length);
+                for (var i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                var byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+            var blob = new Blob(byteArrays, {
+                type: contentType
+            }); //statement which creates the blob
+            return blob;
+        }
+        
+        
+        </script>
+        
+    </form>
+</apex:page>

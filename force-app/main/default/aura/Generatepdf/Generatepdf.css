@@ -1,0 +1,22 @@
+.THIS.showLoadingSpinner{
+    position: relative;
+    display: inline-block;
+    margin-left: 15px;
+    width: 55px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.THIS.spinner_container {  
+    position: relative;
+    display: inline-block;
+    margin-left: 105px;
+    width: 55px;
+    vertical-align: middle;
+    white-space: nowrap;
+    
+}
+
+.THIS .inputSize {
+    width:100%; 
+}

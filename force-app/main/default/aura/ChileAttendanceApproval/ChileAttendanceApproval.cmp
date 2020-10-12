@@ -1,0 +1,60 @@
+<aura:component controller="AttendanceApprovalController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <!--<aura:attribute name="attendance" type="Object" />-->
+    <aura:attribute name="attendance" type="object"/>
+    <!--    <aura:attribute name="datete" type="string"/>
+     <aura:handler name="init" action="{!c.doInit}" value="{!this}" />  -->
+     <aura:attribute name="currentDate" type="Date"/>
+    
+    <tr>
+        
+       <!-- <td scope="row">
+            <div  title="{!v.attendance.Name}" onclick="{!c.names }" ><a>{!v.attendance.Name}</a></div>
+        </td> -->
+         <td scope="row" style="padding-right: 0px;padding-left: 8px;">
+            
+                       <force:outputField  value="{!v.attendance.Preview__c}" />
+                    
+                   
+        </td>
+          <td scope="row">
+            
+                       <force:outputField  value="{!v.attendance.Service_Provider__r.Preview__c}" />
+                    
+                   
+        </td>
+        <td scope="row">
+            <div  title="{!v.attendance.Lithium_ID__c}"><a>{!v.attendance.Service_Provider__r.Lithium_ID__c}</a></div>
+        </td>
+        <td scope="row">
+            <div  title="{!v.attendance.Lithium_ID__c}" onclick="{!c.detail }"  ><a>{!v.attendance.Lithium_ID__c}</a></div>
+        </td>
+      <!--  <td scope="row">
+            <div class="slds-truncate" title="{!v.attendance.Login__c}">{!v.datete}</div>
+        </td> -->
+        <td scope="row">
+            <div  title="{!v.attendance.Login__c}">  <lightning:formattedDateTime aura:id="dt"
+                                     value="{!v.attendance.Login__c}"
+                                     month="short"
+                                     day="numeric"
+                                     year="numeric"
+                                     hour="2-digit"
+                                     minute="2-digit"
+                                   
+                                     hour12="true"
+                                     timeZone="{!$Locale.timezone}"/></div>
+        </td>
+               
+        <td scope="row">
+           <!-- <lightning:button onclick="{!c.approvrd }"  aura:id = "approved"  class="slds-button slds-button_success" name='yes' label="Yes"  
+                              
+                              />-->
+            <!-- <lightning:buttonIcon onclick="{!c.approvrd }" class="slds-button slds-button_success" iconName="utility:check" variant="Green" alternativeText="Approve" title="Approve"  />
+             <lightning:buttonIcon onclick="{!c.rejected }" class="slds-button slds-button_destructive"  iconName="utility:close" variant="Red" alternativeText="Reject" title="Reject"   /> -->
+  <lightning:icon   onclick="{!c.approvrd }" iconName="action:approval" size="x-small" alternativeText="Approved" /> &nbsp;
+             <lightning:icon   onclick="{!c.rejected }" iconName="action:close" size="x-small" alternativeText="Reject" />
+         <!--   <lightning:button onclick="{!c.rejected }"  aura:id = "rejected" class="slds-button slds-button_destructive" name='no' label="No" />-->
+        </td>
+    </tr>
+   
+</aura:component>

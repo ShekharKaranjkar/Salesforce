@@ -1,0 +1,18 @@
+<apex:page >
+    <script>
+    /* sforce.one.createRecord(
+	  {
+    "entityName" : "Toll_Amount__c",
+    "defaultFieldValues" : {
+        'Site__c' : 'a0h0w000000DwVl',
+        'Vehicle__c' : 'a0n0w000000BPvx',
+        'Driver__c' : 'a0m0w0000005d4s'
+        }
+	  });*/
+    //alert('{!$CurrentPage.parameters.Site__c}');
+    sforce.one.navigateToURL('/lightning/o/Toll_Amount__c/new?defaultFieldValues=Site__c={!$CurrentPage.parameters.Site__c},Vehicle__c={!$CurrentPage.parameters.Vehicle__c},Driver__c={!$CurrentPage.parameters.Driver__c}');
+          </script>
+    <apex:form >
+       
+    </apex:form>
+</apex:page>

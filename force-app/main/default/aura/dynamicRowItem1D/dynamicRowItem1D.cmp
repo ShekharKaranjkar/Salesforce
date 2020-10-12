@@ -1,0 +1,66 @@
+<aura:component controller = "productSelectionController">  
+    
+    <aura:attribute name="customDataInstance" type="list"/>
+    <aura:attribute name="oppLineItemInstance" type="Object"/>
+    <aura:attribute name="rowIndex" type="integer"/>
+    <aura:attribute name="priceOfModel" type="String" /> 
+    <aura:attribute name="PicklistOne" type="String" />
+    <aura:attribute name="listControllingValues" type="list" default="[]" description="to store controller field values"/>
+    <aura:attribute name="listDependingValues" type="list" default="['--- None ---']" description="to store dependent field values"/>
+    <aura:attribute name="depnedentFieldMap" type="map" description="map to store dependent values with controlling value"/>
+    <aura:attribute name="bDisabledDependentFld" type="boolean" default="true"/> 
+    <aura:attribute name="objDetail" type="Product2" default="{'sobjectType' : 'Product2'}"/>
+    <aura:attribute name="controllingFieldAPI" type="string" default="Duration__c" description="store field API name of Controller field"/>
+
+
+
+
+    <aura:handler name = "init" value = "{!this}" action = "{!c.doInit}"/>
+   
+    <aura:registerEvent name="DeleteRowEvt1D" type="c:DeleteRowEvt1D"/> 
+    <aura:registerEvent name="AddNewRowEvt1D" type="c:AddNewRowEvt1D"/> 
+
+    <tr class="slds-text-title_caps">
+        <td>
+            <aura:if isTrue="{!v.rowIndex == 0}">
+                <a onclick="{!c.AddNewRow}" >
+                    <lightning:icon iconName="utility:add" class="slds-icon slds-icon_small" size="small" alternativeText="add"/>
+                    <span class="slds-assistive-text">Add Icon</span>
+                </a>    
+                <aura:set attribute="else">
+                    <a onclick="{!c.removeRow}">
+                        <lightning:icon variant="error" iconName="utility:delete" class="slds-icon slds-icon_small" size="small" alternativeText="icon"/>
+                        <span class="slds-assistive-text">Delete Icon</span>
+                    </a>
+                </aura:set> 
+            </aura:if>
+        </td> 
+        <td>
+            
+            <lightning:layoutItem size="12" padding="around-small">    
+ 
+                <lightning:select name="controllerFld"
+                                  value="{!v.oppLineItemInstance.location}"
+                                  label="Duration"
+                                  onchange="{!c.onControllerFieldChange}">
+                    <aura:iteration items="{!v.listControllingValues}" var="val">
+                      
+                        <option value="{!val}">{!val}</option>
+                    </aura:iteration>
+                </lightning:select>
+            </lightning:layoutItem>
+        </td>
+        <td>
+              <ui:outputCurrency  value="{!v.oppLineItemInstance.PriceCarMonth}"/>
+      
+        </td>
+        <td>
+             <lightning:input   onchange="{!c.check}"  value="{!v.oppLineItemInstance.suggestedPrice}"   type="number" name="input7" aura:id = "boxPack" required="true"  formatter="currency" step="0.01"/>
+
+        </td>
+        <td>
+                 <Lightning:input   onchange="{!c.check}"  required="true"    aura:id = "boxPack" value="{!v.oppLineItemInstance.Current_Pursuit__c}" type="number"  />
+            
+        </td>
+    </tr>
+</aura:component>

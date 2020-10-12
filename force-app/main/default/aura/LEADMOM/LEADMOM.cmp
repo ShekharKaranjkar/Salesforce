@@ -1,0 +1,554 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="leadopp" >
+	 <aura:attribute name="OppObj" type="Opportunity" default="{'Id':'','name':'',
+                                                         'StageName':'','Question__c':'',
+                                                        'Does_the_solution_meet_the_client_object__c':'',
+                                                        'Does_the_solution_saves_cost__c':'',
+                                                        'Is_the_solution_operationally_viable__c':'',	
+                                                        'Have_we_internally_reviewed_the_final__c':'',
+                                                        'Have_you_prepared_an_executive_summary__c':'',
+                                                        'Have_you_taken_time_with_the_client__c':'',
+                                                        'Are_all_stakeholder_from_clientavailable__c':'',
+                                                        'Are_they_key_decision_makers__c':'',
+                                                        'Do_you_need_Ops_or_Leadership_to_be_part__c':'',
+                                                        'Have_you_identified_influencers_for__c':'',
+                                                        'Are_you_aware_of_his_current_suppliers__c':'',
+                                                        'Is_the_client_cost_sensitive__c':'',
+                                                        'Has_the_client_made_aware_of_Fuel_price__c':'',
+                                                        'Have_you_collected_market_intel_about__c':'',
+                                                        'Does_the_solution_saves_cost__c':'',
+                                                        'Does_Lithium_commercials_save_client_s__c':'',	
+                                                        'Have_we_created_Savings_glidepath__c':'',
+                                                        'Are_all_the_inclusions_and_exclusions__c':'',
+                                                        'Does_the_customer_wants_to_negotiate__c':'',
+                                                        'Are_you_aware_of_client_s_commercial__c':'',
+                                                        'Have_you_discussed_the_key_contract_term__c':'',
+                                                        'Do_we_have_room_to_negotiate_and_close__c':'',
+                                                        'Have_we_aprised_client_of_lithium_s_valu__c':'',
+                                                        'Have_all_internal_stakeholders_reviewd_t__c':'',
+                                                       'Have_we_highligted_all_deviations_in_the__c':'', 
+                                                        'Has_the_client_set_expectations_on_timel__c':'',
+                                                        'Have_we_signed_the_contract_document__c':'',
+                                                        'Have_we_shared_deployment_plan_and_ramp__c':'',
+                                                        'Is_every_internal_fuction_aware_of_their__c':'',
+                                                        'Has_the_charging_infra_work_planned_for__c':'',
+                                                        'Has_the_client_discussed_operational_dos__c':'',
+                                                         'Approval_Status__c':''
+                                                        }" access="global"/> 
+     <aura:attribute name="CarParkingOptions" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions1" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions2" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions3" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions4" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions5" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/> <aura:attribute name="CarParkingOptions6" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions7" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions8" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions9" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions10" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions11" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions12" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+       <aura:attribute name="CarParkingOptions13" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions14" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions15" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions16" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions17" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions18" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/> <aura:attribute name="CarParkingOptions19" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions20" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions21" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions22" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions23" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions24" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions25" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+       <aura:attribute name="CarParkingOptions26" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions27" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions28" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions29" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions30" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+     <aura:attribute name="CarParkingOptions31" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+    <aura:attribute name="CarParkingValue" type="String" default=""/>
+        <aura:attribute name="CarParkingValue1" type="String" default=""/>
+            <aura:attribute name="CarParkingValue2" type="String" default=""/>
+        <aura:attribute name="CarParkingValue3" type="String" default=""/>
+        <aura:attribute name="CarParkingValue4" type="String" default=""/>
+        <aura:attribute name="CarParkingValue5" type="String" default=""/>
+        <aura:attribute name="CarParkingValue6" type="String" default=""/>
+        <aura:attribute name="CarParkingValue7" type="String" default=""/>
+        <aura:attribute name="CarParkingValue8" type="String" default=""/>
+        <aura:attribute name="CarParkingValue9" type="String" default=""/>
+        <aura:attribute name="CarParkingValue10" type="String" default=""/>
+        <aura:attribute name="CarParkingValue11" type="String" default=""/>
+        <aura:attribute name="CarParkingValue12" type="String" default=""/>
+        <aura:attribute name="CarParkingValue13" type="String" default=""/>
+        <aura:attribute name="CarParkingValue14" type="String" default=""/>
+        <aura:attribute name="CarParkingValue15" type="String" default=""/>
+        <aura:attribute name="CarParkingValue16" type="String" default=""/>
+        <aura:attribute name="CarParkingValue17" type="String" default=""/>
+        <aura:attribute name="CarParkingValue18" type="String" default=""/>
+        <aura:attribute name="CarParkingValue19" type="String" default=""/>
+        <aura:attribute name="CarParkingValue20" type="String" default=""/>
+        <aura:attribute name="CarParkingValue21" type="String" default=""/>
+        <aura:attribute name="CarParkingValue22" type="String" default=""/>
+        <aura:attribute name="CarParkingValue23" type="String" default=""/>
+        <aura:attribute name="CarParkingValue24" type="String" default=""/>
+        <aura:attribute name="CarParkingValue25" type="String" default=""/>
+        <aura:attribute name="CarParkingValue26" type="String" default=""/>
+        <aura:attribute name="CarParkingValue27" type="String" default=""/>
+        <aura:attribute name="CarParkingValue28" type="String" default=""/>
+        <aura:attribute name="CarParkingValue29" type="String" default=""/>
+            <aura:attribute name="CarParkingValue30" type="String" default=""/>
+
+            <aura:attribute name="CarParkingValue31" type="String" default=""/>
+
+
+        <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+        <aura:attribute name="U1" type="Opportunity" />
+<aura:attribute name="M1div" type="boolean" default="false"/>
+    <aura:attribute name="showQualifiermessage" type="boolean" default="false"/>
+ <aura:if  isTrue="{!v.M1div}">
+   <div aura:id="show_combo1">
+       
+        <lightning:radioGroup
+        aura:id="mygroup"
+        name="radioButtonGroup"
+        label="Does the solution meet the client objectives?"
+        options="{! v.CarParkingOptions}"
+        value="{! v.CarParkingValue}"
+        onchange="{! c.CarHandleChange}"
+         />
+       
+        <lightning:radioGroup
+        aura:id="mygroup1"
+        name="radioButtonGroup1"
+        label="Does the solution saves cost?"
+        options="{! v.CarParkingOptions1}"
+        value="{! v.CarParkingValue1}"
+        onchange="{! c.CarHandleChange1}"
+         />
+       
+        <lightning:radioGroup
+        aura:id="mygroup2"
+        name="radioButtonGroup2"
+        label="Is the solution operationally viable?"
+        options="{! v.CarParkingOptions2}"
+        value="{! v.CarParkingValue2}"
+        onchange="{! c.CarHandleChange2}"
+         />
+        <br></br>
+  <lightning:button variant="brand" type="button" name="Save" label="Save" onclick="{!c.OnSubmit}" />
+    </div>
+    </aura:if>
+   <aura:attribute name="M2div" type="boolean" default="false"/>
+ <aura:if  isTrue="{!v.M2div}">
+   <div   aura:id="show_combo2">
+      
+        <lightning:radioGroup
+        aura:id="mygroup3"
+        name="radioButtonGroup3"
+        label="Have we internally reviewed the final deck to be presented?"
+        options="{! v.CarParkingOptions3}"
+        value="{! v.CarParkingValue3}"
+        onchange="{! c.CarHandleChange3}"
+         />
+     
+        <lightning:radioGroup
+        aura:id="mygroup4"
+        name="radioButtonGroup4"
+        label="Have you prepared an executive summary of the solution benefits?"
+        options="{! v.CarParkingOptions4}"
+        value="{! v.CarParkingValue4}"
+        onchange="{! c.CarHandleChange4}"
+         />
+      
+        <lightning:radioGroup
+        aura:id="mygroup5"
+        name="radioButtonGroup5"
+        label="Have you taken time with the client to present?"
+        options="{! v.CarParkingOptions5}"
+        value="{! v.CarParkingValue5}"
+        onchange="{! c.CarHandleChange5}"
+         />
+        <br></br>
+  <lightning:button variant="brand" type="button" name="Save" label="Save" onclick="{!c.OnSubmit}" />
+    </div>
+    </aura:if>
+    
+   <aura:attribute name="M3div" type="boolean" default="false"/>
+ <aura:if  isTrue="{!v.M3div}">
+
+   <div   aura:id="show_combo3">
+  
+        <lightning:radioGroup
+        aura:id="mygroup6"
+        name="radioButtonGroup6"
+        label="Are all stakeholder from client available for Meeting?"
+        options="{! v.CarParkingOptions6}"
+        value="{! v.CarParkingValue6}"
+        onchange="{! c.CarHandleChange6}"
+         />
+    
+        <lightning:radioGroup
+        aura:id="mygroup7"
+        name="radioButtonGroup7"
+        label="Do you need Ops or Leadership to be part of the meeting?"
+        options="{! v.CarParkingOptions7}"
+        value="{! v.CarParkingValue7}"
+        onchange="{! c.CarHandleChange7}"
+         />
+      
+        <lightning:radioGroup
+        aura:id="mygroup8"
+        name="radioButtonGroup8"
+        label="Have you identified influencers for the client?"
+        options="{! v.CarParkingOptions8}"
+        value="{! v.CarParkingValue8}"
+        onchange="{! c.CarHandleChange8}"
+         />
+        <br></br>
+  <lightning:button variant="brand" type="button" name="Save" label="Save" onclick="{!c.OnSubmit}" />
+    </div>
+
+    </aura:if>
+    
+<aura:attribute name="M4div" type="boolean" default="false"/>
+ <aura:if  isTrue="{!v.M4div}">
+
+   <div   aura:id="show_combo4">
+       
+        <lightning:radioGroup
+        aura:id="mygroup9"
+        name="radioButtonGroup9"
+        label="Do you know the client current cost and billing model?"
+        options="{! v.CarParkingOptions9}"
+        value="{! v.CarParkingValue9}"
+        onchange="{! c.CarHandleChange9}"
+         />
+
+        <lightning:radioGroup
+        aura:id="mygroup10"
+        name="radioButtonGroup10"
+        label="Are you aware of his current suppliers?"
+        options="{! v.CarParkingOptions10}"
+        value="{! v.CarParkingValue10}"
+        onchange="{! c.CarHandleChange10}"
+         />
+      
+        <lightning:radioGroup
+        aura:id="mygroup11"
+        name="radioButtonGroup11"
+        label="Is the client cost sensitive?"
+        options="{! v.CarParkingOptions11}"
+        value="{! v.CarParkingValue11}"
+        onchange="{! c.CarHandleChange11}"
+         />
+     
+        <lightning:radioGroup
+        aura:id="mygroup12"
+        name="radioButtonGroup12"
+        label="Has the client made aware of Fuel price?"
+        options="{! v.CarParkingOptions12}"
+        value="{! v.CarParkingValue12}"
+        onchange="{! c.CarHandleChange12}"
+         />
+      <br></br>
+  <lightning:button variant="brand" type="button" name="Save" label="Save" onclick="{!c.OnSubmit}" />
+    </div>
+     </aura:if>
+    <aura:attribute name="M5div" type="boolean" default="false"/>
+ <aura:if  isTrue="{!v.M5div}">
+
+   <div   aura:id="show_combo5">
+
+        <lightning:radioGroup
+        aura:id="mygroup13"
+        name="radioButtonGroup13"
+        label="Have you collected market intel about clients pricing?"
+        options="{! v.CarParkingOptions13}"
+        value="{! v.CarParkingValue13}"
+        onchange="{! c.CarHandleChange13}"
+         />
+      
+        <lightning:radioGroup
+        aura:id="mygroup14"
+        name="radioButtonGroup14"
+        label="Does Lithium commercials save client's transport spend ?"
+        options="{! v.CarParkingOptions14}"
+        value="{! v.CarParkingValue14}"
+        onchange="{! c.CarHandleChange14}"
+         />
+     
+        <lightning:radioGroup
+        aura:id="mygroup15"
+        name="radioButtonGroup15"
+        label="Have we created Savings glidepath?"
+        options="{! v.CarParkingOptions15}"
+        value="{! v.CarParkingValue15}"
+        onchange="{! c.CarHandleChange15}"
+         />
+     
+        <lightning:radioGroup
+        aura:id="mygroup16"
+        name="radioButtonGroup16"
+        label="Are all the inclusions and exclusions identified and communicated?"
+        options="{! v.CarParkingOptions16}"
+        value="{! v.CarParkingValue16}"
+        onchange="{! c.CarHandleChange16}"
+         />
+      <br></br>
+  <lightning:button variant="brand" type="button" name="Save" label="Save" onclick="{!c.OnSubmit}" />
+    </div>
+     </aura:if>
+    <aura:attribute name="M6div" type="boolean" default="false"/>
+ <aura:if  isTrue="{!v.M6div}">
+
+   <div   aura:id="show_combo6">
+      
+        <lightning:radioGroup
+        aura:id="mygroup17"
+        name="radioButtonGroup17"
+        label="Does the customer wants to negotiate the commercial shared?"
+        options="{! v.CarParkingOptions17}"
+        value="{! v.CarParkingValue17}"
+        onchange="{! c.CarHandleChange17}"
+         />
+    
+        <lightning:radioGroup
+        aura:id="mygroup18"
+        name="radioButtonGroup18"
+        label="Are you aware of client's commercial expectation?"
+        options="{! v.CarParkingOptions18}"
+        value="{! v.CarParkingValue18}"
+        onchange="{! c.CarHandleChange18}"
+         />
+      
+        <lightning:radioGroup
+        aura:id="mygroup19"
+        name="radioButtonGroup19"
+        label="Have you discussed the key contract terms?"
+        options="{! v.CarParkingOptions19}"
+        value="{! v.CarParkingValue19}"
+        onchange="{! c.CarHandleChange19}"
+         />
+     
+        <lightning:radioGroup
+        aura:id="mygroup20"
+        name="radioButtonGroup20"
+        label="Do we have room to negotiate and close?"
+        options="{! v.CarParkingOptions20}"
+        value="{! v.CarParkingValue20}"
+        onchange="{! c.CarHandleChange20}"
+         />
+      <br></br>
+  <lightning:button variant="brand" type="button" name="Save" label="Save" onclick="{!c.OnSubmit}" />
+    </div>
+     </aura:if>
+    <aura:attribute name="W1div" type="boolean" default="false"/>
+ <aura:if  isTrue="{!v.W1div}">
+
+   <div   aura:id="show_combo7">
+        <lightning:radioGroup
+        aura:id="mygroup21"
+        name="radioButtonGroup21"
+        label="Have we aprised client of lithium's value adds?"
+        options="{! v.CarParkingOptions21}"
+        value="{! v.CarParkingValue21}"
+        onchange="{! c.CarHandleChange21}"
+         />
+        <lightning:radioGroup
+        aura:id="mygroup22"
+        name="radioButtonGroup22"
+        label="Have all internal stakeholders reviewed the agreement?"
+        options="{! v.CarParkingOptions22}"
+        value="{! v.CarParkingValue22}"
+        onchange="{! c.CarHandleChange22}"
+         />
+        <lightning:radioGroup
+        aura:id="mygroup23"
+        name="radioButtonGroup23"
+        label="Have we highligted all deviations in the contract document?"
+        options="{! v.CarParkingOptions23}"
+        value="{! v.CarParkingValue23}"
+        onchange="{! c.CarHandleChange23}"
+         />
+        <lightning:radioGroup
+        aura:id="mygroup24"
+        name="radioButtonGroup24"
+        label="Has the client set expectations on timelines to go-live?"
+        options="{! v.CarParkingOptions24}"
+        value="{! v.CarParkingValue24}"
+        onchange="{! c.CarHandleChange24}"
+         />
+        <br></br>
+  <lightning:button variant="brand" type="button" name="Save" label="Save" onclick="{!c.OnSubmit}" />
+    </div>
+     </aura:if>
+    <aura:attribute name="W2div" type="boolean" default="false"/>
+ <aura:if  isTrue="{!v.W2div}">
+
+   <div   aura:id="show_combo8">
+     
+        <lightning:radioGroup
+        aura:id="mygroup25"
+        name="radioButtonGroup25"
+        label="Have we signed the contract document?"
+        options="{! v.CarParkingOptions25}"
+        value="{! v.CarParkingValue25}"
+        onchange="{! c.CarHandleChange25}"
+         />
+     
+        <lightning:radioGroup
+        aura:id="mygroup26"
+        name="radioButtonGroup26"
+        label="Have we shared deployment plan and ramp up plan with the client?"
+        options="{! v.CarParkingOptions26}"
+        value="{! v.CarParkingValue26}"
+        onchange="{! c.CarHandleChange26}"
+         />
+   <br></br>
+  <lightning:button variant="brand" type="button" name="Save" label="Save" onclick="{!c.OnSubmit}" />
+    </div>
+     </aura:if>
+    <aura:attribute name="W3div" type="boolean" default="false"/>
+ <aura:if  isTrue="{!v.W3div}">
+
+   <div   aura:id="show_combo9">
+        <lightning:radioGroup
+        aura:id="mygroup27"
+        name="radioButtonGroup27"
+        label="Is every internal fuction aware of their action items and timelines?"
+        options="{! v.CarParkingOptions27}"
+        value="{! v.CarParkingValue27}"
+        onchange="{! c.CarHandleChange27}"
+         />
+        <lightning:radioGroup
+        aura:id="mygroup28"
+        name="radioButtonGroup28"
+        label="Has the charging infra work planned for?"
+        options="{! v.CarParkingOptions28}"
+        value="{! v.CarParkingValue28}"
+        onchange="{! c.CarHandleChange28}"
+         />
+        <lightning:radioGroup
+        aura:id="mygroup2"
+        name="radioButtonGroup29"
+        label="Has the client discussed operational dos and donts with Lithium's team?"
+        options="{! v.CarParkingOptions29}"
+        value="{! v.CarParkingValue29}"
+        onchange="{! c.CarHandleChange29}"
+         />
+      <br></br>
+  <lightning:button variant="brand" type="button" name="Save" label="Save" onclick="{!c.OnSubmit}" />
+    </div>
+     </aura:if>
+    <aura:attribute name="pilotNoQ" type="boolean" default="false"/>
+    <aura:if  isTrue="{!v.pilotNoQ}"> 
+   		 <B> There are No Questions for this Stage </B>
+    </aura:if>
+    <aura:if  isTrue="{!v.showQualifiermessage}"> 
+        <div class="slds-box">
+
+   		 <B>  Need to be Approved! Please check the Approval status in Aprroval History.
+</B>
+        </div>
+    </aura:if>
+    <!-- <aura:attribute name="messageif" type="boolean" default="false"/>
+ <aura:if  isTrue="{!v.messageif}">
+     <b>Please complete all tasks.</b>
+    </aura:if> 
+    <br></br>
+  <lightning:button variant="brand" type="button" name="Save" label="Save" onclick="{!c.OnSubmit}" /> -->
+    </aura:component>

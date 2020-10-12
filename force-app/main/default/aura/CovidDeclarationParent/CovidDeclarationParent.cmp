@@ -1,0 +1,52 @@
+<aura:component  controller="CovidDeclarationController">
+    <aura:attribute name="fileName" type="String" default="No File Selected.." />
+    <aura:attribute name="certificate" type="String" default="certificate" />
+    <aura:attribute name="signed" type="String" default="signed" />
+    
+        <aura:attribute name="certificateApexString" type="String" default="signed" />
+    <aura:attribute name="signedApexString" type="String" default="signed"/>
+    
+    <aura:attribute name="app" type="boolean" default="false"  />
+    <aura:attribute name="duty" type="boolean" default="false"  />
+    <aura:attribute name="covidDeclarationObj" type="Covid_Declaration__c"/>
+      <aura:attribute name="contentVersionList" type="List"  />
+    
+    <aura:handler name="CovidDeclarationEvent" event="c:CovidDeclarationEvent" action="{!c.handleComponentEvent}"/> 
+    
+    <div class="slds-card slds-p-around_medium">
+        <div class="slds-box slds-theme_shade">
+            <span class="slds-text-heading_large slds-align_absolute-center"><b>Covid Declaration</b> </span>
+        </div>
+        
+        <div class="slds-grid slds-wrap slds-p-left_x-large ">
+            <div class="slds-size--1-of-1">
+                
+                
+                
+                
+                
+                <div>
+                    <p> {!$Label.c.I_am_willing_have_joined_duty}    </p>
+                    <lightning:input type = "checkbox"    class = "slds-p-vertical_small slds-p-left_xx-large"
+                           checked="{!v.duty}"           />     
+                </div>
+                <div>
+                    <p> {!$Label.c.I_have_downloaded_aarogya_setu_app_on_my}   </p>
+                    <lightning:input type = "checkbox"   class = "slds-p-vertical_small slds-p-left_xx-large" 
+                   checked="{!v.app}"                  />      
+                </div>      
+                <p>   {!$Label.c.Upload_Doctors_Certificate}  </p>
+                <c:CovidDeclaration fieldvalue="{!v.certificate}"/>
+                <p>{!$Label.c.Upload_Signed_Declaration}</p>
+                <c:CovidDeclaration fieldvalue="{!v.signed}"/>
+                <lightning:button label="Cancel" onclick="{!c.handleCancel}" class="slds-m-top--medium" />
+                <lightning:button label="Save" onclick="{!c.handleSave}"
+                                  variant="brand" class="slds-m-top--medium"/>
+            </div>
+            
+        </div>
+        
+    </div>
+    
+    
+</aura:component>

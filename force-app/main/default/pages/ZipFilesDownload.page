@@ -1,0 +1,144 @@
+<apex:page controller="ZipFilesDownloadController">
+    
+    <form>
+        <apex:includeScript value="https://code.jquery.com/jquery-1.11.3.js"/>
+        <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js"/>
+        <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"/>
+        
+        <script type="text/javascript">
+    var __sfdcSessionId = '{!GETSESSIONID()}';
+    </script>
+    <script src="../../soap/ajax/47.0/connection.js"
+          type="text/javascript"></script>
+    
+          
+        <script>
+        
+          
+        Visualforce.remoting.timeout = 120000; 
+        var zipFiles = [];
+        var parentId = '{!$CurrentPage.parameters.id}';
+        var parentName = '{!recordName}';
+            
+        console.log('load');
+        window.onload = function () {
+            console.log('load');
+            console.log('parentName ',parentName);
+            saveZip();
+        }
+        function sforceQuery(versionId){
+            var result = sforce.connection.query("Select Id,VersionNumber,ContentDocumentid,VersionData,Title,FileType,FileExtension  from ContentVersion where Id='"+ versionId + "' order by createdDate desc", {
+                onSuccess : success,
+                onFailure : failure
+              });
+            
+            function success(result) {
+              var records = result.getArray("records");
+              console.log('records[0].VersionData ',records[0].VersionData);
+              var reader = new FileReader();
+                 var rec = {};
+                  rec.type = records[0].type;
+                  rec.Id = records[0].Id;
+                  rec.VersionNumber = records[0].VersionNumber;
+                  rec.ContentDocumentId = records[0].ContentDocumentId; 
+                              
+                  rec.versionData = records[0].VersionData;
+                  rec.fileName = records[0].Title;
+                  rec.contentType = records[0].FileExtension;
+                  console.log('result ',rec);
+                  zipFiles.push(rec);
+              
+              
+              //console.log('zipFiles ',zipFiles);
+            }
+            
+            function failure(error) {
+              console.log("An error has occurred " + error);
+            }
+        
+        }
+        
+        // Generate the zip file and send it back to Salesforce for attaching
+        function saveZip() {
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.ZipFilesDownloadController.getVersionIds}',
+                parentId,
+                function(result, event) {
+                    console.log(event.status);
+                    if(event.status) {
+                        console.log('result >> ', result);
+                        versionIds = result;
+                        for(var i = 0;i < result.length;i++){
+                            sforceQuery(result[i]);
+                        }
+                        var setInt = setInterval(function(){
+                             if(zipFiles.length == result.length){
+                             clearInterval(setInt);
+                             console.log('len ',zipFiles.length);
+                                if(zipFiles ){
+                                    //console.log('version ',zipFiles[0].versionData);
+                                    zipGenerate(zipFiles);
+                                }
+                             } 
+                        }, 200);
+                          
+                    }
+                }
+            );
+            
+            
+        }
+        
+        function zipGenerate(files){
+            var zip = new JSZip();
+            $.each(files, function(i, j){
+                var reader = new FileReader();
+                reader.readAsArrayBuffer(converBase64toBlob(j.versionData),j.contentType);
+                reader.onload = function () {
+                    console.log('reader',i);
+                    let fname = j.fileName.includes('.') ? j.fileName : j.fileName + '.' + j.contentType;
+                    zip.file(fname , reader.result);
+                    
+                    if(i == files.length - 1){
+                        zip.generateAsync({type: 'blob'})
+                        .then(function (content) {
+                            //contentData += content;
+                            
+                            saveAs(content, parentName +'.zip');
+                            console.log('saveas');
+                            var v = window;
+                            setTimeout(function(){v.close()},100);
+                        });
+                    }
+                };
+            });
+        }
+        
+        function converBase64toBlob(content, contentType) {
+            
+            console.log('converBase64toBlob',content);
+            contentType = contentType || '';
+            var sliceSize = 512;
+            //var btoaContent = window.btoa(content);
+            var byteCharacters = window.atob(content); //method which converts base64 to binary
+            var byteArrays = [
+            ];
+            for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                var slice = byteCharacters.slice(offset, offset + sliceSize);
+                var byteNumbers = new Array(slice.length);
+                for (var i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                var byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+            var blob = new Blob(byteArrays, {
+                type: contentType
+            }); //statement which creates the blob
+            return blob;
+        }
+        
+        </script>
+        <h1 style="font-size: 60px;">Extracting Files...</h1>
+    </form>
+</apex:page>

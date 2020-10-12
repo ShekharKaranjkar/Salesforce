@@ -1,0 +1,62 @@
+<aura:component  >
+    <aura:attribute name="fileName" type="String" default="No File Selected.." />
+    <aura:attribute name="certificate" type="String" default="certificate" />
+    <aura:attribute name="signed" type="String" default="signed" />
+    
+    <aura:attribute name="certificateApexString" type="String" />
+    <aura:attribute name="signedApexString" type="String" />
+      <aura:attribute name="recordid" type="id" />
+    <aura:attribute name="app" type="boolean"  />
+    <aura:attribute name="duty" type="boolean" />
+    <aura:attribute name="covidDeclarationObj" type="Daily_Covid_activity_vehicle__c"/>
+    <aura:attribute name="contentVersionList" type="List"  />
+   
+     <aura:attribute name="redirecttovf" type="object" />
+    <aura:handler name="change" value="{!v.vehicleid}" action="{!c.itemsChange}"/> 
+    <aura:attribute name="vehicleid" type="String"/>
+    <aura:attribute name="vehiclename" type="String"/>
+      <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+   
+  
+    
+    <div class=" slds-p-around_medium">
+        
+       <!--  <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+            <div class="slds-media">
+                <div class="slds-media__figure">
+                    <lightning:icon iconName="custom:custom19" alternativeText=""/>
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Daily Covid Activity- Vehicle">Daily Covid Activity- Vehicle</h1>
+                </div>
+            </div>
+        </div>-->
+     <!--   <div class="slds-box slds-theme_shade">
+            <span class="slds-text-heading_large slds-align_absolute-center"><b>Daily Covid Activity- Vehicle</b> </span>
+        </div> -->
+        
+        <div >
+            <div class="slds-size--1-of-1">
+                
+             <!--   <p><B>Vehicle *</B></p> -->
+                 <span class="slds-form-element__label" ><b>Vehicle<abbr class="slds-required " title="required">* </abbr></b></span>
+                <c:LookupComponent   objectName="Vehicle__c" fieldName="Name"
+                                   selectRecordId="{!v.vehicleid}" selectRecordName="{!v.vehiclename}" 
+                                   required="false" iconName="custom:custom69"/>
+                
+                
+              
+              <!--    <div>
+                    <p><B>Upload Clean Car Image</B></p>
+                  <c:DailyCovidVehicle fieldvalue="{!v.certificate}" parentId="{!v.recordid}"/>
+                </div>
+-->
+               
+            </div>
+            
+        </div>
+        
+    </div>
+    
+    
+</aura:component>

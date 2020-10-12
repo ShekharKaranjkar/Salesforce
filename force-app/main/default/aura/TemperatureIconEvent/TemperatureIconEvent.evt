@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="by this event we are pass the selected temperature color in the parent component">
+    <aura:attribute name="iconcolor" type="string"/>
+    <aura:attribute name="indexnum" type="integer"/>
+    <aura:attribute name="whichtaskList" type="string"/>
+</aura:event>

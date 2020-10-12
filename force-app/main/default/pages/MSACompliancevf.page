@@ -1,0 +1,89 @@
+<apex:page standardController="Compliance__c" extensions="MSACompliance">
+     <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"/>
+ 
+    <apex:slds />
+    <style>
+        .c{
+        transform: rotate(1deg) !important;
+        
+        }
+        .slds-scope .slds-button__icon {
+        width: .875rem;
+        height: .875rem;
+        
+        fill: red;
+        transform: rotate(1deg) !important;
+        }
+        .slds-scope .slds-pill__remove {
+        width: 2rem;
+        height: 1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: .25rem;
+        border-radius: .125rem;
+        }
+    </style>
+  
+    
+    <apex:form >
+        
+    <!--    <apex:actionFunction name="deletedriverProofFile" action="{!deleteRecord}" id="deletedriverProofFile"  >
+            
+
+        </apex:actionFunction>-->
+        
+        <table width="100%">
+            <tr><td >MSA
+
+               </td>
+               <!-- <apex:outputPanel rendered="{!drivingLicence}">
+                    <td >
+                           
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <div class="slds-file-selector slds-file-selector_files">
+                                    <div class="slds-file-selector__dropzone">
+                                        <input type="file" class="slds-file-selector__input slds-assistive-text" accept=".jpg,jepg,.png,.pdf" id="attachtFile" aria-labelledby="file-selector-primary-label file-selector-secondary-label" onchange="showfilename(this)" />
+                                        <label class="slds-file-selector__body" for="attachtFile" id="file-selector-secondary-label">
+                                            <span class="slds-file-selector__button slds-button slds-button_neutral">
+                                                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#upload')}"></use>
+                                                </svg>Upload Files</span>
+                                            <span class="slds-file-selector__text slds-medium-show">or Drop Files</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        
+                    </td>
+                    <td>
+                        <div class="slds-form-element">
+                            
+                            <button class="slds-button slds-button_brand"  onclick="uploaddocuments();return false;">Save</button></div>
+                        
+                    </td>
+                </apex:outputPanel>-->
+                <apex:outputPanel rendered="{!!drivingLicence}">
+                    
+                    <td>
+                        
+                        <apex:outputLink value="{!myCustomObjectVal.MSA_Picture__c}"  id="theLink1">  {!driverProofNm}</apex:outputLink>
+                        
+                    </td>
+                   <!-- <td>
+                        <button class="slds-button slds-button_icon_large slds-button_icon slds-pill__remove" title="Remove" onclick="deletedriverProofFile();return false;">
+                            
+                            <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" >
+                                <use  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#delete')}"></use>
+                            </svg>
+                        </button>  
+                    </td>-->
+                </apex:outputPanel>                
+            </tr>                       
+        </table>        
+    </apex:form>
+</apex:page>

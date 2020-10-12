@@ -1,0 +1,94 @@
+<aura:component implements="force:lightningQuickAction,lightning:actionOverride,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" 
+                access="global" controller = "vehicleController"  >
+    <aura:attribute name="vinNumber" type="String" default="VIN_Number__c" />
+    <aura:attribute name="reEnterVinNumber" type="String" default="Re_enter_VIN_Number__c" />
+    
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+    <aura:attribute name="pass" type="string" default=""/>
+    <aura:attribute name="passed" type="string" default=""/>
+    <aura:attribute name="repass" type="string"/>
+    <aura:attribute name="listOfSecionToShow" type = "List" access="public"/>
+        <aura:attribute name="vehicleRecords" type = "List" access="public"/>
+    <aura:handler name = "init" value = "{!this}" action = "{!c.doInit}"/>
+    <lightning:notificationsLibrary aura:id="notificationsLibrary"/>
+
+    <lightning:recordEditForm aura:id="form"
+                              
+                              objectApiName="Vehicle__c"     
+                              onload="{!c.handleOnload}"
+                              onsubmit="{!c.handleOnSubmit}"
+                              onsuccess="{!c.handleOnSuccess}"
+                              onerror="{!c.handleOnError}"
+                              >
+        <aura:iteration items = "{!v.listOfSecionToShow}" var = "item" >    
+            <div >
+                <div class="slds-page-header" style="padding-top: 9px; padding-bottom: 9px;, padding-right: 9px;, padding-left: 10px;">
+                    <h3 style="font-size: 1rem;" title="">{!item.header}</h3>
+                </div> 
+            </div> 
+        <aura:if isTrue="{!item.orignal}">
+                <div class="slds-grid  slds-wrap slds-p-top_medium  slds-size_12-of-12">    
+                        <div  class="slds-size_6-of-12 ">
+                   
+                            <span> VIN Number <lightning:input type="password" autocomplete="off"  value="{!v.pass}"  required="true" pattern="[a-zA-Z0-9]*" 
+                 messageWhenPatternMismatch="Please use only letters and numbers." /></span>
+                        </div>
+                </div>
+            </aura:if> 
+            <aura:if isTrue="{!item.renter}">
+                <div class="slds-grid  slds-wrap slds-p-top_medium  slds-size_12-of-12">    
+              
+                        
+                        <div  class="slds-size_6-of-12 ">
+                            <span>
+                              Re-enter VIN Number  
+                                <lightning:input type="password" value="{!v.repass}" required="true" pattern="[a-zA-Z0-9]*" 
+                 messageWhenPatternMismatch="Please use only letters and numbers." /> 
+                                
+                            </span>
+                        </div>
+                        
+                   
+                </div>
+                
+            </aura:if> 
+    
+            
+            <aura:if isTrue="{!item.others}">
+                <div class="slds-grid  slds-wrap slds-p-top_medium  slds-size_12-of-12">    
+                    <aura:iteration items="{!item.fieldsString}" var="fieldsStringvar">
+                        
+                        <div  class="slds-size_6-of-12 ">
+                            <span>
+                                <aura:if isTrue="{!fieldsStringvar == 'Vehicle_Registration_Number__c'}">
+                                	<lightning:inputField required="true" fieldName="{!fieldsStringvar}"/>
+                                    <aura:set attribute="else">
+                                    	<lightning:inputField fieldName="{!fieldsStringvar}"/>
+                                    </aura:set>
+                                </aura:if>
+                                
+                            </span>
+                        </div>
+                        
+                    </aura:iteration>
+                </div>
+                
+            </aura:if>             
+            
+            
+            
+            
+            
+            
+
+        </aura:iteration>
+         <div class="slds-m-top_medium slds-p-bottom_x-large slds-align_absolute-center">
+            <lightning:button   variant="neutral" type="cancel" name="save" onclick="{!c.cancel}" label="Cancel" />
+             <lightning:button variant="brand" type="submit" name="save" label="Save" /> 
+        </div>
+        <div class=" slds-p-bottom_x-large">
+        </div>
+        <div class=" slds-p-bottom_x-large">
+        </div>
+    </lightning:recordEditForm>
+    </aura:component>

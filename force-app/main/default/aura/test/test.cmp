@@ -1,0 +1,31 @@
+<aura:component implements="force:lightningQuickAction,lightning:actionOverride,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" 
+                access="global" controller = "vehicleController"  >
+    <aura:attribute name="vinNumber" type="String" default="VIN_Number__c" />
+    <aura:attribute name="reEnterVinNumber" type="String" default="Re_enter_VIN_Number__c" />
+    
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+    <aura:attribute name="pass" type="string" default=""/>
+    <aura:attribute name="passed" type="string" default=""/>
+    <aura:attribute name="repass" type="string"/>
+    <aura:attribute name="listOfSecionToShow" type = "List" access="public"/>
+        <aura:attribute name="vehicleRecords" type = "List" access="public"/>
+ <!--   <aura:handler name = "init" value = "{!this}" action = "{!c.doInit}"/> -->
+    <lightning:notificationsLibrary aura:id="notificationsLibrary"/>
+
+    <lightning:recordEditForm aura:id="form"
+                              
+                              objectApiName="Extra_Trip__c"     
+                              onload="{!c.handleOnload}"
+                              onsubmit="{!c.handleOnSubmit}"
+                              onsuccess="{!c.handleOnSuccess}"
+                              onerror="{!c.handleOnError}"
+                              >
+       	
+         <lightning:inputField aura:id = "userEmail"  fieldName="Lithium_ID__c" />
+
+        <div class=" slds-p-bottom_x-large">
+        </div>
+        <div class=" slds-p-bottom_x-large">
+        </div>
+    </lightning:recordEditForm>
+    </aura:component>

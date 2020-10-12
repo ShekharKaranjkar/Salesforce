@@ -1,0 +1,10 @@
+<apex:page standardController="Opportunity" extensions="MapMarkerController">
+    
+    <apex:map width="100%" height="250px" mapType="roadmap">
+        <apex:repeat value="{!UniverseInputs}" var="ui">
+            <apex:mapMarker title="{!ui.Name}"
+                            position="{!ui.First_Point_Pickup_Location_Geo_Code__Latitude__s},{!ui.First_Point_Pickup_Location_Geo_Code__Longitude__s }"/>
+        </apex:repeat>
+    </apex:map>
+    
+</apex:page>

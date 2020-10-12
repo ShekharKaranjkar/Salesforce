@@ -1,0 +1,237 @@
+<aura:component Controller="DailyCovidActivityVehicle1" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,lightning:actionOverride,force:hasRecordId,force:hasSObjectName" access="global" >
+	<aura:attribute name="LookUpRecords3" type="sObject[]" default="[]"/>
+    <aura:attribute name="driverobj" type="sObject[]" />
+    <aura:attribute name="icon" type="String" default="utility:click" />
+     <!--<aura:handler name="oSelecteduserlookupIdEvent" event="c:SelecteduserlookupEvent" action="{!c.handleComponentEvent}"/>-->
+    <aura:attribute name="overAllTemperature" type="String"/>
+    <aura:attribute name="Vehiclerec" type="Vehicle__c"/>
+    <aura:attribute name="LookUpRecords" type="sObject[]" default="[]"/>
+      <aura:attribute name="isFileAttached" type="boolean" default="false" />
+    <aura:attribute name="fileName" type="List" default="" />
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+     <aura:attribute name="vehicleid" type="String"/>
+    <aura:attribute name="vehiclename" type="String"/>
+    <aura:attribute name="parentrecid" type="string" />
+ 
+    <aura:attribute name="dailyList" type="Daily_Covid_activity_vehicle__c" default="{
+                                                                   'Sanitization_done__c':'',
+                                                                   'Car_has_been_cleaned__c':'','Name':'',
+                                                                   
+                                                                   'WhatId':'',
+                                                                   'Vehicle__c':''
+                                                                   }" access="global"/> 
+    <aura:attribute name="fieldList" type="Daily_Covid_activity_vehicle__c" default="{
+                                                                  'Sanitization_done__c':'','Car_has_been_cleaned__c':'',
+                                                                  }" access="global"/> 
+    <aura:attribute name="MudFlaps" type="List" default="[
+                                                         {'label': '', 'value': 'Yes'}
+                                                         
+                                                         ]"/>
+    <aura:attribute name="MudFlaps1" type="List" default="[
+                                                          {'label': '', 'value': 'No'}
+                                                          
+                                                          ]"/>
+                            
+    <aura:attribute name="SeatCover" type="List" default="[
+                                                          {'label': '', 'value': 'Yes'}
+                                                          
+                                                          ]"/>
+    <aura:attribute name="SeatCover1" type="List" default="[
+                                                           {'label': '', 'value': 'No'}
+                                                           
+                                                           ]"/>
+   
+    <aura:attribute name="radioValue1" type="String" /> 
+    <aura:attribute name="radioValue2" type="String" />
+    <aura:attribute name="radioValue3" type="String" />
+    <aura:attribute name="radioValue4" type="String" />
+    
+    <aura:attribute name="selectedLookUpRecords" type="Vehicle__c" />
+    <aura:attribute name="userobj" type="sObject" default=""/>
+    <aura:handler name="oSelectedServicelookupIdEvent1" event="c:SelectedMultiplelookupEvent" action="{!c.handlemultipleComponentEvent}"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:html tag="style">
+        .slds-modal__header {
+        padding: 0.5rem !important;
+        
+        
+        }
+        .slds-p-around--medium {
+        padding: 2rem !important;
+        }
+        .slds-modal__content{
+        height:unset !important;
+        max-height:unset !important;
+        
+        padding: 0.5rem !important;
+        
+        }
+        .slds-modal__footer{
+        
+        }
+        
+        
+    </aura:html>  
+    
+    <div class="slds-clearfix slds-m-bottom_small slds-page-header">
+        <div class="slds-media">
+            <div class="slds-media__figure">
+                <lightning:icon iconName="custom:custom19" alternativeText=""/>
+            </div>
+            <div class="slds-media__body">
+                <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Daily Covid Activity- Vehicle">Daily Covid Activity- Vehicle</h1>
+            </div>
+        </div>
+    </div>
+   
+    <div class="slds-modal__content slds-size_1-of-1 slds-is-relative" aura:id="modalbody" id="modalbody">
+        <form class="slds-form--stacked">
+            <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                
+                <div class="slds-size_1-of-1">
+                    <div class=" slds-box_x-small">
+                        <!-- <b>
+     <div class="slds-truncate"  title="vehicleName">Vehicle</div> 
+        </b> -->                   
+                        <!-- <lightning:pill class="slds-m-around_xx-small" label="{!v.Vehiclerec.Name}" name="{!v.Vehiclerec.Id}" >
+                            <aura:set attribute="media">
+                        <lightning:icon iconName="custom:custom69" size="x-small" alternativeText="icon"/>
+                        </aura:set></lightning:pill>-->
+                      <!--  <c:driverLookupResult objectAPIName="Vehicle__c" 
+                                              lstSelectedRecords="{!v.selectedLookUpRecords}"
+                                              placeholder="Enter Search Vehicles.."
+                                              label="Vehicle" 
+                                              IsServiceProvider1="true"
+                                              showvehiclepill="true" 
+                                              userobj="{!v.Vehiclerec}" 
+                                              IconName="custom:custom69"/>  -->
+                        
+                           <c:LookupComponent   objectName="Vehicle__c" fieldName="Name" Label="Vehicle" 
+                                   selectRecordId="{!v.vehicleid}" selectRecordName="{!v.vehiclename}" 
+                                   required="false" iconName="action:user"/>
+                        
+                       <!--  <c:driverLookupResult objectAPIName="Vehicle__c" 
+                                              lstSelectedRecords="{!v.selectedLookUpRecords}"
+                                              placeholder="Enter Search Vehicles.."
+                                              IsServiceProvider1="true" 
+                                              showvehiclepill="true" 
+                                              userobj="{!v.Vehiclerec}" 
+                                              IconName="custom:custom69" /> -->
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="slds-scrollable">
+                <table class="slds-table  slds-table_cell-buffer" > 
+                    <thead>
+                        <tr>
+                            <th scope="col" class="slds-size_1-of-4">
+                                <div class="slds-truncate"  title="Exterio"></div>
+                            </th>
+                            <th scope="col" class="slds-size_1-of-4">
+                                <div class="slds-truncate"  title="Satisfactory"></div>
+                            </th>
+                            <th scope="col" class="slds-size_1-of-4">
+                                <div class="slds-truncate"  title="Substandard"></div>
+                            </th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>   
+                        <tr>
+                            <td>
+                                <B>  Sanitization Done  </B>                    
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits"    
+                                                      options="{! v.MudFlaps }"
+                                                      value="{! v.radioValue1 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange}"
+                                                      class="customRadioCls"
+                                                      /> Yes
+                                
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits1" 
+                                                      
+                                                      options="{! v.MudFlaps1 }"
+                                                      value="{! v.radioValue1 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange }"
+                                                      class="customRadioCls"
+                                                      /> No
+                                
+                            </td>
+                            
+                            <br/>
+                        </tr>
+                    </tbody>
+                    <tbody>   
+                        <tr>
+                            <td>
+                                <B>  Car has been cleaned   </B>                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits"    
+                                                      options="{! v.SeatCover }"
+                                                      value="{! v.radioValue2 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange1}"
+                                                      class="customRadioCls"
+                                                      />Yes
+                                
+                                
+                            </td>
+                            <td style="padding-top:5px;">
+                                <lightning:radioGroup aura:id="myFruits1" 
+                                                      
+                                                      options="{! v.SeatCover1 }"
+                                                      value="{! v.radioValue2 }"
+                                                      type="radio"
+                                                      onchange="{! c.CarHandleChange1 }"
+                                                      class="customRadioCls"
+                                                      /> No
+                                
+                            </td>
+                            
+                            <br/>
+                        </tr>
+                    </tbody>
+                    
+                     </table>
+            </div>
+            <br/>
+                        
+             <div class="slds-col slds-size_6-of-12">
+                    <lightning:input aura:id="fuploader" onchange="{!c.handleFilesChange}" accept=".pdf, .png, .jpg, .jpeg, .csv, .doc" type="file" name="file" label="Upload clean car image" multiple="true"/>
+                    <div class="slds-text-body_small slds-text-color_error">{!v.fileName}
+                        <aura:iteration items="{!v.fileName}" var = "name">
+                            {!name}<br/>
+                        </aura:iteration>
+                    </div>
+                    
+                </div>
+            
+            <div class="exampleHolder slds-align_absolute-center" size="large">
+                <lightning:spinner aura:id="loadingSpinner" class="slds-hide"/></div>
+            
+        </form>
+    </div>
+    
+    <footer class="slds-modal__footer slds-align_absolute-center">
+        <div class="slds-p-right_x-large">
+            <lightning:button variant="brand" 
+                              label="Save"
+                              title="Save"
+                              onclick="{!c.submitmethod}"/>
+            
+            <lightning:button variant="neutral" 
+                              label="Cancel"
+                              title="Cancel"
+                              onclick="{!c.Cancel}"/>
+        </div>
+    </footer>
+</aura:component>
