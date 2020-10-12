@@ -1,0 +1,73 @@
+<apex:page standardController="SFDC_520_Quote__c" showHeader="false" renderAs="pdf" extensions="salesQuotes" > 
+		
+		 <apex:stylesheet value="{!URLFOR($Resource.advancedpdfresource, 'qstyles.css')}"/> 
+        <apex:image value="{!URLFOR($Resource.advancedpdfresource, 'logo.gif')}"/>
+        <apex:panelGrid columns="1" styleClass="companyTable" width="100%">
+            <apex:outputText value="{!$Organization.Name}" styleClass="companyName"/>
+            <apex:outputText value="{!$Organization.Street}"/>
+            <apex:outputText value="{!$Organization.City}, {!$Organization.State} {!$Organization.PostalCode}"/>
+            <apex:outputText value="{!$Organization.Phone}"/>
+        </apex:panelGrid>
+        <apex:outputPanel layout="block" styleClass="line"/>
+        <apex:panelGrid columns="1" styleClass="centered" width="100%">
+            <apex:panelGrid columns="2" width="100%" cellpadding="0" cellspacing="0" columnClasses="left,right">
+                <apex:outputText value="Quote# {!SFDC_520_Quote__c.name}"  styleClass="customerName"/>
+                <apex:outputField value="{!SFDC_520_Quote__c.lastmodifieddate}" style="text-align:right"/>
+            </apex:panelGrid>
+            <apex:outputText value="{!SFDC_520_Quote__c.opportunity__r.account.name}" styleClass="customerName"/>
+            <apex:outputText value="{!contact.name}" styleClass="contactName"/>
+        </apex:panelGrid>
+        <apex:panelGrid columns="1">
+            <apex:outputText value="{!SFDC_520_Quote__c.opportunity__r.account.name}"/>
+            <apex:outputText value="{!contact.mailingStreet}"/>
+            <apex:panelGroup >
+                <apex:outputText value="{!contact.mailingCity}"/> 
+                <apex:outputText value=", {!contact.mailingState}"/>
+                <apex:outputText value=" {!contact.mailingPostalCode}"/>
+            </apex:panelGroup>
+            <apex:outputText value="Phone: {!contact.phone}"/>
+        </apex:panelGrid>
+        
+	   
+	   <br>
+	   
+	   <apex:repeat value="{!pageBrokenQuoteLines}" var="aPageOfQuotes" id="theList">
+		 <div style="page-break-after:always;"> 
+
+        <!--  Main table with quote items -->
+        <apex:dataTable value="{!aPageOfQuotes}" var="c" id="theTable" headerClass="tablehead" rowClasses="odd,even" style="font-size: 50%; " columnsWidth="50px, 100px, 150px, 200px, 100px, 50px, 100px, 100px, 100px, 100px">
+                      <apex:column style="border: 1px"> 
+                          <apex:facet name="header">Quote Line Item</apex:facet>
+                          <apex:outputText value="{!c.Name}"/>
+                      </apex:column>
+                      <apex:column >
+                          <apex:facet name="header" >Product Name</apex:facet>
+                          <apex:outputText value="{!c.Product2__r.Name}"/>
+                      </apex:column>
+                      <apex:column >
+                          <apex:facet name="header">Description</apex:facet>
+                          <apex:outputText value="{!c.Description__c}"/>
+                      </apex:column>   
+                      <apex:column >
+                          <apex:facet name="header">Quantity Ordered</apex:facet>
+                          <apex:outputText value="{!c.Qty_Ordered__c}"/>
+                      </apex:column>
+               		<apex:column styleClass="highlightcol" > 
+                          <apex:facet name="header">Unit Price</apex:facet>
+                          <apex:outputText value="{!c.Unit_Price__c}"/>
+                      </apex:column>
+                      <apex:column style="text-align:center;">
+                          <apex:facet name="header" >Ext Price</apex:facet>
+                          <apex:outputField value="{!c.Ext_Price__c}"/>
+                      </apex:column>
+          </apex:dataTable>
+ 		</div> 
+ 		</apex:repeat>
+        <br>
+        <apex:panelGrid columns="2" width="100%" styleClass="infobox">
+        	<apex:outputText styleClass="infohead" value="Quotation Totals:" />
+        	<apex:outputField value="{!SFDC_520_Quote__c.Quote_Amount_rollup__c}"/>
+        </apex:panelGrid>
+        
+         
+</apex:page>
